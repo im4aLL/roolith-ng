@@ -7,7 +7,7 @@ description: Build UI with roolith-ng Angular components using bundled docs when
 
 ## Purpose
 
-Help the agent use the `roolith-ng` (`@im4all/roolith-ng`) component library with correct imports, selectors, and patterns via the bundled `references/components/**/*.md` docs (copied, no symlink).
+Help the agent use the `roolith-ng` (`@im4all/roolith-ng`) component library with correct imports, selectors, and patterns via the bundled `references/*.md` docs (copied, no symlink).
 
 ## When to Use
 
@@ -32,74 +32,75 @@ Trigger phrases: "roolith-ng", "add button/card/table/dialog", "roolith componen
    - If the request is vague, list the catalog and ask which component is needed.
 
 3. **Read the reference (no symlink):**
-   - Read the file at `references/components/<path>` relative to this skill's directory (e.g. `references/components/button/button.md`). Use file copy only, never `ln -s`.
+   - Read the file at `references/<name>.md` relative to this skill's directory (e.g. `references/button.md`). Use file copy only, never `ln -s`.
    - Prefer `Read` over `Bash` cat; resolve the skill directory via `Glob` for `skills/roolith-ng/SKILL.md` if the consumer installed to `.agents/skills/roolith-ng/` or `skills/roolith-ng/`.
-   - Copy patterns verbatim for import and selector. Consumer projects import from `@im4all/roolith-ng`; this workspace uses `roolith-ng`.
+   - Copy imports and selectors verbatim; the docs already use `@im4all/roolith-ng`.
 
 4. **Apply the pattern:**
    - Import the standalone component(s) in `imports: [...]` (e.g. `import { ButtonComponent } from '@im4all/roolith-ng'`).
-   - Use `rng-` selectors, Iconoir class names (e.g. `iconoir-search`) via `<rng-icon>`, signal variables, and `rem()` from `sass/functions/_rem.scss` for spacing. Never select raw tags in SCSS and never use component SCSS for styling.
+   - Use `rng-` selectors and signal variables. For icons, use `<rng-icon>` with a built-in `name` from `IconNameType` (e.g. `name="search"`); use Iconoir class names only with `[custom]="true"` (e.g. `name="iconoir-search" [custom]="true"`) and only when the Iconoir CSS is loaded. For spacing, use `rem()` via `@use '@im4all/roolith-ng/sass/functions/rem'` in consumer SCSS. Never select raw tags in SCSS and never use component SCSS for styling.
    - Paste usage from the doc's `Usage` section and adapt props to the user's requirement.
 
 5. **Refresh bundled docs when stale (maintainer only):**
    - In this repo, source of truth is `projects/roolith-ng/src/lib/components/**/*.md`.
-   - Re-sync with `cp` (not `ln -s`) into `skills/roolith-ng/references/components/` preserving hierarchy. Do not create symlinks.
+   - Re-sync with `cp` (not `ln -s`) each leaf `*.md` into `skills/roolith-ng/references/<name>.md` (flattened, no `components/` subfolders). Do not create symlinks.
+   - Leaf filenames are unique across the tree, so flattening is safe. Any relative link in a doc that points to a non-`.md` source file is stale in the flattened copy; prefer inlining or absolute `projects/roolith-ng/...` links in the source docs.
 
 ## Component Catalog
 
-39 docs bundled under `references/components/` (all copied, no symlink):
+39 docs bundled under `references/` (all copied, no symlink):
 
 | Component | Reference |
 | --- | --- |
-| accordion | `references/components/accordion/accordion.md` |
-| badge | `references/components/badge/badge.md` |
-| block-message | `references/components/block-message/block-message.md` |
-| breadcrumb | `references/components/breadcrumb/breadcrumb.md` |
-| button | `references/components/button/button.md` |
-| button-split | `references/components/button-split/button-split.md` |
-| card | `references/components/card/card.md` |
-| dialog | `references/components/dialog/dialog.md` |
-| drawer | `references/components/drawer/drawer.md` |
-| dropdown | `references/components/dropdown/dropdown.md` |
-| filter | `references/components/filter/filter.md` |
-| filter-button | `references/components/filter-button/filter-button.md` |
-| icon | `references/components/icon/icon.md` |
-| list | `references/components/list/list.md` |
-| loader | `references/components/loader/loader.md` |
-| message | `references/components/message/message.md` |
-| nav | `references/components/nav/nav.md` |
-| pagination | `references/components/pagination/pagination.md` |
-| popover | `references/components/popover/popover.md` |
-| progress | `references/components/progress/progress.md` |
-| tab | `references/components/tab/tab.md` |
-| table | `references/components/table/table.md` |
-| toast | `references/components/toast/toast.md` |
-| toggle-group | `references/components/toggle-group/toggle-group.md` |
-| tooltip | `references/components/tooltip/tooltip.md` |
-| checkbox-input | `references/components/inputs/checkbox/checkbox-input.md` |
-| date-picker-input | `references/components/inputs/date-picker/date-picker-input.md` |
-| date-time-picker-input | `references/components/inputs/date-time-picker/date-time-picker-input.md` |
-| file-input | `references/components/inputs/file/file-input.md` |
-| multi-select-input | `references/components/inputs/multi-select/multi-select-input.md` |
-| number-input | `references/components/inputs/number/number-input.md` |
-| radio-input | `references/components/inputs/radio/radio-input.md` |
-| search-input | `references/components/inputs/search/search-input.md` |
-| select-input | `references/components/inputs/select/select-input.md` |
-| select-plain | `references/components/inputs/select-plain/select-plain.md` |
-| switch-input | `references/components/inputs/switch/switch-input.md` |
-| text-input | `references/components/inputs/text/text-input.md` |
-| textarea-input | `references/components/inputs/textarea/textarea-input.md` |
-| time-picker-input | `references/components/inputs/time-picker/time-picker-input.md` |
+| accordion | `references/accordion.md` |
+| badge | `references/badge.md` |
+| block-message | `references/block-message.md` |
+| breadcrumb | `references/breadcrumb.md` |
+| button | `references/button.md` |
+| button-split | `references/button-split.md` |
+| card | `references/card.md` |
+| dialog | `references/dialog.md` |
+| drawer | `references/drawer.md` |
+| dropdown | `references/dropdown.md` |
+| filter | `references/filter.md` |
+| filter-button | `references/filter-button.md` |
+| icon | `references/icon.md` |
+| list | `references/list.md` |
+| loader | `references/loader.md` |
+| message | `references/message.md` |
+| nav | `references/nav.md` |
+| pagination | `references/pagination.md` |
+| popover | `references/popover.md` |
+| progress | `references/progress.md` |
+| tab | `references/tab.md` |
+| table | `references/table.md` |
+| toast | `references/toast.md` |
+| toggle-group | `references/toggle-group.md` |
+| tooltip | `references/tooltip.md` |
+| checkbox-input | `references/checkbox-input.md` |
+| date-picker-input | `references/date-picker-input.md` |
+| date-time-picker-input | `references/date-time-picker-input.md` |
+| file-input | `references/file-input.md` |
+| multi-select-input | `references/multi-select-input.md` |
+| number-input | `references/number-input.md` |
+| radio-input | `references/radio-input.md` |
+| search-input | `references/search-input.md` |
+| select-input | `references/select-input.md` |
+| select-plain | `references/select-plain.md` |
+| switch-input | `references/switch-input.md` |
+| text-input | `references/text-input.md` |
+| textarea-input | `references/textarea-input.md` |
+| time-picker-input | `references/time-picker-input.md` |
 
 ## Output
 
 - Import statement and component usage snippet adapted to the user's task.
 - File paths touched and reference file used.
-- If docs were refreshed, list the updated `references/components/**/*.md` files.
+- If docs were refreshed, list the updated `references/*.md` files.
 
 ## Guardrails
 
 - Do not use `ln -s`; always copy with `cp` or `Write`. Verify with `ls -l` that no symlink exists.
-- Do not read `projects/roolith-ng/src/lib/components/**/*.md` in consumer projects; read from the bundled `references/components/` inside the installed skill.
+- Do not read `projects/roolith-ng/src/lib/components/**/*.md` in consumer projects; read from the bundled `references/` inside the installed skill.
 - Do not invent props; cite the doc's Inputs table.
 - Keep install scope to this skill only: `npx skills add https://github.com/im4aLL/roolith-ng --skill roolith-ng` or `npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng`.
