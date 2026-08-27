@@ -273,7 +273,10 @@ export const docNav: IDocNavGroup[] = [
   },
   {
     title: 'Guides',
-    links: [{ label: 'Theming', route: '/guide/theming' }],
+    links: [
+      { label: 'Theming', route: '/guide/theming' },
+      { label: 'AI Ready', route: '/guide/ai-ready' },
+    ],
   },
   {
     title: 'Components',
@@ -291,5 +294,6 @@ export const docNav: IDocNavGroup[] = [
 export const topNavLinks: IDocNavLink[] = [
   { label: 'Getting Started', route: '/guide/getting-started' },
   { label: 'Theming', route: '/guide/theming' },
+  { label: 'AI Ready', route: '/guide/ai-ready' },
   { label: 'Components', route: '/guide/components' },
 ];

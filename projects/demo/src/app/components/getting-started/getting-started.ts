@@ -65,4 +65,6 @@ import { ButtonComponent } from '@im4all/roolith-ng';
   template: \`<rng-button variant="primary">It works!</rng-button>\`
 })
 export class AppComponent {}`;
+
+  protected readonly skillNpx = `npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng`;
 }

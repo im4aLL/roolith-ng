@@ -60,6 +60,7 @@ export class Home {
 @include rng.rng-everything();`;
   protected readonly formsSnippet = `import { FormsModule, ReactiveFormsModule } from '@angular/forms';`;
   protected readonly heroHint = 'Peer deps: @angular/core, @angular/common, @angular/forms - Works with ReactiveForms & FormsModule';
+  protected readonly skillCmd = 'npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng';
   protected readonly exampleCode = `import { Component } from '@angular/core';
 import { ButtonComponent, CardComponent } from '@im4all/roolith-ng';
 

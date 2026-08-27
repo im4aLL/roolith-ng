@@ -89,6 +89,27 @@
     Validation, disabled and error states are built in.
   </p>
 
+  <h2 class="doc-prose__h2">For AI Agents - Install the skill</h2>
+  <p class="doc-prose__p">
+    Roolith NG is AI-ready. Install the <code class="doc-prose__code">roolith-ng</code> agent skill so your AI coding assistant generates correct <code class="doc-prose__code">rng-*</code> selectors, imports and props from bundled docs - no hallucinated APIs.
+  </p>
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-spark" aria-hidden="true"></i> Why</p>
+    <p class="doc-prose__p">
+      The skill gives your agent 39 reference docs under <code class="doc-prose__code">references/*.md</code> plus theming and convention rules.
+      It triggers on phrases like <code class="doc-prose__code">roolith-ng</code>, <code class="doc-prose__code">add button/card/table/dialog</code> or <code class="doc-prose__code">rng-*</code>.
+    </p>
+  </div>
+
+  <p class="doc-prose__p">Install for your detected agents (Pi and OpenCode first, then others):</p>
+  <rng-code-block [code]="skillNpx" language="bash" title="npx skills add" variant="prose" />
+
+  <p class="doc-prose__p">
+    Verify with <code class="doc-prose__code">ls .pi/skills/roolith-ng/SKILL.md</code> or <code class="doc-prose__code">ls .opencode/skills/roolith-ng/SKILL.md</code>. Full guide and supported agents at
+    <a class="doc-prose__link" routerLink="/guide/ai-ready">AI Ready - For AI Agents</a>.
+  </p>
+
   <h2 class="doc-prose__h2">Theming</h2>
   <p class="doc-prose__p">
     Design tokens ship as SCSS variables and CSS custom properties under <code class="doc-prose__code">--rng-*</code>.

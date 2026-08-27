@@ -103,4 +103,4 @@ Trigger phrases: "roolith-ng", "add button/card/table/dialog", "roolith componen
 - Do not use `ln -s`; always copy with `cp` or `Write`. Verify with `ls -l` that no symlink exists.
 - Do not read `projects/roolith-ng/src/lib/components/**/*.md` in consumer projects; read from the bundled `references/` inside the installed skill.
 - Do not invent props; cite the doc's Inputs table.
-- Keep install scope to this skill only: `npx skills add https://github.com/im4aLL/roolith-ng --skill roolith-ng` or `npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng`.
+- Keep install scope to this skill only: `npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng`.

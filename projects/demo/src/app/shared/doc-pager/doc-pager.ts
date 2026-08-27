@@ -11,6 +11,7 @@ import { componentCatalog, IDocNavLink } from '../../nav';
 const DOC_PAGER_ORDER: IDocNavLink[] = [
   { label: 'Getting Started', route: '/guide/getting-started' },
   { label: 'Theming', route: '/guide/theming' },
+  { label: 'AI Ready', route: '/guide/ai-ready' },
   { label: 'Components', route: '/guide/components' },
   ...componentCatalog
     .filter((entry) => !!entry.route)

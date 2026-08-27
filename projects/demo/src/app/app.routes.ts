@@ -14,6 +14,11 @@ export const routes: Routes = [
     title: 'Theming',
   },
   {
+    path: 'guide/ai-ready',
+    loadComponent: () => import('./components/ai-ready/ai-ready').then((mod) => mod.AiReady),
+    title: 'AI Ready',
+  },
+  {
     path: 'guide/components',
     loadComponent: () => import('./components/components/components').then((mod) => mod.Components),
     title: 'Components',

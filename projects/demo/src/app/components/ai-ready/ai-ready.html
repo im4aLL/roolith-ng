@@ -1,0 +1,125 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">AI Ready - For AI Agents</h1>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">@im4all/roolith-ng</code> ships an installable agent skill so AI coding agents generate correct <code class="doc-prose__code">rng-*</code> markup, imports, theming and forms code without guesswork.
+    Opt-in, zero runtime cost - the skill is documentation your agent can read.
+  </p>
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-spark" aria-hidden="true"></i> At a glance</p>
+    <p class="doc-prose__p">
+      Package installs the component library as usual with <code class="doc-prose__code">npm install @im4all/roolith-ng</code>.
+      Then add the <code class="doc-prose__code">roolith-ng</code> skill to your agent so it uses bundled <code class="doc-prose__code">references/*.md</code> docs for every component, not hallucinated props.
+    </p>
+  </div>
+
+  <h2 class="doc-prose__h2">Why install the skill</h2>
+  <p class="doc-prose__p">Without the skill, agents often invent props, selectors or import paths. With it, they:</p>
+  <ul class="doc-prose__ul doc-list">
+    <li class="doc-prose__li doc-list__item">Import the exact standalone component from <code class="doc-prose__code">@im4all/roolith-ng</code> via <code class="doc-prose__code">imports: [...]</code>.</li>
+    <li class="doc-prose__li doc-list__item">Use correct <code class="doc-prose__code">rng-*</code> selectors and signal variables.</li>
+    <li class="doc-prose__li doc-list__item">Follow theming, forms and convention rules from <code class="doc-prose__code">AGENTS.md</code> - <code class="doc-prose__code">rem()</code>, Iconoir icons, no raw tag selectors.</li>
+    <li class="doc-prose__li doc-list__item">Cite the doc's Inputs table instead of inventing props.</li>
+  </ul>
+
+  <h2 class="doc-prose__h2">What the skill includes</h2>
+  <p class="doc-prose__p">
+    The skill lives at <code class="doc-prose__code">skills/roolith-ng/SKILL.md:1</code> in this repo and is published inside the npm package under <code class="doc-prose__code">skills/roolith-ng/</code>.
+    It is copied to your project's agent directory on install - no symlink, no runtime dependency.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Contents</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">SKILL.md</code></td><td class="doc-prose__td">Process, guardrails and component catalog (39 entries)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">references/*.md</code></td><td class="doc-prose__td">One doc per component - import, selector, inputs/outputs and usage snippet</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Conventions</td><td class="doc-prose__td">Theming via <code class="doc-prose__code">@im4all/roolith-ng/sass/rng-scss</code>, forms, icons, <code class="doc-prose__code">rem()</code></td></tr>
+    </tbody>
+  </table>
+  <p class="doc-prose__p">
+    39 bundled references cover <code class="doc-prose__code">accordion</code>, <code class="doc-prose__code">badge</code>, <code class="doc-prose__code">button</code>, <code class="doc-prose__code">card</code>, <code class="doc-prose__code">dialog</code>, <code class="doc-prose__code">table</code>, <code class="doc-prose__code">filter</code> and all inputs including <code class="doc-prose__code">text-input</code>, <code class="doc-prose__code">select-input</code>, <code class="doc-prose__code">date-picker-input</code> and more.
+    See the skill catalog at <code class="doc-prose__code">skills/roolith-ng/SKILL.md:49</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Installation</h2>
+  <p class="doc-prose__p">
+    Install the library first, then add the skill with <code class="doc-prose__code">npx skills add</code>.
+    The installer detects your agents and copies to the right locations - Pi and OpenCode first, then others.
+  </p>
+  <rng-code-block [code]="installSkillsNpx" language="bash" title="npx skills add" variant="prose" />
+
+  <h3 class="doc-prose__h3">Manual copy (no CLI)</h3>
+  <p class="doc-prose__p">
+    The package already contains the skill under <code class="doc-prose__code">node_modules/@im4all/roolith-ng/skills/roolith-ng/</code>.
+    Copy it directly if you prefer not to use <code class="doc-prose__code">npx skills add</code>:
+  </p>
+  <rng-code-block [code]="manualCopy" language="bash" title="manual cp" variant="prose" />
+  <p class="doc-prose__p">Detected locations (Pi and OpenCode first):</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Destination</th><th class="doc-prose__th">Agent</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.pi/skills/roolith-ng/</code></td><td class="doc-prose__td">Pi</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.opencode/skills/roolith-ng/</code></td><td class="doc-prose__td">OpenCode</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.agents/skills/roolith-ng/</code></td><td class="doc-prose__td">OpenCode, generic</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.claude/skills/roolith-ng/</code></td><td class="doc-prose__td">Claude Code</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.cursor/skills/roolith-ng/</code></td><td class="doc-prose__td">Cursor</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.codex/skills/roolith-ng/</code></td><td class="doc-prose__td">Codex</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.windsurf/skills/roolith-ng/</code></td><td class="doc-prose__td">Windsurf</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">.github/skills/roolith-ng/</code></td><td class="doc-prose__td">GitHub Copilot</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Verify installation</h3>
+  <rng-code-block [code]="verifySkill" language="bash" title="verify" variant="prose" />
+
+  <h3 class="doc-prose__h3">Uninstall</h3>
+  <rng-code-block [code]="uninstallSkill" language="bash" title="uninstall" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage - tell your agent</h2>
+  <p class="doc-prose__p">Once installed, prompt your agent with natural language. Include the <code class="doc-prose__code">roolith-ng</code> trigger phrase:</p>
+  <rng-code-block [code]="agentPrompt" language="text" title="example prompt" variant="prose" />
+  <p class="doc-prose__p">More examples:</p>
+  <ul class="doc-prose__ul doc-list">
+    <li class="doc-prose__li doc-list__item"><code class="doc-prose__code">Add a roolith-ng card with a filter and table</code></li>
+    <li class="doc-prose__li doc-list__item"><code class="doc-prose__code">Use roolith-ng dialog with DialogService</code></li>
+    <li class="doc-prose__li doc-list__item"><code class="doc-prose__code">Create a form with roolith-ng text-input and select-input using ReactiveForms</code></li>
+    <li class="doc-prose__li doc-list__item"><code class="doc-prose__code">Use rng-icon with name="search" from roolith-ng</code></li>
+  </ul>
+  <p class="doc-prose__p">The agent will read <code class="doc-prose__code">references/&lt;name&gt;.md</code> from the installed skill, copy imports and selectors verbatim, and adapt the Usage snippet to your task.</p>
+  <rng-code-block [code]="usageSnippet" language="typescript" title="app/example.component.ts - what the agent generates" variant="prose" />
+
+  <h2 class="doc-prose__h2">Conventions your agent follows</h2>
+  <p class="doc-prose__p">The skill encodes project rules so the agent does not need to be told twice:</p>
+  <ul class="doc-prose__ul doc-list">
+    <li class="doc-prose__li doc-list__item">Selectors use <code class="doc-prose__code">rng-*</code> prefix - e.g. <code class="doc-prose__code">&lt;rng-button&gt;</code>, <code class="doc-prose__code">&lt;rng-card&gt;</code>.</li>
+    <li class="doc-prose__li doc-list__item">Standalone imports only - <code class="doc-prose__code">import {{ '{' }} ButtonComponent {{ '}' }} from '@im4all/roolith-ng'</code> then <code class="doc-prose__code">imports: [ButtonComponent]</code>.</li>
+    <li class="doc-prose__li doc-list__item">Icons via <code class="doc-prose__code">&lt;rng-icon name="search"&gt;</code> with built-in <code class="doc-prose__code">IconNameType</code>; Iconoir class names only with <code class="doc-prose__code">[custom]="true"</code>.</li>
+    <li class="doc-prose__li doc-list__item">Signals over plain variables, and <code class="doc-prose__code">rem()</code> via <code class="doc-prose__code">@use '@im4all/roolith-ng/sass/functions/rem'</code> - never raw <code class="doc-prose__code">1px</code>.</li>
+    <li class="doc-prose__li doc-list__item">No raw tag selectors in SCSS, no component SCSS for ad-hoc styling.</li>
+    <li class="doc-prose__li doc-list__item">Generate components with <code class="doc-prose__code">ng g component &lt;path&gt; --project=&lt;name&gt;</code>.</li>
+  </ul>
+
+  <h2 class="doc-prose__h2">Updating</h2>
+  <p class="doc-prose__p">
+    When you update the package with <code class="doc-prose__code">npm install @im4all/roolith-ng@latest</code>, re-run the skill installer to refresh the copied docs.
+    In this repo, the source of truth is <code class="doc-prose__code">projects/roolith-ng/src/lib/components/**/*.md</code> - maintainers re-sync with <code class="doc-prose__code">cp</code> into <code class="doc-prose__code">skills/roolith-ng/references/&lt;name&gt;.md</code> (never <code class="doc-prose__code">ln -s</code>).
+  </p>
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-settings" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">The published npm package does not ship <code class="doc-prose__code">*.md</code> from <code class="doc-prose__code">node_modules</code> sourcing - agents must read from the installed skill at <code class="doc-prose__code">.pi/skills/roolith-ng/references/</code>, <code class="doc-prose__code">.opencode/skills/roolith-ng/references/</code> or <code class="doc-prose__code">.agents/skills/roolith-ng/references/</code>, not from <code class="doc-prose__code">projects/roolith-ng/...</code> in consumer projects.</p>
+  </div>
+
+  <div class="doc-callout" style="margin-top: 1.5rem;">
+    <p class="doc-callout__title"><i class="iconoir-github-circle" aria-hidden="true"></i> Source and skill</p>
+    <p class="doc-prose__p">
+      Skill file at <a class="doc-prose__link" href="https://github.com/im4aLL/roolith-ng/blob/main/skills/roolith-ng/SKILL.md" target="_blank" rel="noopener noreferrer">skills/roolith-ng/SKILL.md</a>
+      and references at <a class="doc-prose__link" href="https://github.com/im4aLL/roolith-ng/tree/main/skills/roolith-ng/references" target="_blank" rel="noopener noreferrer">skills/roolith-ng/references</a>.
+      Questions? Open an issue on <a class="doc-prose__link" href="https://github.com/im4aLL/roolith-ng" target="_blank" rel="noopener noreferrer">github.com/im4aLL/roolith-ng</a>.
+    </p>
+  </div>
+
+  <rng-doc-pager />
+</article>

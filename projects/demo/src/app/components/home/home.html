@@ -311,6 +311,67 @@
   </div>
 </section>
 
+<!-- AI Ready -->
+<section class="doc-section" id="ai-ready">
+  <div class="doc-section__head">
+    <span class="doc-kicker">Agent skill</span>
+    <h2>AI Ready - ship faster with your agent.</h2>
+    <p>
+      Roolith NG ships an installable <code class="doc-prose__code">roolith-ng</code> skill so AI coding agents use correct <code class="doc-prose__code">rng-*</code> APIs instead of hallucinating props.
+    </p>
+  </div>
+
+  <div class="doc-install">
+    <div class="doc-install-card">
+      <h3><i class="iconoir-spark"></i> For AI Agents</h3>
+      <p>Install once. Your agent reads 39 bundled references and follows project conventions.</p>
+
+      <rng-code-block
+        [code]="skillCmd"
+        language="bash"
+        title="npx skills add"
+        variant="block"
+        (copiedChange)="onCopied()"
+      />
+
+      <ul class="doc-check-list">
+        <li><i class="iconoir-check"></i> Correct imports from <code class="doc-prose__code">@im4all/roolith-ng</code></li>
+        <li><i class="iconoir-check"></i> Valid <code class="doc-prose__code">rng-*</code> selectors and props</li>
+        <li><i class="iconoir-check"></i> Theming, forms and <code class="doc-prose__code">rem()</code> conventions built-in</li>
+      </ul>
+
+      <div style="margin-top: 1rem;">
+        <a class="doc-btn doc-btn--primary" routerLink="/guide/ai-ready">
+          Explore AI Ready guide <i class="iconoir-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="doc-install-card">
+      <h3><i class="iconoir-terminal"></i> Prompt your agent</h3>
+      <p>Use the <code class="doc-prose__code">roolith-ng</code> trigger phrase - the skill handles the rest.</p>
+
+      <rng-code-block
+        [code]="'Add a roolith-ng card with a filter and table.\nUse roolith-ng skill - rng- selectors, standalone imports.'"
+        language="text"
+        title="Example prompt"
+        variant="block"
+        (copiedChange)="onCopied()"
+      />
+
+      <div class="doc-callout" style="margin-top: 1rem;">
+        <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Works with</p>
+        <p class="doc-prose__p" style="margin: 0;">
+          Pi (<code class="doc-prose__code">.pi</code>), OpenCode (<code class="doc-prose__code">.opencode</code>), Claude Code (<code class="doc-prose__code">.claude</code>), Cursor (<code class="doc-prose__code">.cursor</code>), Codex, Windsurf and more.
+          See <a class="doc-prose__link" routerLink="/guide/ai-ready">full agent list</a>.
+        </p>
+      </div>
+
+      <p class="doc-muted" style="margin-top: 1rem;">Skill is opt-in and copied - no symlink, no runtime dependency. Re-run after <code class="doc-prose__code">npm install @im4all/roolith-ng@latest</code>.</p>
+    </div>
+  </div>
+</section>
+
 <!-- Why -->
 <section class="doc-section">
   <div class="doc-why">
