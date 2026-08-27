@@ -31,7 +31,7 @@ Trigger phrases: "roolith-ng", "add button/card/table/dialog", "roolith componen
    - Map the request to the catalog below.
    - If the request is vague, list the catalog and ask which component is needed.
 
-3. **Read the reference (no symlink):**
+3. **Read the reference:**
    - Read the file at `references/<name>.md` relative to this skill's directory (e.g. `references/button.md`). Use file copy only, never `ln -s`.
    - Prefer `Read` over `Bash` cat; resolve the skill directory via `Glob` for `skills/roolith-ng/SKILL.md` if the consumer installed to `.agents/skills/roolith-ng/` or `skills/roolith-ng/`.
    - Copy imports and selectors verbatim; the docs already use `@im4all/roolith-ng`.
@@ -50,47 +50,47 @@ Trigger phrases: "roolith-ng", "add button/card/table/dialog", "roolith componen
 
 39 docs bundled under `references/` (all copied, no symlink):
 
-| Component | Reference |
-| --- | --- |
-| accordion | `references/accordion.md` |
-| badge | `references/badge.md` |
-| block-message | `references/block-message.md` |
-| breadcrumb | `references/breadcrumb.md` |
-| button | `references/button.md` |
-| button-split | `references/button-split.md` |
-| card | `references/card.md` |
-| dialog | `references/dialog.md` |
-| drawer | `references/drawer.md` |
-| dropdown | `references/dropdown.md` |
-| filter | `references/filter.md` |
-| filter-button | `references/filter-button.md` |
-| icon | `references/icon.md` |
-| list | `references/list.md` |
-| loader | `references/loader.md` |
-| message | `references/message.md` |
-| nav | `references/nav.md` |
-| pagination | `references/pagination.md` |
-| popover | `references/popover.md` |
-| progress | `references/progress.md` |
-| tab | `references/tab.md` |
-| table | `references/table.md` |
-| toast | `references/toast.md` |
-| toggle-group | `references/toggle-group.md` |
-| tooltip | `references/tooltip.md` |
-| checkbox-input | `references/checkbox-input.md` |
-| date-picker-input | `references/date-picker-input.md` |
+| Component              | Reference                              |
+| ---------------------- | -------------------------------------- |
+| accordion              | `references/accordion.md`              |
+| badge                  | `references/badge.md`                  |
+| block-message          | `references/block-message.md`          |
+| breadcrumb             | `references/breadcrumb.md`             |
+| button                 | `references/button.md`                 |
+| button-split           | `references/button-split.md`           |
+| card                   | `references/card.md`                   |
+| dialog                 | `references/dialog.md`                 |
+| drawer                 | `references/drawer.md`                 |
+| dropdown               | `references/dropdown.md`               |
+| filter                 | `references/filter.md`                 |
+| filter-button          | `references/filter-button.md`          |
+| icon                   | `references/icon.md`                   |
+| list                   | `references/list.md`                   |
+| loader                 | `references/loader.md`                 |
+| message                | `references/message.md`                |
+| nav                    | `references/nav.md`                    |
+| pagination             | `references/pagination.md`             |
+| popover                | `references/popover.md`                |
+| progress               | `references/progress.md`               |
+| tab                    | `references/tab.md`                    |
+| table                  | `references/table.md`                  |
+| toast                  | `references/toast.md`                  |
+| toggle-group           | `references/toggle-group.md`           |
+| tooltip                | `references/tooltip.md`                |
+| checkbox-input         | `references/checkbox-input.md`         |
+| date-picker-input      | `references/date-picker-input.md`      |
 | date-time-picker-input | `references/date-time-picker-input.md` |
-| file-input | `references/file-input.md` |
-| multi-select-input | `references/multi-select-input.md` |
-| number-input | `references/number-input.md` |
-| radio-input | `references/radio-input.md` |
-| search-input | `references/search-input.md` |
-| select-input | `references/select-input.md` |
-| select-plain | `references/select-plain.md` |
-| switch-input | `references/switch-input.md` |
-| text-input | `references/text-input.md` |
-| textarea-input | `references/textarea-input.md` |
-| time-picker-input | `references/time-picker-input.md` |
+| file-input             | `references/file-input.md`             |
+| multi-select-input     | `references/multi-select-input.md`     |
+| number-input           | `references/number-input.md`           |
+| radio-input            | `references/radio-input.md`            |
+| search-input           | `references/search-input.md`           |
+| select-input           | `references/select-input.md`           |
+| select-plain           | `references/select-plain.md`           |
+| switch-input           | `references/switch-input.md`           |
+| text-input             | `references/text-input.md`             |
+| textarea-input         | `references/textarea-input.md`         |
+| time-picker-input      | `references/time-picker-input.md`      |
 
 ## Output
 
