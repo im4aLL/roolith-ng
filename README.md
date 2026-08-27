@@ -1,6 +1,6 @@
 # RoolithNg
 
-A modern, Angular-native UI component library for building enterprise-grade web applications.
+A modern, Angular-native UI component library for building enterprise-grade web applications. AI Ready with an installable `roolith-ng` agent skill for Pi, OpenCode, Claude, Cursor and more so AI agents generate correct `rng-*` APIs.
 `@im4all/roolith-ng` ships standalone Angular components, directives, pipes, and a design-token driven SCSS system so you can compose consistent, accessible, and themeable interfaces.
 
 - Package: `@im4all/roolith-ng`
@@ -17,6 +17,7 @@ A modern, Angular-native UI component library for building enterprise-grade web 
 - Data-heavy building blocks - table with sorting/selection, pagination, filters, and export helpers.
 - Overlay primitives - dialog, drawer, dropdown, popover, tooltip, and toast with focus-trapping and stacking.
 - Zero global side effects (`sideEffects: false`) and minimal runtime dependencies.
+- AI Ready - installable `roolith-ng` agent skill for Pi, OpenCode, Claude, Cursor and more so AI agents generate correct `rng-*` APIs (see [AI Ready - Agent Skills](#ai-ready---agent-skills)).
 
 ## Requirements
 
@@ -164,58 +165,19 @@ document.documentElement.classList.toggle('theme-dark', isDark);
 - Package includes: `skills/roolith-ng/SKILL.md` + `references/` (components, theming, conventions, forms, patterns)
 - Not installed automatically - opt-in via installer
 - No internal workspace skills (`.agents/skills`, `.opencode/agents`) are included - only `roolith-ng` is published (verified at build)
+- Works with Pi and OpenCode first, then Claude, Cursor, Codex, Windsurf and others via `npx skills add`
 
 ### Install skills in a consumer app
 
 After `npm install @im4all/roolith-ng`:
 
 ```bash
-# Install to all detected agents (.agents, .claude, .cursor, .opencode, .codex)
-npx roolith-skills
-# or via package bin
-npx @im4all/roolith-ng add-skills
-
-# Target a specific agent
-npx roolith-skills --agent=claude
-npx roolith-skills --agent=agents
-npx roolith-skills --agent=cursor --force
-npx roolith-skills --dry-run   # preview
-npx roolith-skills --list      # show installed
+npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng
 ```
 
-Installer copies `node_modules/@im4all/roolith-ng/skills/roolith-ng/` to:
+The installer detects your agents and copies to the right locations - Pi and OpenCode first, then others.
 
-- `.agents/skills/roolith-ng/` (OpenCode, generic)
-- `.claude/skills/roolith-ng/` (Claude Code)
-- `.cursor/skills/roolith-ng/` (Cursor)
-- `.opencode/skills/roolith-ng/`, `.codex/skills/roolith-ng/`, `.windsurf/skills/roolith-ng/`, `.github/skills/roolith-ng/` (others)
-
-Multi-agent: `npx roolith-skills --agent=claude,cursor`
-
-Manual copy (no CLI):
-
-```bash
-cp -R node_modules/@im4all/roolith-ng/skills/roolith-ng .agents/skills/
-cp -R node_modules/@im4all/roolith-ng/skills/roolith-ng .claude/skills/
-```
-
-Verify:
-
-```bash
-ls .agents/skills/roolith-ng/SKILL.md
-ls .claude/skills/roolith-ng/SKILL.md
-```
-
-Uninstall: `rm -rf .agents/skills/roolith-ng .claude/skills/roolith-ng .cursor/skills/roolith-ng`
-
-### What the skill gives your agent
-
-- Correct imports from `projects/roolith-ng/src/lib/index.ts:1`, `rng-*` selectors, required setup (`rng-dialog-host`, `rng-toast` host), and forms integration (`ReactiveForms`, `FormsModule`)
-- Theming patterns from `projects/roolith-ng/src/sass/rng-scss.scss:9` and `projects/roolith-ng/src/sass/_css-var.scss:1` (global `rng-everything()`, modular imports, CSS variable runtime overrides, SCSS `!default` build-time overrides)
-- Conventions from `AGENTS.md:1`: `rem()` not `1px`, no raw tag selectors, Iconoir only, signals, `ng g component --project=<name>`
-- Component catalog with snippets sourced from `projects/demo/src/app/components/*/` live examples
-
-Skill file: `skills/roolith-ng/SKILL.md:1`, references: `skills/roolith-ng/references/*`. Source at repo `skills/` is canonical - synced to `projects/roolith-ng/skills/` at build via `scripts/sync-skills.mjs:1` and shipped via `projects/roolith-ng/ng-package.json:8`.
+Installer copies `node_modules/@im4all/roolith-ng/skills/roolith-ng/` to `.pi/skills/roolith-ng/` (Pi), `.opencode/skills/roolith-ng/` (OpenCode), `.agents/skills/roolith-ng/`, `.claude/skills/roolith-ng/` and others.
 
 ### Build-time overrides (SCSS)
 
