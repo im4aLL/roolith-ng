@@ -1,0 +1,310 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Select Plain</h1>
+  <p class="doc-prose__p">
+    A lightweight native <code class="doc-prose__code">&lt;select&gt;</code> wrapper built as <code class="doc-prose__code">rng-select-plain</code>.
+    Use it when a styled dropdown overlay is not needed - it renders the browser's native select with the shared label and hint layout.
+    Supports <code class="doc-prose__code">label</code>, <code class="doc-prose__code">hint</code> / <code class="doc-prose__code">errorMessage</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code> and <code class="doc-prose__code">name</code>, plus
+    <code class="doc-prose__code">FormValueControl&lt;ISelectPlainOption | undefined&gt;</code> integration for signals forms.
+    The selected value is a single <code class="doc-prose__code">ISelectPlainOption</code> via <code class="doc-prose__code">[(value)]</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ISelectPlainOption</code></h3>
+  <p class="doc-prose__p">
+    Each option has a <code class="doc-prose__code">label</code> for display and a <code class="doc-prose__code">value</code> for identity.
+    <code class="doc-prose__code">value</code> can be a <code class="doc-prose__code">string</code> or <code class="doc-prose__code">number</code> - matched on change via strict equality or string coercion so <code class="doc-prose__code">2</code> matches native <code class="doc-prose__code">"2"</code>.
+  </p>
+  <rng-code-block [code]="interfaceSnippet" language="typescript" title="ISelectPlainOption" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">[data]</code>, <code class="doc-prose__code">label</code> and <code class="doc-prose__code">hint</code>.
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync - <code class="doc-prose__code">value</code> is a <code class="doc-prose__code">model&lt;ISelectPlainOption | undefined&gt;</code>.
+    Changing the native select calls <code class="doc-prose__code">onChangeHandler($event)</code> which finds the matching option in <code class="doc-prose__code">data</code> and sets <code class="doc-prose__code">value</code> (or <code class="doc-prose__code">undefined</code> when no match).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Priority"
+        hint="Select a priority level"
+        [(value)]="basicSelected" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        @if (basicSelected()) {
+          <span>Selected: <code class="doc-prose__code">{{ basicSelected()!.label }}</code> (<code class="doc-prose__code">{{ basicSelected()!.value }}</code>)</span>
+        } @else {
+          <span>No selection - open the native dropdown and pick a priority.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Label</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">label</code> to render a field label via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code> above the select.
+    When <code class="doc-prose__code">label</code> is <code class="doc-prose__code">null</code> no label is rendered.
+    The <code class="doc-prose__code">id</code> is auto-generated via <code class="doc-prose__code">uniqueId()</code> but can be overridden with <code class="doc-prose__code">[id]</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="With label"
+        [(value)]="hintSelected" />
+      <rng-select-plain
+        [data]="priorityOptions"
+        [(value)]="hintSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Current: <code class="doc-prose__code">{{ hintSelected() ? hintSelected()!.label : 'none' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="labelSnippet" language="html" title="label" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the select.
+    It renders via the computed <code class="doc-prose__code">hintMessage()</code> when not overridden by an error.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Priority"
+        hint="Select a priority level"
+        [(value)]="hintSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ hintSelected() ? hintSelected()!.label : 'none' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Priority"
+        [error]="true"
+        errorMessage="Priority is required"
+        [(value)]="errorSelected" />
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Priority"
+        hint="Select a priority level"
+        [error]="true"
+        errorMessage="Priority is required"
+        [(value)]="hintVsErrorSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">{{ errorSelected() ? errorSelected()!.label : 'none' }}</code> / <code class="doc-prose__code">{{ hintVsErrorSelected() ? hintVsErrorSelected()!.label : 'none' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">Number values</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">ISelectPlainOption.value</code> accepts <code class="doc-prose__code">string | number</code>.
+    On <code class="doc-prose__code">change</code> the component compares the native string value with <code class="doc-prose__code">option.value === value || `${{ "{" }}option.value{{ "}" }}` === `${{ "{" }}value{{ "}" }}`</code> so numeric options match correctly.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="numericOptions"
+        label="Quantity (numeric)"
+        hint="Values are numbers 1 - 4"
+        [(value)]="numericSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ numericSelected() ? numericSelected()!.label + ' (' + numericSelected()!.value + ' - ' + typeof numericSelected()!.value + ')' : 'none' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="numberValueSnippet" language="html" title="number values" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> is true (signals forms).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Disabled"
+        [disabled]="true"
+        [value]="disabledSelected()" />
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Required"
+        [required]="true"
+        [(value)]="requiredSelected" />
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="With name"
+        name="priority"
+        [(value)]="nameSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Disabled: <code class="doc-prose__code">{{ disabledSelected()!.label }}</code> |
+        Required: <code class="doc-prose__code">{{ requiredSelected() ? requiredSelected()!.label : 'none' }}</code> |
+        Name: <code class="doc-prose__code">{{ nameSelected() ? nameSelected()!.label : 'none' }}</code> (<code class="doc-prose__code">name="priority"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and <code class="doc-prose__code">valueChange</code></h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;ISelectPlainOption | undefined&gt;</code>.
+    Selecting an option sets <code class="doc-prose__code">value</code> to the matched <code class="doc-prose__code">ISelectPlainOption</code>; an unmatched value resets it to <code class="doc-prose__code">undefined</code>.
+    Blur marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> via <code class="doc-prose__code">(blur)="touched.set(true)"</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain [(value)]="twoWaySelected" [data]="priorityOptions" label="Two-way binding" />
+      <rng-select-plain [data]="priorityOptions" [value]="twoWaySelected()" (valueChange)="onValueChange($event)" label="With valueChange handler" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Current: <code class="doc-prose__code">{{ twoWaySelected() ? twoWaySelected()!.label + ' (' + twoWaySelected()!.value + ')' : 'undefined' }}</code>
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="twoWayTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Change handling</h3>
+  <p class="doc-prose__p">
+    The native <code class="doc-prose__code">&lt;select&gt;</code> forwards <code class="doc-prose__code">change</code> to <code class="doc-prose__code">onChangeHandler</code>.
+    Selected option is derived from <code class="doc-prose__code">[selected]="item.value === value()?.value"</code> on each <code class="doc-prose__code">&lt;option&gt;</code>.
+  </p>
+  <rng-code-block [code]="changeHandlerSnippet" language="typescript" title="onChangeHandler - behavior" variant="prose" />
+
+  <h3 class="doc-prose__h3">With <code class="doc-prose__code">FormField</code> (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-select-plain</code> implements <code class="doc-prose__code">FormValueControl&lt;ISelectPlainOption | undefined&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, hint and two-way binding with live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-select-plain
+        [data]="priorityOptions"
+        label="Priority"
+        hint="Select a priority level"
+        [(value)]="fullSelected" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        @if (fullSelected()) {
+          <p class="doc-prose__p" style="margin: 0 0 0.375rem 0;">Selected:</p>
+          <ul style="margin: 0 0 0.5rem 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            <li><code class="doc-prose__code">{{ fullSelected()!.label }}</code> - <code class="doc-prose__code">{{ fullSelected()!.value }}</code></li>
+          </ul>
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">Native <code class="doc-prose__code">&lt;select&gt;</code> uses <code class="doc-prose__code">rng-input--select</code> and <code class="doc-prose__code">rng-icon--select</code> for the dropdown icon.</p>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No priority selected yet - open the native select and pick an option.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-select-plain</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">data</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of available options</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the select via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the select via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the select via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the select as required via <code class="doc-prose__code">aria-required</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">uniqueId()</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">id</code> forwarded to <code class="doc-prose__code">[id]</code> on the <code class="doc-prose__code">&lt;select&gt;</code> and <code class="doc-prose__code">[for]</code> on the label</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-select-plain</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption | undefined</code></td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">The currently selected item - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-select-plain</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption | undefined</code></td><td class="doc-prose__td">Emits the selected option on change - used by <code class="doc-prose__code">[(value)]</code> two-way binding; unmatched value emits <code class="doc-prose__code">undefined</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;ISelectPlainOption | undefined&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;ISelectPlainOption | undefined&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.priority"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeHandler</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeHandler(event: Event): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">change</code> - finds the matching option in <code class="doc-prose__code">data</code> by strict or string-coerced equality and sets <code class="doc-prose__code">value</code>; resets to <code class="doc-prose__code">undefined</code> when no match</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ISelectPlainOption</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Display label for the option</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Unique identifier used for selection - compared with <code class="doc-prose__code">===</code> and string coercion in <code class="doc-prose__code">onChangeHandler</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

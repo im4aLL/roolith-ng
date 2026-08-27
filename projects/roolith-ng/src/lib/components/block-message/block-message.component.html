@@ -1,0 +1,12 @@
+<div
+  class="rng-block-message"
+  [style.height]="height()">
+  <div class="rng-block-message__content">
+    @if (header()) {
+      <h4 class="rng-block-message__title">{{ header() }}</h4>
+    }
+    <p class="rng-block-message__description">
+      <ng-content />
+    </p>
+  </div>
+</div>

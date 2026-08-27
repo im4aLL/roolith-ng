@@ -1,0 +1,161 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin tooltip() {
+  .rng-tooltip {
+    --rng-tooltip-bg-color: var(--rng-color-neutral-900);
+    --rng-tooltip-text-color: var(--rng-color-neutral);
+    --rng-tooltip-padding: #{rem(4) rem(10)};
+    --rng-tooltip-padding-large: #{rem(15)};
+    --rng-tooltip-border-radius: var(--rng-border-radius);
+    --rng-tooltip-transition-duration: 150ms;
+    --rng-tooltip-transition-delay: 0.25s;
+    --rng-tooltip-border-color: transparent;
+    --rng-tooltip-content-btn-bg-color: var(--rng-color-primary);
+    --rng-tooltip-content-btn-hover-bg-color: var(--rng-color-primary-light);
+
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    border-bottom: rem(1) dotted var(--rng-tooltip-border-color);
+
+    &:hover .rng-tooltip__content {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .rng-tooltip__content {
+    position: absolute;
+    bottom: calc(100% + rem(5));
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--rng-tooltip-bg-color);
+    color: var(--rng-tooltip-text-color);
+    display: inline-block;
+    padding: var(--rng-tooltip-padding);
+    border-radius: var(--rng-tooltip-border-radius);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    font-size: rem(12);
+    line-height: rem(18);
+    z-index: 1;
+    @include m.transition(
+      'opacity, visibility',
+      var(--rng-tooltip-transition-duration),
+      var(--rng-tooltip-transition-delay)
+    );
+
+    &::before {
+      position: absolute;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+  }
+
+  .rng-tooltip--top {
+    .rng-tooltip__content::before {
+      @include m.triangle('down', rem(5), var(--rng-tooltip-bg-color));
+      position: absolute;
+      bottom: rem(-5);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .rng-tooltip--bottom {
+    .rng-tooltip__content {
+      top: calc(100% + rem(5));
+      bottom: auto;
+    }
+
+    .rng-tooltip__content::before {
+      @include m.triangle('up', rem(6), var(--rng-tooltip-bg-color));
+      transform: translateX(-50%);
+      top: rem(-5);
+      left: 50%;
+    }
+  }
+
+  .rng-tooltip--left {
+    .rng-tooltip__content {
+      left: rem(-7);
+      right: auto;
+      top: 50%;
+      bottom: auto;
+      transform: translate(-100%, -50%);
+    }
+
+    .rng-tooltip__content::before {
+      @include m.triangle('right', rem(6), var(--rng-tooltip-bg-color));
+      right: rem(-5);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .rng-tooltip--right {
+    .rng-tooltip__content {
+      left: auto;
+      right: rem(-7);
+      top: 50%;
+      bottom: auto;
+      transform: translate(100%, -50%);
+    }
+
+    .rng-tooltip__content::before {
+      @include m.triangle('left', rem(6), var(--rng-tooltip-bg-color));
+      left: rem(-5);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .rng-tooltip--large {
+    .rng-tooltip__content {
+      white-space: normal;
+      width: rem(250);
+      padding: var(--rng-tooltip-padding-large);
+    }
+  }
+
+  .rng-tooltip__content-hl {
+    font-size: rem(14);
+    font-weight: font-weight('bold');
+    padding-bottom: rem(5);
+  }
+
+  .rng-tooltip__content-button {
+    border: none;
+    width: 100%;
+    background: var(--rng-tooltip-content-btn-bg-color);
+    color: var(--rng-surface-alt-text-color);
+    margin-top: rem(10);
+    border-radius: var(--rng-tooltip-border-radius);
+    padding: rem(4) rem(10);
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: rem(12);
+    line-height: rem(18);
+    @include m.transition('background');
+
+    &:hover {
+      background: var(--rng-tooltip-content-btn-hover-bg-color);
+      color: var(--rng-surface-alt-text-color);
+    }
+  }
+
+  .rng-tooltip--active {
+    .rng-tooltip__content {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .rng-tooltip__content--limited {
+    white-space: normal;
+    width: max-content;
+  }
+}

@@ -1,0 +1,83 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin popover {
+  .rng-popover {
+    --rng-popover-spacing: #{rem(10)};
+    --rng-popover-border-color: var(--rng-color-neutral-400);
+    --rng-popover-bg-color: var(--rng-color-neutral);
+    --rng-popover-gutter: #{rem(4)};
+    --rng-popover-anchor: --rng-popover;
+    --rng-popover-width: #{rem(320)};
+
+    .theme-dark & {
+      --rng-popover-border-color: var(--rng-border-color);
+    }
+
+    padding-inline: var(--rng-popover-spacing);
+    padding-block: calc(var(--rng-popover-spacing) - #{rem(3)});
+    background-color: var(--rng-popover-bg-color);
+    border: rem(1) solid var(--rng-popover-border-color);
+    border-radius: var(--rng-border-radius);
+    font-size: rem(14);
+    max-width: var(--rng-popover-width);
+    box-shadow: var(--rng-shadow);
+    position-anchor: var(--rng-popover-anchor);
+    position: absolute;
+    top: calc(anchor(bottom) + var(--rng-popover-gutter));
+    left: anchor(left);
+    color: var(--rng-surface-text-color);
+    transform-origin: top left;
+  }
+
+  .rng-popover__trigger {
+    anchor-name: var(--rng-popover-anchor);
+  }
+
+  .rng-popover--right {
+    left: auto;
+    right: anchor(right);
+    transform-origin: top right;
+  }
+
+  .rng-popover--top {
+    top: auto;
+    bottom: calc(anchor(top) + var(--rng-popover-gutter));
+    transform-origin: bottom left;
+  }
+
+  .rng-popover--top-right {
+    top: auto;
+    bottom: calc(anchor(top) + var(--rng-popover-gutter));
+    left: auto;
+    right: anchor(right);
+    transform-origin: bottom right;
+  }
+
+  .rng-popover__header {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+  }
+
+  .rng-popover__hl {
+    font-size: rem(14);
+    font-weight: var(--rng-font-weight-semi-bold);
+    color: var(--rng-surface-text-color);
+  }
+
+  .rng-popover__subtext {
+    font-size: rem(14);
+    line-height: 1.5em;
+    color: var(--rng-color-neutral-800);
+  }
+
+  .rng-popover__content {
+    line-height: 1.5em;
+    font-size: rem(14);
+  }
+
+  .rng-popover__content--spacing {
+    padding-top: rem(10);
+  }
+}

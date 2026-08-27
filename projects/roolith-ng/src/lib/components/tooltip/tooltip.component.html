@@ -1,0 +1,16 @@
+<div
+  class="rng-tooltip"
+  [class]="positionClassName()"
+  [class.rng-tooltip--large]="hasContentTemplate()">
+  <ng-content></ng-content>
+  <div
+    class="rng-tooltip__content"
+    [class.rng-tooltip__content--limited]="width()"
+    [style.maxWidth]="width()">
+    @if (hasContentTemplate()) {
+      <ng-container *ngTemplateOutlet="tooltipContent()"></ng-container>
+    } @else {
+      {{ text() }}
+    }
+  </div>
+</div>

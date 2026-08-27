@@ -1,0 +1,11 @@
+<div class="rng-badge__extended">
+  <ng-content></ng-content>
+
+  @if (hasExtendedContent()) {
+    <div class="rng-badge__extended-text">
+      <ng-container *ngTemplateOutlet="extendedContent()"></ng-container>
+    </div>
+  } @else {
+    <span class="rng-badge__extended-text">{{ text() }}</span>
+  }
+</div>

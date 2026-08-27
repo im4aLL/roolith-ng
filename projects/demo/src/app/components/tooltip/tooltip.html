@@ -1,0 +1,243 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Tooltip</h1>
+  <p class="doc-prose__p">
+    A wrapper that displays a tooltip relative to its trigger content on hover or focus.
+    Provide plain text via <code class="doc-prose__code">text</code> or rich markup through
+    <code class="doc-prose__code">&lt;ng-template #rngTooltipContent&gt;</code> - which automatically activates
+    <code class="doc-prose__code">rng-tooltip--large</code> mode.
+    Position is controlled with <code class="doc-prose__code">position</code> and the bubble width can be constrained with
+    <code class="doc-prose__code">width</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic - plain text</h3>
+  <p class="doc-prose__p">
+    The simplest tooltip wraps any trigger content and shows <code class="doc-prose__code">text</code> on hover or focus.
+    When no <code class="doc-prose__code">position</code> is set the bubble appears in the default placement and no
+    modifier class such as <code class="doc-prose__code">rng-tooltip--top</code> is added.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+      <rng-tooltip text="Here is the tooltip text">
+        <span style="cursor: help; font-size: 14px;">Hover me</span>
+      </rng-tooltip>
+      <rng-tooltip text="Save your changes">
+        <rng-button size="small">Save</rng-button>
+      </rng-tooltip>
+      <rng-tooltip text="Delete this item permanently">
+        <rng-button size="small" variant="danger">Delete</rng-button>
+      </rng-tooltip>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - text trigger" variant="prose" />
+  <rng-code-block [code]="basicButtonSnippet" language="html" title="basic - button trigger" variant="prose" />
+
+  <h3 class="doc-prose__h3">Position</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">position</code> to <code class="doc-prose__code">'top'</code>,
+    <code class="doc-prose__code">'bottom'</code>, <code class="doc-prose__code">'left'</code> or
+    <code class="doc-prose__code">'right'</code> to control where the bubble appears.
+    The component maps the value to <code class="doc-prose__code">rng-tooltip--top</code>,
+    <code class="doc-prose__code">rng-tooltip--bottom</code>, <code class="doc-prose__code">rng-tooltip--left</code> or
+    <code class="doc-prose__code">rng-tooltip--right</code> via the computed <code class="doc-prose__code">positionClassName</code>.
+    When omitted the bubble renders with no position class and falls back to the stylesheet default.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: center; padding: 2rem 1rem;">
+      <rng-tooltip text="Tooltip on top" position="top">
+        <rng-button size="small" variant="secondary">Top</rng-button>
+      </rng-tooltip>
+      <rng-tooltip text="Tooltip on bottom" position="bottom">
+        <rng-button size="small" variant="secondary">Bottom</rng-button>
+      </rng-tooltip>
+      <rng-tooltip text="Tooltip on left" position="left">
+        <rng-button size="small" variant="secondary">Left</rng-button>
+      </rng-tooltip>
+      <rng-tooltip text="Tooltip on right" position="right">
+        <rng-button size="small" variant="secondary">Right</rng-button>
+      </rng-tooltip>
+    </div>
+  </div>
+  <rng-code-block [code]="positionSnippet" language="html" title="position - template" variant="prose" />
+  <rng-code-block [code]="positionTypeSnippet" language="typescript" title="TooltipPositionType" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom width</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">width</code> as any CSS length string (e.g. <code class="doc-prose__code">"18rem"</code>,
+    <code class="doc-prose__code">"220px"</code>, <code class="doc-prose__code">"20ch"</code>) to constrain the bubble.
+    When set, the inner <code class="doc-prose__code">rng-tooltip__content</code> receives
+    <code class="doc-prose__code">rng-tooltip__content--limited</code> and an inline <code class="doc-prose__code">max-width</code>.
+    Leave it <code class="doc-prose__code">null</code> to let the content size naturally.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+      <rng-tooltip text="Here is the tooltip text with a wider container that wraps onto multiple lines for demonstration" width="20rem">
+        <rng-button size="small" variant="ghost">Wide (20rem)</rng-button>
+      </rng-tooltip>
+      <rng-tooltip text="Short width example that wraps sooner and shows truncation behavior for long text" width="12rem">
+        <rng-button size="small" variant="ghost">Narrow (12rem)</rng-button>
+      </rng-tooltip>
+      <rng-tooltip text="Default width - no constraint applied to the bubble">
+        <rng-button size="small" variant="ghost">Default</rng-button>
+      </rng-tooltip>
+    </div>
+  </div>
+  <rng-code-block [code]="widthSnippet" language="html" title="width - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Rich content</h3>
+  <p class="doc-prose__p">
+    For custom markup project an <code class="doc-prose__code">&lt;ng-template #rngTooltipContent&gt;</code> as a content child instead of using
+    <code class="doc-prose__code">text</code>.
+    When the template is present the component renders it via <code class="doc-prose__code">NgTemplateOutlet</code> and adds
+    <code class="doc-prose__code">rng-tooltip--large</code> to the host.
+    The fallback <code class="doc-prose__code">text</code> interpolation is skipped entirely.
+    Use the built-in helpers <code class="doc-prose__code">rng-tooltip__content-hl</code> for a heading and
+    <code class="doc-prose__code">rng-tooltip__content-button</code> for a call-to-action.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+      <rng-tooltip>
+        <rng-button size="small">Hover for rich</rng-button>
+        <ng-template #rngTooltipContent>
+          <div class="rng-tooltip__content-hl">Tooltip Header</div>
+          <p style="margin: 0;">Rich description text with more detail and formatting.</p>
+          <a href="#" class="rng-tooltip__content-button" (click)="$event.preventDefault()">Action Button</a>
+        </ng-template>
+      </rng-tooltip>
+      <rng-tooltip>
+        <rng-button size="small" variant="ghost" icon="info">Details</rng-button>
+        <ng-template #rngTooltipContent>
+          <div class="rng-tooltip__content-hl">Helpful information</div>
+          <p style="margin: 0;">
+            This tooltip uses projected HTML via <code class="doc-prose__code">#rngTooltipContent</code> and renders in large mode with
+            <code class="doc-prose__code">rng-tooltip--large</code>.
+          </p>
+          <a href="#" class="rng-tooltip__content-button" (click)="$event.preventDefault()">Learn more</a>
+        </ng-template>
+      </rng-tooltip>
+      <rng-tooltip width="22rem">
+        <rng-button size="small" variant="secondary">Wide rich (22rem)</rng-button>
+        <ng-template #rngTooltipContent>
+          <div class="rng-tooltip__content-hl">Wide rich tooltip</div>
+          <p style="margin: 0;">
+            When <code class="doc-prose__code">width</code> is set the content wrapper receives
+            <code class="doc-prose__code">rng-tooltip__content--limited</code> and an inline <code class="doc-prose__code">max-width</code>.
+          </p>
+          <a href="#" class="rng-tooltip__content-button" (click)="$event.preventDefault()">Action</a>
+        </ng-template>
+      </rng-tooltip>
+    </div>
+  </div>
+  <rng-code-block [code]="richContentSnippet" language="html" title="rich content - basic" variant="prose" />
+  <rng-code-block [code]="richButtonSnippet" language="html" title="rich content - button trigger" variant="prose" />
+  <rng-code-block [code]="richWidthSnippet" language="html" title="rich content - with width" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">
+    Plain text tooltips, positioned variants, custom widths and rich templates together.
+    Mix <code class="doc-prose__code">text</code> for simple cases and <code class="doc-prose__code">#rngTooltipContent</code> for large, structured tooltips.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-tooltip text="Here is the tooltip text">
+          <rng-button size="small">Default</rng-button>
+        </rng-tooltip>
+        <rng-tooltip text="Tooltip text" position="top">
+          <rng-button size="small" variant="secondary">Top</rng-button>
+        </rng-tooltip>
+        <rng-tooltip text="Tooltip text" position="bottom">
+          <rng-button size="small" variant="secondary">Bottom</rng-button>
+        </rng-tooltip>
+        <rng-tooltip text="Tooltip text" position="right" width="18rem">
+          <rng-button size="small" variant="ghost">Right (wide)</rng-button>
+        </rng-tooltip>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-tooltip>
+          <rng-button size="small" variant="primary">Rich content</rng-button>
+          <ng-template #rngTooltipContent>
+            <div class="rng-tooltip__content-hl">Tooltip Header</div>
+            <p style="margin: 0;">Rich description text with more detail.</p>
+            <a href="#" class="rng-tooltip__content-button" (click)="$event.preventDefault()">Action Button</a>
+          </ng-template>
+        </rng-tooltip>
+        <rng-tooltip text="Save your changes" position="left">
+          <rng-button size="small" icon="check">Save</rng-button>
+        </rng-tooltip>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-tooltip</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">text</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">string</code></td>
+        <td class="doc-prose__td">No</td>
+        <td class="doc-prose__td"><code class="doc-prose__code">''</code></td>
+        <td class="doc-prose__td">Plain text to display inside the tooltip bubble. Ignored when <code class="doc-prose__code">#rngTooltipContent</code> is projected</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">position</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">'top' | 'bottom' | 'left' | 'right' | undefined</code></td>
+        <td class="doc-prose__td">No</td>
+        <td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td>
+        <td class="doc-prose__td">Position relative to the trigger. Maps to <code class="doc-prose__code">rng-tooltip--top</code> / <code class="doc-prose__code">--bottom</code> / <code class="doc-prose__code">--left</code> / <code class="doc-prose__code">--right</code> via <code class="doc-prose__code">positionClassName</code>. No class when undefined</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">width</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td>
+        <td class="doc-prose__td">No</td>
+        <td class="doc-prose__td"><code class="doc-prose__code">null</code></td>
+        <td class="doc-prose__td">Optional inline width for the tooltip container. When set, adds <code class="doc-prose__code">rng-tooltip__content--limited</code> and sets <code class="doc-prose__code">max-width</code> via <code class="doc-prose__code">[style.maxWidth]</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-tooltip</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">The trigger element the tooltip wraps around - text, button, icon or any markup. Rendered via <code class="doc-prose__code">&lt;ng-content /&gt;</code> inside <code class="doc-prose__code">rng-tooltip</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngTooltipContent</code></td><td class="doc-prose__td"><code class="doc-prose__code">&lt;ng-template&gt;</code> for rich or custom tooltip content. When present the component renders it via <code class="doc-prose__code">NgTemplateOutlet</code> and adds <code class="doc-prose__code">rng-tooltip--large</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">TooltipPositionType</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Type</th><th class="doc-prose__th">Values</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">TooltipPositionType</code></td><td class="doc-prose__td"><code class="doc-prose__code">'top' | 'bottom' | 'left' | 'right'</code></td><td class="doc-prose__td">Allowed values for <code class="doc-prose__code">position</code>. Each maps to a <code class="doc-prose__code">rng-tooltip--&lt;position&gt;</code> modifier class</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Styling notes</h3>
+  <p class="doc-prose__p">
+    The host renders as <code class="doc-prose__code">&lt;div class="rng-tooltip"&gt;</code> with an optional position modifier from
+    <code class="doc-prose__code">positionClassName</code> and <code class="doc-prose__code">rng-tooltip--large</code> when a content template is present.
+    The bubble itself is <code class="doc-prose__code">rng-tooltip__content</code> and receives
+    <code class="doc-prose__code">rng-tooltip__content--limited</code> plus an inline <code class="doc-prose__code">max-width</code> when
+    <code class="doc-prose__code">width</code> is set.
+    For rich tooltips use <code class="doc-prose__code">rng-tooltip__content-hl</code> for a header and
+    <code class="doc-prose__code">rng-tooltip__content-button</code> for an action link inside the bubble.
+  </p>
+
+  <rng-doc-pager />
+</article>

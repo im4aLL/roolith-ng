@@ -1,0 +1,30 @@
+<div class="rng-progress">
+  @if (label() || showValue()) {
+    <div class="rng-progress__header">
+      @if (label()) {
+        <label
+          [for]="id()"
+          class="rng-progress__label">
+          {{ label() }}
+        </label>
+      }
+      @if (showValue()) {
+        <span
+          class="rng-progress__value"
+          aria-live="polite">
+          {{ percentage() }}%
+        </span>
+      }
+    </div>
+  }
+  <progress
+    [id]="id()"
+    [max]="max()"
+    [value]="value()"
+    class="rng-progress__bar"
+    [attr.aria-valuenow]="value()"
+    [attr.aria-valuemin]="0"
+    [attr.aria-valuemax]="max()">
+    {{ percentage() }}%
+  </progress>
+</div>

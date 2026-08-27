@@ -1,0 +1,29 @@
+<div class="items">
+  <rng-button
+    variant="primary"
+    (clickEvent)="showLoader()">
+    Show loader
+  </rng-button>
+
+  <rng-button
+    variant="dark"
+    (clickEvent)="showNonBlockingLoader()">
+    Show loader 2
+  </rng-button>
+</div>
+
+@if (isShowLoader()) {
+<div class="rng-loader">
+  <div class="rng-loader__content">
+    <i class="rng-icon rng-icon--spinner rng-animation rng-spinner rng-loader__icon"></i>
+    <span class="rng-loader__text">Processing...</span>
+  </div>
+</div>
+} @if (isShowNonBlockingLoader()) {
+<div class="rng-loader rng-loader--non-blocking">
+  <div class="rng-loader__content">
+    <i class="rng-icon rng-icon--loader rng-animation rng-spinner rng-loader__icon"></i>
+    <span class="rng-loader__text">Processing...</span>
+  </div>
+</div>
+}

@@ -1,0 +1,29 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-file {
+  .rng-input--file {
+    --rng-input-file-button-bg-color: var(--rng-color-neutral-100);
+    --rng-input-file-button-hover-bg-color: var(--rng-color-neutral-300);
+    --rng-input-file-button-border-radius: var(--rng-border-radius);
+    --rng-input-file-button-color: var(--rng-input-color);
+
+    .rng-input__field {
+      &::-webkit-file-upload-button,
+      &::file-selector-button {
+        background: var(--rng-input-file-button-bg-color);
+        border: none;
+        border-radius: var(--rng-input-file-button-border-radius);
+        font-family: inherit;
+        transform: translateX(rem(-5));
+        color: var(--rng-input-file-button-color);
+        @include m.transition('background');
+      }
+
+      &:hover::-webkit-file-upload-button,
+      &:hover::file-selector-button {
+        background: var(--rng-input-file-button-hover-bg-color);
+      }
+    }
+  }
+}

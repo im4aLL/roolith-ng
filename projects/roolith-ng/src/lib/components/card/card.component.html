@@ -1,0 +1,29 @@
+<div class="rng-card">
+  @if (header() || subheader()) {
+    <div class="rng-card__header">
+      <div class="rng-card__header-text">
+        @if (header()) {
+          <h6 class="rng-card__hl">{{ header() }}</h6>
+        }
+        @if (subheader()) {
+          <div class="rng-card__subhl">{{ subheader() }}</div>
+        }
+      </div>
+      @if (hasAction()) {
+        <div class="rng-card__action">
+          <ng-content select="[rngCardAction]" />
+        </div>
+      }
+    </div>
+  }
+
+  <div class="rng-card__body">
+    <ng-content />
+  </div>
+
+  @if (hasFooter()) {
+    <div class="rng-card__footer">
+      <ng-content select="[rngCardFooter]" />
+    </div>
+  }
+</div>

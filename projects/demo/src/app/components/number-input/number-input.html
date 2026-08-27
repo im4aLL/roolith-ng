@@ -1,0 +1,337 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Number Input</h1>
+  <p class="doc-prose__p">
+    A numeric input field built as <code class="doc-prose__code">rng-number-input</code>.
+    Supports <code class="doc-prose__code">min</code>, <code class="doc-prose__code">max</code> and <code class="doc-prose__code">step</code> constraints,
+    validation state via <code class="doc-prose__code">error</code> and <code class="doc-prose__code">errorMessage</code>,
+    plus <code class="doc-prose__code">label</code>, <code class="doc-prose__code">hint</code>, <code class="doc-prose__code">placeholder</code> and
+    <code class="doc-prose__code">FormValueControl&lt;number | null&gt;</code> integration for signals forms.
+    The current value is exposed as <code class="doc-prose__code">number | null</code> via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code> (<code class="doc-prose__code">null</code> when empty).
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code> and optionally <code class="doc-prose__code">placeholder</code>.
+    Use two-way binding <code class="doc-prose__code">[(value)]</code> to sync the numeric value.
+    When the field is empty the model is <code class="doc-prose__code">null</code> - otherwise a <code class="doc-prose__code">number</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Quantity"
+        placeholder="0"
+        [(value)]="basicValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ basicValue() === null ? 'null' : basicValue() }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ basicValue() === null ? 'empty' : typeof basicValue() }})</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Placeholder</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">placeholder</code> to show hint text when the value is <code class="doc-prose__code">null</code>.
+    It is forwarded to the native <code class="doc-prose__code">placeholder</code> attribute on <code class="doc-prose__code">&lt;input type="number"&gt;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Quantity"
+        placeholder="Enter quantity"
+        [(value)]="placeholderValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Quantity value: <code class="doc-prose__code">{{ placeholderValue() === null ? 'null' : placeholderValue() }}</code>
+      </p>
+      <rng-number-input
+        label="Age"
+        placeholder="0"
+        [(value)]="placeholderAgeValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Age value: <code class="doc-prose__code">{{ placeholderAgeValue() === null ? 'null' : placeholderAgeValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="placeholderSnippet" language="html" title="placeholder" variant="prose" />
+
+  <h3 class="doc-prose__h3">Min / Max / Step</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[min]</code>, <code class="doc-prose__code">[max]</code> and <code class="doc-prose__code">[step]</code> to constrain the allowed range.
+    <code class="doc-prose__code">min</code> and <code class="doc-prose__code">max</code> are forwarded to <code class="doc-prose__code">[attr.min]</code> / <code class="doc-prose__code">[attr.max]</code>
+    and <code class="doc-prose__code">step</code> defaults to <code class="doc-prose__code">1</code> via <code class="doc-prose__code">[attr.step]</code>.
+    Use a decimal <code class="doc-prose__code">step</code> such as <code class="doc-prose__code">0.5</code> for fractional values.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Rating (1 - 10, step 1)"
+        [min]="1"
+        [max]="10"
+        [step]="1"
+        [(value)]="ratingValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Rating: <code class="doc-prose__code">{{ ratingValue() === null ? 'null' : ratingValue() }}</code>
+      </p>
+      <rng-number-input
+        label="Rating decimal (1 - 10, step 0.5)"
+        hint="Try 7.5, 8, 8.5 ..."
+        [min]="1"
+        [max]="10"
+        [step]="0.5"
+        [(value)]="ratingDecimalValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Decimal rating: <code class="doc-prose__code">{{ ratingDecimalValue() === null ? 'null' : ratingDecimalValue() }}</code>
+      </p>
+      <div style="display: flex; gap: 1rem; width: 100%;">
+        <div style="flex: 1;">
+          <rng-number-input
+            label="Age (min 0)"
+            [min]="0"
+            [(value)]="minOnlyValue" />
+          <p class="doc-prose__p" style="margin: 0.25rem 0 0 0; font-size: 0.75rem;">
+            <code class="doc-prose__code">{{ minOnlyValue() === null ? 'null' : minOnlyValue() }}</code>
+          </p>
+        </div>
+        <div style="flex: 1;">
+          <rng-number-input
+            label="Score (max 100)"
+            [max]="100"
+            [(value)]="maxOnlyValue" />
+          <p class="doc-prose__p" style="margin: 0.25rem 0 0 0; font-size: 0.75rem;">
+            <code class="doc-prose__code">{{ maxOnlyValue() === null ? 'null' : maxOnlyValue() }}</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="minMaxStepSnippet" language="html" title="min / max / step" variant="prose" />
+  <rng-code-block [code]="minMaxStepTsSnippet" language="typescript" title="min / max / step - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field via <code class="doc-prose__code">rng-input__hint</code>.
+    The hint is visible when not overridden by an error message.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Quantity"
+        hint="Enter a value between 1 and 10"
+        [(value)]="hintValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ hintValue() === null ? 'null' : hintValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Age"
+        [error]="true"
+        errorMessage="Age must be a positive number" />
+      <rng-number-input
+        label="Quantity"
+        hint="Enter a quantity"
+        [error]="true"
+        errorMessage="Quantity is required"
+        [(value)]="errorValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">{{ errorValue() === null ? 'null' : errorValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[readonly]="true"</code> to make it read-only via <code class="doc-prose__code">[readonly]</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> or <code class="doc-prose__code">error()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Disabled"
+        [disabled]="true" />
+      <rng-number-input
+        label="Disabled with value"
+        [disabled]="true"
+        [value]="disabledValue()" />
+      <rng-number-input
+        label="Read-only"
+        [readonly]="true"
+        [(value)]="readonlyValue" />
+      <rng-number-input
+        label="Required"
+        [required]="true"
+        [(value)]="requiredValue" />
+      <rng-number-input
+        label="With name"
+        name="quantity"
+        [(value)]="nameValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Read-only: <code class="doc-prose__code">{{ readonlyValue() === null ? 'null' : readonlyValue() }}</code> |
+        Required: <code class="doc-prose__code">{{ requiredValue() === null ? 'null' : requiredValue() }}</code> |
+        Name: <code class="doc-prose__code">{{ nameValue() === null ? 'null' : nameValue() }}</code> (<code class="doc-prose__code">name="quantity"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="readonlySnippet" language="html" title="readonly" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and valueChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;number | null&gt;</code> - empty input emits <code class="doc-prose__code">null</code>,
+    non-numeric input is coerced to <code class="doc-prose__code">null</code> via <code class="doc-prose__code">onInput</code>.
+    Typing in the field calls <code class="doc-prose__code">onInput</code> which parses the raw string with <code class="doc-prose__code">Number(rawValue)</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input [(value)]="twoWayValue" label="Two-way binding" />
+      <rng-number-input [value]="twoWayValue()" (valueChange)="onTwoWayValueChange($event)" label="With valueChange handler" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Current: <code class="doc-prose__code">{{ twoWayValue() === null ? 'null' : twoWayValue() }}</code>
+          <span> ({{ twoWayValue() === null ? 'null' : typeof twoWayValue() }})</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="valueChangeTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-number-input</code> implements <code class="doc-prose__code">FormValueControl&lt;number | null&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, placeholder, hint, min/max/step and live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-number-input
+        label="Quantity"
+        placeholder="0"
+        hint="Enter a quantity between 1 and 10"
+        [min]="1"
+        [max]="10"
+        [step]="1"
+        [(value)]="fullQuantity" />
+      <rng-number-input
+        label="Rating"
+        hint="Decimal with step 0.5 (1 - 10)"
+        [min]="1"
+        [max]="10"
+        [step]="0.5"
+        [(value)]="fullRating" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Quantity: <code class="doc-prose__code">{{ fullQuantity() === null ? 'null' : fullQuantity() }}</code>
+          | Rating: <code class="doc-prose__code">{{ fullRating() === null ? 'null' : fullRating() }}</code>
+        </p>
+        @if (fullQuantity() !== null || fullRating() !== null) {
+          <rng-button size="small" (clickEvent)="clearFullValues()">Clear values</rng-button>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No values yet - try the spinner controls or type a number.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-number-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the input via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Placeholder text forwarded to <code class="doc-prose__code">[placeholder]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the input via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">min</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Minimum allowed value via <code class="doc-prose__code">[attr.min]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">max</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Maximum allowed value via <code class="doc-prose__code">[attr.max]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">step</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">1</code></td><td class="doc-prose__td">Step increment via <code class="doc-prose__code">[attr.step]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">invalid()</code> for <code class="doc-prose__code">aria-invalid</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">readonly</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the input read-only via <code class="doc-prose__code">[readonly]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required via <code class="doc-prose__code">aria-required</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-number-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">The current value - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>; <code class="doc-prose__code">null</code> when empty or non-numeric</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-number-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | null</code></td><td class="doc-prose__td">Emits the parsed value on change - used by <code class="doc-prose__code">[(value)]</code> two-way binding; empty or NaN emits <code class="doc-prose__code">null</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;number | null&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;number | null&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.quantity"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onInput</code></td><td class="doc-prose__td"><code class="doc-prose__code">onInput(rawValue: string): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">input</code> - parses <code class="doc-prose__code">rawValue</code> with <code class="doc-prose__code">Number()</code>, sets <code class="doc-prose__code">null</code> for empty or <code class="doc-prose__code">NaN</code>, otherwise sets the numeric <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clearInput</code></td><td class="doc-prose__td"><code class="doc-prose__code">clearInput(): void</code></td><td class="doc-prose__td">Resets <code class="doc-prose__code">value</code> to <code class="doc-prose__code">null</code> and clears the native <code class="doc-prose__code">&lt;input&gt;</code> value via <code class="doc-prose__code">inputElement()</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

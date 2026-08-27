@@ -1,0 +1,46 @@
+@use './functions' as *;
+
+@mixin base() {
+  html {
+    box-sizing: border-box;
+    accent-color: var(--rng-color-accent);
+    interpolate-size: allow-keywords;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
+  html {
+    font-size: var(--rng-base-font-size);
+  }
+
+  body {
+    font-family: var(--rng-base-font-family);
+    font-weight: var(--rng-font-weight-regular);
+    color: var(--rng-surface-text-color);
+    background-color: var(--rng-surface-bg-color);
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  a,
+  button,
+  input {
+    font-family: var(--rng-base-font-family);
+    font-weight: var(--rng-font-weight-regular);
+    outline: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

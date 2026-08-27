@@ -1,0 +1,84 @@
+@use './modules' as m;
+@use './settings' as s;
+@use './state';
+@use './base';
+@use './typography';
+@use './reset';
+@use './css-var';
+
+@mixin rng-base-style() {
+  @include css-var.css-variable();
+  @include reset.reset();
+  @include base.base();
+  @include typography.typography();
+  @include m.color();
+}
+
+@mixin rng-modules-style() {
+  @include m.animation();
+  @include m.icon();
+  @include m.badge();
+  @include m.tooltip();
+  @include m.nav();
+  @include m.button();
+  @include m.input();
+  @include m.input-checkbox();
+  @include m.input-list();
+  @include m.input-chip();
+  @include m.input-select();
+  @include m.input-group();
+  @include m.input-search();
+  @include m.input-plain-select();
+  @include m.table();
+  @include m.popover();
+  @include m.pagination();
+  @include m.breadcrumb();
+  @include m.header();
+  @include m.dialog();
+  @include m.message();
+  @include m.toast();
+  @include m.loader();
+  @include m.dropdown();
+  @include m.calendar();
+  @include m.input-time-picker();
+  @include m.input-date-picker();
+  @include m.input-file();
+  @include m.progress();
+  @include m.block-message();
+  @include m.filters();
+  @include m.input-radio();
+  @include m.input-switch();
+  @include m.input-textarea();
+  @include m.input-date-time-picker();
+  @include m.button-split();
+  @include m.toggle-group();
+  @include m.tab();
+  @include m.card();
+  @include m.accordion();
+  @include m.drawer();
+  @include m.button-filter();
+  @include m.list();
+}
+
+@mixin rng-layout-style() {
+  @if (s.$grid-layout == css-grid) {
+    @include m.css-grid();
+  } @else if(s.$grid-layout == traditional) {
+    @include m.grid();
+  }
+
+  @include m.layout();
+}
+
+@mixin rng-state-style() {
+  @include state.state();
+}
+
+@mixin rng-everything() {
+  @include rng-base-style();
+  @include rng-modules-style();
+  @include rng-layout-style();
+  @include rng-state-style();
+}
+
+// @include m.debug();

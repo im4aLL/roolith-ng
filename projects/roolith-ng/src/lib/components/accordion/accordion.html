@@ -1,0 +1,39 @@
+<div class="rng-accordion rng-accordion--bordered">
+  @for (item of [1, 2, 3, 4, 5]; track $index) {
+  <div
+    class="rng-accordion__item"
+    [class.rng-accordion__item--expanded]="item === 1"
+    [class.rng-accordion__item--disabled]="item === 2">
+    <a
+      href="#"
+      class="rng-accordion__header">
+      Accordion Item {{ item }}
+    </a>
+    <div class="rng-accordion__body">
+      This is the body of accordion item {{ item }}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel
+      sapien augue. Donec eget ex nec mi efficitur tincidunt. Suspendisse potenti.
+    </div>
+  </div>
+  }
+</div>
+
+<hr />
+
+<div class="rng-accordion">
+  @for (item of [1, 2, 3, 4, 5]; track $index) {
+  <div
+    class="rng-accordion__item"
+    [class.rng-accordion__item--expanded]="item === 1"
+    [class.rng-accordion__item--disabled]="item === 2">
+    <a
+      href="#"
+      class="rng-accordion__header">
+      Accordion Item {{ item }}
+    </a>
+    <div class="rng-accordion__body">
+      This is the body of accordion item {{ item }}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel
+      sapien augue. Donec eget ex nec mi efficitur tincidunt. Suspendisse potenti.
+    </div>
+  </div>
+  }
+</div>

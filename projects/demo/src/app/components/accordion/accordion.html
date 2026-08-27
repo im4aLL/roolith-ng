@@ -1,0 +1,146 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Accordion</h1>
+  <p class="doc-prose__p">
+    A vertically stacked set of interactive headings that each reveal a section of content.
+    Only one item is expanded at a time by default - use <code class="doc-prose__code">allowMultiple</code> to keep multiple
+    items open, and <code class="doc-prose__code">bordered</code> for a framed variant.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">The simplest accordion - the first item is auto-expanded on init when no item has <code class="doc-prose__code">[expanded]="true"</code>.</p>
+  <rng-accordion>
+    <rng-accordion-item header="Item 1">Content of item 1.</rng-accordion-item>
+    <rng-accordion-item header="Item 2">Content of item 2.</rng-accordion-item>
+    <rng-accordion-item header="Item 3">Content of item 3.</rng-accordion-item>
+  </rng-accordion>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">Bordered</h3>
+  <p class="doc-prose__p">Add a border and radius around the group with <code class="doc-prose__code">[bordered]="true"</code>.</p>
+  <rng-accordion [bordered]="true">
+    <rng-accordion-item header="Item 1">Content of item 1.</rng-accordion-item>
+    <rng-accordion-item header="Item 2">Content of item 2.</rng-accordion-item>
+  </rng-accordion>
+  <rng-code-block [code]="borderedSnippet" language="html" title="bordered" variant="prose" />
+
+  <h3 class="doc-prose__h3">Allow multiple items open</h3>
+  <p class="doc-prose__p">By default only one item can be expanded at a time. Set <code class="doc-prose__code">[allowMultiple]="true"</code> to allow multiple items to be open simultaneously.</p>
+  <rng-accordion [allowMultiple]="true">
+    <rng-accordion-item header="Item 1">Content of item 1.</rng-accordion-item>
+    <rng-accordion-item header="Item 2">Content of item 2.</rng-accordion-item>
+  </rng-accordion>
+  <rng-code-block [code]="allowMultipleSnippet" language="html" title="allowMultiple" variant="prose" />
+
+  <h3 class="doc-prose__h3">Disabled item</h3>
+  <p class="doc-prose__p">A disabled item cannot be expanded or collapsed. The header remains visible but ignores clicks.</p>
+  <rng-accordion>
+    <rng-accordion-item header="Item 1">Content of item 1.</rng-accordion-item>
+    <rng-accordion-item header="Disabled Item" [disabled]="true">This item cannot be toggled.</rng-accordion-item>
+  </rng-accordion>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+
+  <h3 class="doc-prose__h3">Pre-expanded item</h3>
+  <p class="doc-prose__p">Control the initial state with <code class="doc-prose__code">[expanded]="true"</code> on an <code class="doc-prose__code">rng-accordion-item</code>. Two-way bindable via <code class="doc-prose__code">[(expanded)]</code>.</p>
+  <rng-accordion>
+    <rng-accordion-item header="Item 1">Content of item 1.</rng-accordion-item>
+    <rng-accordion-item header="Item 2" [expanded]="true">This item starts expanded.</rng-accordion-item>
+  </rng-accordion>
+  <rng-code-block [code]="expandedSnippet" language="html" title="pre-expanded" variant="prose" />
+
+  <h3 class="doc-prose__h3">Listening to change events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">changeEvent</code> on <code class="doc-prose__code">rng-accordion</code> fires whenever any item is toggled and provides the index,
+    header and expanded state of the affected item.
+  </p>
+  <rng-accordion (changeEvent)="onAccordionChange($event)">
+    <rng-accordion-item header="Item 1">Content of item 1.</rng-accordion-item>
+    <rng-accordion-item header="Item 2">Content of item 2.</rng-accordion-item>
+  </rng-accordion>
+  @if (lastEvent) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">expanded: {{ lastEvent.expanded }}</code> •
+        <code class="doc-prose__code">itemIndex: {{ lastEvent.itemIndex }}</code> •
+        <code class="doc-prose__code">itemHeader: "{{ lastEvent.itemHeader }}"</code>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="changeEventSnippet" language="html" title="changeEvent - template" variant="prose" />
+  <rng-code-block [code]="changeEventTsSnippet" language="typescript" title="changeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Bordered, allow multiple, disabled item, and change handling together.</p>
+  <rng-accordion [bordered]="true" [allowMultiple]="true" (changeEvent)="onFullChange($event)">
+    <rng-accordion-item header="Accordion Item 1">This is the content of Accordion Item 1.</rng-accordion-item>
+    <rng-accordion-item header="Accordion Item 2">This is the content of Accordion Item 2.</rng-accordion-item>
+    <rng-accordion-item header="Disabled Accordion Item" [disabled]="true">
+      This content should not be visible because the accordion item is disabled.
+    </rng-accordion-item>
+  </rng-accordion>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-accordion</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">bordered</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Adds a border and border-radius around the accordion</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">allowMultiple</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">When <code class="doc-prose__code">true</code>, multiple items can be expanded at once</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-accordion</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">OutputRef&lt;IAccordionEvent&gt;</code></td><td class="doc-prose__td">Emits whenever any child item is toggled, with its index, header and state</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="doc-prose__h4"><code class="doc-prose__code">IAccordionEvent</code></h4>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">expanded</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">Whether the item was expanded or collapsed</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">itemIndex</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Zero-based index of the toggled item</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">itemHeader</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Header text of the toggled item</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-accordion-item</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Text displayed in the clickable header row</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">When <code class="doc-prose__code">true</code>, the item cannot be expanded or collapsed</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">expanded</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Two-way bindable. Controls the expanded state of the item</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-accordion-item</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">OutputRef&lt;boolean&gt;</code></td><td class="doc-prose__td">Emits the new expanded state whenever it changes</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["projects/**/*.ts"],
+  "exclude": ["**/*.spec.ts", "dist", "out-tsc", "node_modules"]
+}

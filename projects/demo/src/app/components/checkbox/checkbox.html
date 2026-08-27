@@ -1,0 +1,251 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Checkbox</h1>
+  <p class="doc-prose__p">
+    A styled checkbox built as <code class="doc-prose__code">rng-checkbox-input</code>.
+    Supports a label via content projection, a <code class="doc-prose__code">standalone</code> icon-only mode without a label wrapper,
+    an <code class="doc-prose__code">indeterminate</code> visual state that auto-clears when checked, and
+    <code class="doc-prose__code">FormCheckboxControl</code> integration for signals forms.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Project label text or rich HTML into the default slot.
+    Use two-way binding <code class="doc-prose__code">[(checked)]</code> to control the checked state.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-checkbox-input [(checked)]="basicChecked">
+        I agree with the
+        <a href="#">terms and conditions</a>
+      </rng-checkbox-input>
+      <p class="doc-prose__p" style="margin: 0;">
+        Checked: <code class="doc-prose__code">{{ basicChecked() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Standalone (no label)</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[standalone]="true"</code> to render the checkbox without a label wrapper.
+    Useful for table row selection or icon-only toggles. The component renders a self-closing element with no projected content.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 0.25rem; align-items: center;">
+        <rng-checkbox-input [(checked)]="standaloneChecked" [standalone]="true" />
+        <span style="font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">checked</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.25rem; align-items: center;">
+        <rng-checkbox-input [(checked)]="standaloneUnchecked" [standalone]="true" />
+        <span style="font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">unchecked</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.25rem; align-items: center;">
+        <rng-checkbox-input [checked]="true" [standalone]="true" [disabled]="true" />
+        <span style="font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">disabled</span>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="standaloneSnippet" language="html" title="standalone" variant="prose" />
+
+  <h3 class="doc-prose__h3">Indeterminate state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[indeterminate]="true"</code> to show the mixed state.
+    The component adds <code class="doc-prose__code">is--indeterminate</code> to the inner <code class="doc-prose__code">&lt;input&gt;</code>.
+    When <code class="doc-prose__code">checked</code> becomes <code class="doc-prose__code">true</code>, the indeterminate signal is automatically cleared to <code class="doc-prose__code">false</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <rng-checkbox-input [checked]="false" [standalone]="true" [indeterminate]="true" />
+      <span style="font-size: 0.875rem;">indeterminate + unchecked (standalone)</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 0.75rem;">
+      <rng-checkbox-input [(checked)]="indeterminateChecked" [(indeterminate)]="indeterminate" [standalone]="true" />
+      <span style="font-size: 0.875rem;">
+        interactive: checked <code class="doc-prose__code">{{ indeterminateChecked() }}</code>,
+        indeterminate <code class="doc-prose__code">{{ indeterminate() }}</code> - check the box to see indeterminate auto-clear
+      </span>
+    </div>
+  </div>
+  <rng-code-block [code]="indeterminateSnippet" language="html" title="indeterminate" variant="prose" />
+
+  <h3 class="doc-prose__h3">Indeterminate - select all pattern</h3>
+  <p class="doc-prose__p">
+    A common use case is a "select all" parent that is indeterminate when only some children are checked.
+    Derive <code class="doc-prose__code">indeterminate</code> from child states and sync children on parent change.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-checkbox-input
+        [checked]="allChecked()"
+        [indeterminate]="isIndeterminate()"
+        (checkedChange)="onParentChange($event)">
+        Select all
+      </rng-checkbox-input>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1.5rem; border-left: 1px solid var(--rng-border-color, #e2e8f0);">
+        <rng-checkbox-input [(checked)]="task1Checked">Task 1</rng-checkbox-input>
+        <rng-checkbox-input [(checked)]="task2Checked">Task 2</rng-checkbox-input>
+        <rng-checkbox-input [(checked)]="task3Checked">Task 3</rng-checkbox-input>
+      </div>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Parent: checked <code class="doc-prose__code">{{ allChecked() }}</code>,
+        indeterminate <code class="doc-prose__code">{{ isIndeterminate() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="indeterminateSelectAllSnippet" language="html" title="select all - template" variant="prose" />
+  <rng-code-block [code]="indeterminateSelectAllTsSnippet" language="typescript" title="select all - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable interaction,
+    <code class="doc-prose__code">[error]="true"</code> for error styling via <code class="doc-prose__code">rng-input--error</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required, and
+    <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-checkbox-input [disabled]="true" [checked]="false">Disabled unchecked</rng-checkbox-input>
+      <rng-checkbox-input [disabled]="true" [checked]="true">Disabled checked</rng-checkbox-input>
+      <rng-checkbox-input [(checked)]="errorChecked" [error]="true">Error styling</rng-checkbox-input>
+      <rng-checkbox-input [(checked)]="requiredChecked" [required]="true">Required (ARIA)</rng-checkbox-input>
+      <rng-checkbox-input name="acceptTerms" [(checked)]="withNameChecked">With <code class="doc-prose__code">name="acceptTerms"</code></rng-checkbox-input>
+    </div>
+  </div>
+  <rng-code-block [code]="statesSnippet" language="html" title="states" variant="prose" />
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+
+  <h3 class="doc-prose__h3">Rich label content</h3>
+  <p class="doc-prose__p">
+    The default slot accepts any HTML - links, <code class="doc-prose__code">&lt;strong&gt;</code>, <code class="doc-prose__code">&lt;em&gt;</code>, or other inline markup.
+    Content is projected inside the <code class="doc-prose__code">rng-input-checkbox</code> label next to the input.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-checkbox-input [(checked)]="richChecked">
+        I agree with the
+        <a href="#">terms and conditions</a>
+      </rng-checkbox-input>
+      <rng-checkbox-input [(checked)]="richChecked2">
+        Subscribe to <strong>newsletter</strong> and <em>product updates</em>
+      </rng-checkbox-input>
+    </div>
+  </div>
+  <rng-code-block [code]="richLabelSnippet" language="html" title="rich label" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and checkedChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(checked)]</code> for two-way sync or listen to <code class="doc-prose__code">(checkedChange)</code> for explicit handling.
+    The <code class="doc-prose__code">checked</code> model is a <code class="doc-prose__code">model&lt;boolean&gt;</code> with an associated <code class="doc-prose__code">checkedChange</code> output.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-checkbox-input [(checked)]="isChecked">Two-way binding - checked: {{ isChecked() }}</rng-checkbox-input>
+      <rng-checkbox-input [checked]="isChecked()" (checkedChange)="onCheckedChange($event)">With checkedChange handler</rng-checkbox-input>
+      <p class="doc-prose__p" style="margin: 0;">
+        Current value: <code class="doc-prose__code">{{ isChecked() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and checkedChange" variant="prose" />
+  <rng-code-block [code]="checkedChangeTsSnippet" language="typescript" title="checkedChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-checkbox-input</code> implements <code class="doc-prose__code">FormCheckboxControl</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">checked</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, standalone, indeterminate and states together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-checkbox-input [(checked)]="fullChecked">
+        I agree with the <a href="#">terms</a>
+      </rng-checkbox-input>
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+        <rng-checkbox-input [checked]="true" [standalone]="true" />
+        <span style="font-size: 0.8125rem;">standalone checked</span>
+        <rng-checkbox-input [checked]="false" [standalone]="true" [indeterminate]="true" />
+        <span style="font-size: 0.8125rem;">indeterminate</span>
+      </div>
+      <rng-checkbox-input [disabled]="true">Disabled</rng-checkbox-input>
+      <rng-checkbox-input [error]="true" [(checked)]="fullErrorChecked">Error state</rng-checkbox-input>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-checkbox-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute for the inner <code class="doc-prose__code">&lt;input&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">standalone</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Renders the checkbox without a label wrapper (icon-only style) via <code class="doc-prose__code">rng-input-checkbox--standalone</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the checkbox and applies <code class="doc-prose__code">rng-input--disabled</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the checkbox as required (ARIA <code class="doc-prose__code">aria-required</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-checkbox-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">checked</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Whether the checkbox is checked - two-way bindable via <code class="doc-prose__code">[(checked)]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">indeterminate</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Indeterminate visual state - auto-clears to <code class="doc-prose__code">false</code> when <code class="doc-prose__code">checked</code> becomes <code class="doc-prose__code">true</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-checkbox-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">checkedChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">Emits the new checked state on change - used by <code class="doc-prose__code">[(checked)]</code> two-way binding</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-checkbox-input</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Label text or rich HTML beside the checkbox - projected inside <code class="doc-prose__code">rng-input-checkbox</code> label</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormCheckboxControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormCheckboxControl</code> and syncs <code class="doc-prose__code">checked</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and other control state.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;boolean&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.agreed"</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

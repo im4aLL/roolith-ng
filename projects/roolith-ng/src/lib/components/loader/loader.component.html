@@ -1,0 +1,13 @@
+@if (isShowLoader()) {
+  <div
+    class="rng-loader"
+    [class.rng-loader--non-blocking]="isNonBlocking()">
+    <div class="rng-loader__content">
+      <i
+        class="rng-icon rng-animation rng-spinner rng-loader__icon"
+        [class.rng-icon--spinner]="!isNonBlocking()"
+        [class.rng-icon--loader]="isNonBlocking()"></i>
+      <span class="rng-loader__text">{{ message() }}</span>
+    </div>
+  </div>
+}

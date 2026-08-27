@@ -1,0 +1,81 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin outline() {
+  .doc-outline {
+    display: none;
+
+    @include m.breakpoint(xlarge-up) {
+      display: block;
+      width: var(--doc-outline-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: var(--doc-topbar-height);
+      align-self: flex-start;
+      max-height: calc(100dvh - var(--doc-topbar-height));
+      overflow-y: auto;
+      padding: rem(48) 0 rem(48) rem(16);
+      @include m.nice-scroll();
+    }
+  }
+
+  .doc-outline__inner {
+    display: block;
+  }
+
+  .doc-outline__title {
+    margin: 0 0 rem(12);
+    padding-left: rem(12);
+    font-size: 0.75rem;
+    font-weight: var(--doc-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--doc-text-muted);
+  }
+
+  .doc-outline__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: rem(1) solid var(--doc-border);
+  }
+
+  .doc-outline__item {
+    margin: 0;
+  }
+
+  .doc-outline__link {
+    display: block;
+    padding: rem(6) rem(12);
+    margin-left: -rem(1);
+    border-left: rem(1) solid transparent;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--doc-text-muted);
+    transition:
+      color var(--doc-duration) var(--doc-easing),
+      border-color var(--doc-duration) var(--doc-easing);
+
+    &:hover {
+      color: var(--doc-primary);
+      text-decoration: none;
+    }
+  }
+
+  .doc-outline__link--active {
+    color: var(--doc-primary);
+    border-left-color: var(--doc-primary);
+    font-weight: var(--doc-font-weight-medium);
+  }
+
+  // Hide the entire outline when there is no content - the template only renders
+  // `.doc-outline__list` when headings exist, so an empty outline should not
+  // occupy layout space or show the "On this page" title.
+  .doc-outline:not(:has(.doc-outline__list)) {
+    display: none !important;
+  }
+
+  .doc-outline__inner:not(:has(.doc-outline__list)) {
+    display: none;
+  }
+}

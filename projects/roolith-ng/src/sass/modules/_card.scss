@@ -1,0 +1,76 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin card {
+  .rng-card {
+    --rng-card-background: var(--rng-surface-bg-color);
+    --rng-card-text-color: var(--rng-surface-text-color);
+    --rng-card-padding-x: #{rem(15)};
+    --rng-card-padding-y: #{rem(15)};
+    --rng-card-border-color: var(--rng-border-color);
+    --rng-card-border-radius: var(--rng-border-radius);
+    --rng-card-subhl-color: var(--rng-color-neutral-700);
+    --rng-card-text-font-size: #{rem(14)};
+    --rng-card-text-line-height: #{rem(22)};
+    --rng-card-footer-background-color: var(--rng-color-neutral-50);
+
+    display: flex;
+    flex-direction: column;
+    background: var(--rng-card-background);
+    color: var(--rng-card-text-color);
+    border: rem(1) solid var(--rng-card-border-color);
+    border-radius: var(--rng-card-border-radius);
+  }
+
+  .rng-card__header {
+    border-bottom: rem(1) solid var(--rng-card-border-color);
+    padding-inline: var(--rng-card-padding-x);
+    padding-block: calc(var(--rng-card-padding-y) - rem(2));
+    display: flex;
+    justify-content: space-between;
+    gap: rem(10);
+  }
+
+  .rng-card__header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .rng-card__body {
+    padding-inline: var(--rng-card-padding-x);
+    padding-block: calc(var(--rng-card-padding-y) - rem(2));
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+    font-size: var(--rng-card-text-font-size);
+    line-height: var(--rng-card-text-line-height);
+  }
+
+  .rng-card__footer {
+    border-top: rem(1) solid var(--rng-card-border-color);
+    padding: var(--rng-card-padding-y) var(--rng-card-padding-x);
+    display: flex;
+    flex-direction: column;
+    gap: max(rem(5), calc(var(--rng-card-padding-x) / 2));
+    background-color: var(--rng-card-footer-background-color);
+    border-bottom-left-radius: var(--rng-card-border-radius);
+    border-bottom-right-radius: var(--rng-card-border-radius);
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  .rng-card__hl {
+    font-size: rem(16);
+    font-weight: var(--rng-font-weight-semi-bold);
+  }
+
+  .rng-card__subhl {
+    font-size: var(--rng-card-text-font-size);
+    line-height: var(--rng-card-text-line-height);
+    font-weight: var(--rng-font-weight-regular);
+    color: var(--rng-card-subhl-color);
+  }
+}

@@ -1,0 +1,34 @@
+<div class="items">
+  <button
+    class="rng-button rng-popover__trigger"
+    popovertarget="rng-popover-el"
+    style="anchor-name: --a1">
+    Popover example
+  </button>
+
+  <button
+    class="rng-button rng-popover__trigger"
+    popovertarget="rng-popover-el2"
+    style="anchor-name: --a2">
+    Popover example (right aligned)
+  </button>
+</div>
+
+<div
+  id="rng-popover-el"
+  class="rng-popover rng-animation rng-reveal"
+  popover
+  style="--rng-popover-anchor: --a1">
+  <div class="rng-popover__header">
+    <h5 class="rng-popover__hl">Popover title</h5>
+    <div class="rng-popover__subtext">A simple popover with a header, title, and description.</div>
+  </div>
+</div>
+
+<div
+  id="rng-popover-el2"
+  class="rng-popover rng-animation rng-reveal rng-popover--right"
+  popover
+  style="--rng-popover-anchor: --a2">
+  Hello from the popover!
+</div>

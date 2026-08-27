@@ -1,0 +1,12 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-group {
+  .rng-input-group {
+    --rng-input-group-spacing: #{rem(20)};
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--rng-input-group-spacing);
+  }
+}

@@ -1,0 +1,20 @@
+<div
+  class="rng-message"
+  [class]="messageClassName()"
+  [class.is--hidden]="!isShow()">
+  <i
+    class="rng-icon rng-message__icon"
+    [class]="iconClassName()"></i>
+  <ng-content></ng-content>
+
+  @if (showClose()) {
+    <div class="rng-message__close">
+      <rng-button
+        variant="dark"
+        size="xsmall"
+        (clickEvent)="close()">
+        Clear
+      </rng-button>
+    </div>
+  }
+</div>

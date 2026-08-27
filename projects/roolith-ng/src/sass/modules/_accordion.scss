@@ -1,0 +1,90 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin accordion {
+  .rng-accordion {
+    --rng-accordion-background: var(--rng-surface-bg-color);
+    --rng-accordion-text-color: var(--rng-surface-text-color);
+    --rng-accordion-padding-y: #{rem(10)};
+    --rng-accordion-border-color: var(--rng-border-color);
+    --rng-accordion-border-radius: var(--rng-border-radius);
+    --rng-accordion-text-font-size: #{rem(14)};
+    --rng-accordion-text-line-height: #{rem(22)};
+    --rng-accordion-header-caret-color: var(--rng-color-neutral-600);
+  }
+
+  .rng-accordion__item {
+    border-bottom: rem(1) solid var(--rng-accordion-border-color);
+    padding-block: var(--rng-accordion-padding-y);
+  }
+
+  .rng-accordion__header,
+  .rng-accordion__body {
+    color: var(--rng-accordion-text-color);
+    font-size: var(--rng-accordion-text-font-size);
+    line-height: var(--rng-accordion-text-line-height);
+  }
+
+  .rng-accordion__header {
+    font-weight: var(--rng-font-weight-semi-bold);
+    padding-block-end: rem(4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(10);
+
+    &:hover {
+      cursor: pointer;
+      color: var(--rng-accordion-text-color);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: rem(4);
+    }
+
+    &:after {
+      content: '';
+      color: var(--rng-accordion-header-caret-color);
+      min-width: rem(16);
+      align-self: flex-start;
+      margin-top: rem(4);
+      @extend .rng-icon, .rng-icon--chevron-down;
+      @include m.transition('transform');
+    }
+  }
+
+  .rng-accordion__body {
+    height: 0;
+    overflow: hidden;
+    @include m.transition('height');
+  }
+
+  .rng-accordion__item--expanded {
+    .rng-accordion__header {
+      &:after {
+        transform: rotate(180deg);
+      }
+    }
+
+    .rng-accordion__body {
+      height: auto; // calc-size(auto, size)
+    }
+  }
+
+  .rng-accordion__item--disabled {
+    .rng-accordion__header {
+      color: var(--rng-color-neutral-600);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  .rng-accordion--bordered {
+    border: rem(1) solid var(--rng-accordion-border-color);
+    border-radius: var(--rng-accordion-border-radius);
+    padding-inline: calc(var(--rng-accordion-padding-y) * 1.5);
+  }
+
+  .rng-accordion__item--last-child {
+    border-bottom: none;
+  }
+}

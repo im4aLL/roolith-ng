@@ -1,0 +1,92 @@
+<div
+  class="rng-input"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--readonly]="readonly()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+
+  <div
+    class="rng-input__field-container"
+    [class.is--active]="isActive()">
+    <div
+      class="rng-input__field rng-input__field--select"
+      [class.rng-input__field--focused]="isFocused()"
+      tabindex="0"
+      (click)="onInputFocusHandler()"
+      (keydown.enter)="onInputFocusHandler()">
+      <input
+        type="text"
+        [id]="id()"
+        class="rng-input__plain"
+        [value]="value() ? value()!.label : ''"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        [readonly]="readonly() || !searchable()"
+        [attr.aria-invalid]="invalid()"
+        [attr.aria-required]="required()"
+        [attr.name]="name()"
+        (input)="onInput($event.target.value)"
+        (change)="onChange($event.target.value)"
+        #inputElement />
+
+      @if (isShowClearButton()) {
+        <button
+          type="button"
+          class="rng-input__clear"
+          (click)="onClear($event)">
+          <i class="rng-icon rng-icon--delete"></i>
+        </button>
+      }
+
+      <i class="rng-icon rng-icon--chevron-down rng-input__icon"></i>
+    </div>
+
+    @if (filteredData().length > 0) {
+      <ul
+        class="rng-input-list rng-animation rng-reveal"
+        [class.rng-input-list--right]="rightAligned()"
+        [class.rng-input-list--top]="isShowListOnTop()"
+        [style.width.px]="dropdownWidth()"
+        [style.minWidth.px]="dropdownMinWidth()"
+        #listElement>
+        @for (item of filteredData(); let i = $index; track item.value) {
+          <li
+            role="button"
+            class="rng-input-list__item"
+            [class.is--focused]="currentFocusedOptionIndex() === i"
+            tabindex="0"
+            (click)="onSelectHandler(item)"
+            (keydown.enter)="onSelectHandler(item)"
+            (keydown.space)="onSelectHandler(item)">
+            <ng-container
+              *ngTemplateOutlet="optionTemplate() || defaultTemplate; context: { $implicit: item }"></ng-container>
+
+            @if (value() && value()!.value === item.value) {
+              <i class="rng-icon rng-icon--check rng-input-list__icon"></i>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>
+
+<ng-template
+  #defaultTemplate
+  let-item>
+  @if (item.icon) {
+    <i [class]="item.icon"></i>
+  }
+
+  {{ item.label }}
+</ng-template>

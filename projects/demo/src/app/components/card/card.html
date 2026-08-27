@@ -1,0 +1,150 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Card</h1>
+  <p class="doc-prose__p">
+    A container for grouping related content with an optional header, subtitle, header action and footer.
+    Use <code class="doc-prose__code">header</code> and <code class="doc-prose__code">subheader</code> for the title area, project a button or link with
+    <code class="doc-prose__code">[rngCardAction]</code> to the right of the header, and add actions at the bottom via
+    <code class="doc-prose__code">[rngCardFooter]</code>. The default slot renders inside <code class="doc-prose__code">rng-card__body</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">Or import individually if you prefer:</p>
+  <rng-code-block [code]="importIndividualSnippet" language="typescript" title="individual import" variant="prose" />
+  <p class="doc-prose__p">
+    When projecting a header action or footer, also import <code class="doc-prose__code">CardActionDirective</code> and <code class="doc-prose__code">CardFooterDirective</code>.
+    The card only renders <code class="doc-prose__code">rng-card__action</code> and <code class="doc-prose__code">rng-card__footer</code> when the corresponding directive content is present.
+    Use <code class="doc-prose__code">IMPORT_CARD</code> to import all three at once, or import them individually if you prefer.
+  </p>
+  <rng-code-block [code]="importWithButtonSnippet" language="typescript" title="with header action and footer (IMPORT_CARD)" variant="prose" />
+  <p class="doc-prose__p">Or individually:</p>
+  <rng-code-block [code]="importIndividualWithButtonSnippet" language="typescript" title="with header action and footer (individual)" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic (body only)</h3>
+  <p class="doc-prose__p">
+    The simplest card - only the default body content is rendered. No header or footer is shown when
+    <code class="doc-prose__code">header</code> and <code class="doc-prose__code">subheader</code> are omitted.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-card>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, eaque.</rng-card>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">With header and subheader</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">header</code> for the title and <code class="doc-prose__code">subheader</code> for the subtitle.
+    The header area <code class="doc-prose__code">rng-card__header</code> only renders when at least one of them is set.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-card header="Card title" subheader="Card subtitle">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+      </rng-card>
+    </div>
+  </div>
+  <rng-code-block [code]="withHeaderSnippet" language="html" title="with header" variant="prose" />
+
+  <h3 class="doc-prose__h3">With header action</h3>
+  <p class="doc-prose__p">
+    Project an element with the <code class="doc-prose__code">[rngCardAction]</code> attribute to place it on the right side of the header
+    inside <code class="doc-prose__code">rng-card__action</code>. Requires <code class="doc-prose__code">CardActionDirective</code>.
+    The wrapper is not rendered when no action content is present.
+    Typically an <code class="doc-prose__code">rng-button</code> with <code class="doc-prose__code">variant="link"</code> and <code class="doc-prose__code">size="xsmall"</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-card header="Card title" subheader="Card subtitle">
+        Lorem ipsum dolor sit amet.
+
+        <rng-button rngCardAction size="xsmall" variant="link">Open Action</rng-button>
+      </rng-card>
+    </div>
+  </div>
+  <rng-code-block [code]="withActionSnippet" language="html" title="with header action" variant="prose" />
+
+  <h3 class="doc-prose__h3">With footer</h3>
+  <p class="doc-prose__p">
+    Wrap footer content in an <code class="doc-prose__code">&lt;ng-container rngCardFooter&gt;</code>.
+    Requires <code class="doc-prose__code">CardFooterDirective</code>.
+    The content is rendered inside <code class="doc-prose__code">rng-card__footer</code> at the bottom of the card and the wrapper is not rendered when no footer content is present.
+    Use <code class="doc-prose__code">[block]="true"</code> on buttons for full-width footer actions.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-card header="Card title" subheader="Card subtitle">
+        Lorem ipsum dolor sit amet.
+
+        <ng-container rngCardFooter>
+          <rng-button variant="dark" [block]="true">Action 1</rng-button>
+          <rng-button [block]="true">Action 2</rng-button>
+        </ng-container>
+      </rng-card>
+    </div>
+  </div>
+  <rng-code-block [code]="withFooterSnippet" language="html" title="with footer" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining header, subheader, header action and footer together.</p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-card header="Card title" subheader="Card subtitle">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+
+        <rng-button rngCardAction size="xsmall" variant="link">Open Action</rng-button>
+
+        <ng-container rngCardFooter>
+          <rng-button variant="dark" [block]="true">Action 1</rng-button>
+          <rng-button [block]="true">Action 2</rng-button>
+        </ng-container>
+      </rng-card>
+    </div>
+  </div>
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-card</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Title rendered in the card header</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">subheader</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Subtitle rendered below the title</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-card</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Selector</th><th class="doc-prose__th">Directive</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>Body</em> (default)</td><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">-</td><td class="doc-prose__td">Main content of the card, rendered inside <code class="doc-prose__code">rng-card__body</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Header action</td><td class="doc-prose__td"><code class="doc-prose__code">[rngCardAction]</code></td><td class="doc-prose__td"><code class="doc-prose__code">CardActionDirective</code></td><td class="doc-prose__td">Element placed on the right side of the card header inside <code class="doc-prose__code">rng-card__action</code>. Wrapper only renders when directive is present</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Footer</td><td class="doc-prose__td"><code class="doc-prose__code">[rngCardFooter]</code></td><td class="doc-prose__td"><code class="doc-prose__code">CardFooterDirective</code></td><td class="doc-prose__td">Content rendered inside <code class="doc-prose__code">rng-card__footer</code> at the bottom of the card. Wrapper only renders when directive is present</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Directives</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Directive</th><th class="doc-prose__th">Selector</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">CardActionDirective</code></td><td class="doc-prose__td"><code class="doc-prose__code">[rngCardAction]</code></td><td class="doc-prose__td">Marker for header action projection. Detected via <code class="doc-prose__code">contentChild(CardActionDirective)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">CardFooterDirective</code></td><td class="doc-prose__td"><code class="doc-prose__code">[rngCardFooter]</code></td><td class="doc-prose__td">Marker for footer projection. Detected via <code class="doc-prose__code">contentChild(CardFooterDirective)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMPORT_CARD</code></h3>
+  <p class="doc-prose__p">Includes <code class="doc-prose__code">CardComponent</code>, <code class="doc-prose__code">CardActionDirective</code> and <code class="doc-prose__code">CardFooterDirective</code>.</p>
+  <rng-code-block [code]="importWithButtonSnippet" language="typescript" title="IMPORT_CARD" variant="prose" />
+
+  <rng-doc-pager />
+</article>

@@ -1,0 +1,33 @@
+@use './css-var' as *;
+
+@mixin base() {
+  html {
+    font-size: var(--doc-base-font-size);
+    -webkit-text-size-adjust: 100%;
+    max-width: 100%;
+  }
+
+  body {
+    font-family: var(--doc-base-font-family);
+    background-color: var(--doc-bg);
+    color: var(--doc-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-width: 100%;
+    transition:
+      background-color var(--doc-duration) var(--doc-easing),
+      color var(--doc-duration) var(--doc-easing);
+  }
+
+  html ::selection {
+    background-color: hsl(from var(--doc-primary) h s l / 0.18) !important;
+    color: var(--doc-primary);
+  }
+
+  html.theme-dark ::selection,
+  .theme-dark ::selection {
+    background-color: hsl(from var(--doc-primary-strong) h s l / 0.36) !important;
+    color: #ffffff;
+  }
+}

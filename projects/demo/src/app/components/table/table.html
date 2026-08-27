@@ -1,0 +1,691 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Table</h1>
+  <p class="doc-prose__p">
+    A responsive data table built as <code class="doc-prose__code">rng-table</code>.
+    Supports column definitions via <code class="doc-prose__code">ITableColumn</code>, client-side sorting, built-in pagination, row selection with header select-all, free-text search, sticky columns and header, clickable and inline-editable cells with validation, expandable rows, per-column custom cell templates via <code class="doc-prose__code">rngTableCell</code>, and a strategy-based export system for CSV, JSON or custom formats.
+    The table is <code class="doc-prose__code">OnPush</code> and auto-generates <code class="doc-prose__code">_trackKey</code> for stable row tracking.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">
+    Or import the full set of table pieces at once. <code class="doc-prose__code">IMPORT_TABLE</code> includes <code class="doc-prose__code">TableComponent</code>, <code class="doc-prose__code">TableSortComponent</code>, <code class="doc-prose__code">TableHeaderCheckboxComponent</code>, <code class="doc-prose__code">TableCheckboxComponent</code>, <code class="doc-prose__code">TableStickyDirective</code>, <code class="doc-prose__code">TableCellEditDirective</code> and <code class="doc-prose__code">TableCellDirective</code>.
+  </p>
+  <rng-code-block [code]="importAllSnippet" language="typescript" title="IMPORT_TABLE" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">[data]</code> as an array of <code class="doc-prose__code">ITableData</code> and <code class="doc-prose__code">[columns]</code> as <code class="doc-prose__code">ITableColumn[]</code> with <code class="doc-prose__code">field</code> and <code class="doc-prose__code">label</code>.
+    The component clones each row with a generated <code class="doc-prose__code">_trackKey</code> and renders <code class="doc-prose__code">columnData</code> derived from <code class="doc-prose__code">_setColumnData()</code>.
+    Without <code class="doc-prose__code">columns</code> the table renders only the container and pagination.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="basicData()" [columns]="basicColumns()" />
+  </div>
+  <rng-code-block [code]="basicColumnsSnippet" language="typescript" title="basic - component" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sortable columns</h3>
+  <p class="doc-prose__p">
+    Mark columns as sortable via <code class="doc-prose__code">[sortableColumns]</code> - an array of <code class="doc-prose__code">field</code> strings that sets <code class="doc-prose__code">sortable: true</code> on matching <code class="doc-prose__code">columnData</code> entries.
+    Provide <code class="doc-prose__code">[defaultSort]</code> as <code class="doc-prose__code">ITableSortColumn</code> to set the initial <code class="doc-prose__code">sortDirection</code>.
+    Click the header sort button to cycle <code class="doc-prose__code">asc -> desc -> default</code>; <code class="doc-prose__code">onSortChange</code> updates <code class="doc-prose__code">columnData</code> and re-sorts via <code class="doc-prose__code">orderBy</code> from <code class="doc-prose__code">lodash-es</code>. When <code class="doc-prose__code">direction</code> is <code class="doc-prose__code">default</code> the original <code class="doc-prose__code">data()</code> order is restored.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table
+      [data]="sortableData()"
+      [columns]="sortableColumns()"
+      [sortableColumns]="sortableFields()"
+      [defaultSort]="defaultSort()" />
+  </div>
+  <rng-code-block [code]="sortableTsSnippet" language="typescript" title="sortable - component" variant="prose" />
+  <rng-code-block [code]="sortableSnippet" language="html" title="sortable - template" variant="prose" />
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">
+      Only one column is sorted at a time. When a new column is sorted, all other sortable columns reset to <code class="doc-prose__code">default</code>. Non-sortable headers render plain text via <code class="doc-prose__code">columnLabel</code> without <code class="doc-prose__code">rng-table-sort</code>.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Paginated table</h3>
+  <p class="doc-prose__p">
+    Enable <code class="doc-prose__code">[paginate]</code> to render <code class="doc-prose__code">rng-pagination</code> inside <code class="doc-prose__code">rng-table__pagination</code>.
+    Control rows per page with <code class="doc-prose__code">[perPage]</code> (two-way bindable via <code class="doc-prose__code">[(perPage)]</code> and typed as <code class="doc-prose__code">PageSizeOptionType</code>) and visible page buttons with <code class="doc-prose__code">[maxPageItem]</code>.
+    Pagination slices <code class="doc-prose__code">items()</code> into <code class="doc-prose__code">filteredItems()</code> via <code class="doc-prose__code">_goToPage()</code>; changing <code class="doc-prose__code">rowsPerPage</code> resets to page <code class="doc-prose__code">1</code> via <code class="doc-prose__code">_handleRowPerPageChange</code>.
+    When <code class="doc-prose__code">items().length &lt;= perPage()</code> the component skips slicing and keeps all rows visible.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-table
+        [data]="paginatedData()"
+        [columns]="paginatedColumns()"
+        [paginate]="true"
+        [perPage]="10"
+        [maxPageItem]="5" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+        Total <code class="doc-prose__code">{{ paginatedData().length }}</code> rows - paginated at <code class="doc-prose__code">perPage 10</code>, <code class="doc-prose__code">maxPageItem 5</code>. Use the pagination footer to navigate.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="paginatedSnippet" language="html" title="paginated" variant="prose" />
+
+  <h3 class="doc-prose__h3">Row selection</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[allowSelection]</code> to add a leading checkbox column with <code class="doc-prose__code">rng-table-header-checkbox</code> and per-row <code class="doc-prose__code">rng-table-checkbox</code>.
+    The header checkbox watches body checkboxes via <code class="doc-prose__code">_watchHeaderCheckbox()</code> and <code class="doc-prose__code">outputToObservable</code> - clicking it sets every body <code class="doc-prose__code">fieldValue</code> to the header value. Selection state is derived from <code class="doc-prose__code">_selectedRows</code> and emitted via <code class="doc-prose__code">(selectionChange)</code> with an <code class="doc-prose__code">effect</code>.
+    The <code class="doc-prose__code">indeterminate</code> state is computed from <code class="doc-prose__code">_isAllChecked</code> and <code class="doc-prose__code">_isSomeChecked</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-table
+        [data]="selectionData()"
+        [columns]="selectionColumns()"
+        [allowSelection]="true"
+        (selectionChange)="onSelectionChange($event)" />
+      <div style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+        @if (selectedRows().length > 0) {
+          <span>Selected <code class="doc-prose__code">{{ selectedRows().length }}</code>: <code class="doc-prose__code">{{ selectedRows().length }} row(s)</code> - check the header to select all.</span>
+        } @else {
+          <span>No rows selected - use the checkboxes or the header select-all.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="selectionSnippet" language="html" title="selection - template" variant="prose" />
+  <rng-code-block [code]="selectionHandlerSnippet" language="typescript" title="selection - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Column alignment and width</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">align</code> (<code class="doc-prose__code">'left' | 'center' | 'right'</code>) and <code class="doc-prose__code">width</code> (pixels) on <code class="doc-prose__code">ITableColumn</code>.
+    Width is bound to <code class="doc-prose__code">[style.minWidth.px]</code> on <code class="doc-prose__code">&lt;col&gt;</code> in the <code class="doc-prose__code">colgroup</code>; alignment adds <code class="doc-prose__code">is--text-center</code> or <code class="doc-prose__code">is--text-right</code> on <code class="doc-prose__code">&lt;th&gt;</code> and <code class="doc-prose__code">&lt;td&gt;</code>. Selection and expand columns have fixed widths of <code class="doc-prose__code">40px</code> and no label.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="alignData()" [columns]="alignColumns()" />
+  </div>
+  <rng-code-block [code]="alignSnippet" language="typescript" title="align and width - columns" variant="prose" />
+
+  <h3 class="doc-prose__h3">Column with transform function</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">func</code> on a column to derive the displayed value from the full row instead of <code class="doc-prose__code">row[field]</code>.
+    The function runs on every change detection cycle, so prefer pre-transforming <code class="doc-prose__code">data</code> when possible for better performance. When <code class="doc-prose__code">func</code> is present, <code class="doc-prose__code">editable</code> and custom <code class="doc-prose__code">rngTableCell</code> templates are ignored for that column.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="funcData()" [columns]="funcColumns()" />
+  </div>
+  <rng-code-block [code]="funcSnippet" language="typescript" title="func - columns" variant="prose" />
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Tip</p>
+    <p class="doc-prose__p">
+      Use <code class="doc-prose__code">func</code> only when the transformation depends on multiple row fields (e.g. <code class="doc-prose__code">rate + rateType</code> or <code class="doc-prose__code">rangeFrom - rangeTo</code>). Otherwise map the data beforehand and bind the computed field directly.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Limit cell content</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[limitCellContent]="true"</code> to add <code class="doc-prose__code">rng-table--limit-cell-content</code> on the table.
+    Overflowing text is truncated with an ellipsis instead of wrapping - useful when columns have a fixed <code class="doc-prose__code">width</code> and you want single-line rows.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="limitData()" [columns]="limitColumns()" [limitCellContent]="true" />
+  </div>
+  <rng-code-block [code]="limitCellSnippet" language="html" title="limitCellContent" variant="prose" />
+
+  <h3 class="doc-prose__h3">Truncate cell content with tooltip</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">truncate</code> on a column to cap text at <code class="doc-prose__code">maxContentLength</code> characters and show the full value in an <code class="doc-prose__code">rng-tooltip</code> on hover.
+    Configure the tooltip via <code class="doc-prose__code">tooltipWidth</code> and <code class="doc-prose__code">tooltipPosition</code> (<code class="doc-prose__code">TooltipPositionType</code>).
+    In the default cell template the component checks <code class="doc-prose__code">content?.length &gt; maxContentLength</code> and renders <code class="doc-prose__code">content | slice: 0 : maxContentLength + '...'</code> inside <code class="doc-prose__code">rng-tooltip</code>.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="truncateData()" [columns]="truncateColumns()" />
+  </div>
+  <rng-code-block [code]="truncateSnippet" language="typescript" title="truncate - columns" variant="prose" />
+
+  <h3 class="doc-prose__h3">Search filtering</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[searchTerm]</code> to filter visible rows client-side across all fields via <code class="doc-prose__code">_getFilteredData</code> (<code class="doc-prose__code">String(value).toLowerCase().includes(term)</code>).
+    On change the table calls <code class="doc-prose__code">_searchTermChanged()</code> which filters <code class="doc-prose__code">data()</code>, then re-applies sorting via <code class="doc-prose__code">_runSorting()</code> and resets pagination with <code class="doc-prose__code">_resetPagination()</code>.
+    Clearing the term restores the original list via <code class="doc-prose__code">_init()</code>. Pagination and selection are preserved.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="max-width: 320px; width: 100%;">
+        <rng-search-input [(value)]="searchQuery" placeholder="Search name, role or email..." />
+      </div>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+        Query: <code class="doc-prose__code">"{{ searchQuery() || '(empty)' }}"</code> - matched <code class="doc-prose__code">{{ filteredCount() }}</code> of <code class="doc-prose__code">{{ searchData().length }}</code> rows.
+      </p>
+      <rng-table [data]="searchData()" [columns]="searchColumns()" [searchTerm]="searchQuery()" />
+    </div>
+  </div>
+  <rng-code-block [code]="searchTsSnippet" language="typescript" title="search - component" variant="prose" />
+  <rng-code-block [code]="searchSnippet" language="html" title="search - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sticky columns</h3>
+  <p class="doc-prose__p">
+    Pin the first N columns with <code class="doc-prose__code">[stickyConfig]</code> (<code class="doc-prose__code">ITableStickyConfig</code>).
+    Provide <code class="doc-prose__code">numberOfColumns</code> and a <code class="doc-prose__code">width</code> array indexed to each sticky column; the component computes <code class="doc-prose__code">left</code> offsets as a running sum of preceding widths and passes <code class="doc-prose__code">ITableStickyDirectiveData</code> to <code class="doc-prose__code">[rngTableSticky]</code> on every <code class="doc-prose__code">&lt;th&gt;</code> and <code class="doc-prose__code">&lt;td&gt;</code> via <code class="doc-prose__code">getStickyColumnDataByIndex()</code>.
+    Selection and expand columns count toward the sticky index.
+  </p>
+  <div class="doc-prose__example">
+    <div style="overflow-x: auto; width: 100%;">
+      <rng-table [data]="stickyData()" [columns]="stickyColumns()" [stickyConfig]="stickyConfig()" />
+    </div>
+    <p class="doc-prose__p" style="margin: 0.75rem 0 0 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+      The first two columns (<code class="doc-prose__code">ID</code> and <code class="doc-prose__code">Name</code>) stay pinned - scroll horizontally to see the effect. <code class="doc-prose__code">stickyConfig.width</code> must match the rendered column widths for precise alignment.
+    </p>
+  </div>
+  <rng-code-block [code]="stickySnippet" language="typescript" title="sticky - config" variant="prose" />
+  <rng-code-block [code]="stickyTemplateSnippet" language="html" title="sticky - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sticky header</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[stickyHeader]="true"</code> to pin the header while the body scrolls.
+    The container gains <code class="doc-prose__code">is--sticky-header</code> and its <code class="doc-prose__code">maxHeight</code> (default <code class="doc-prose__code">'300px'</code>) constrains the scrollable area. <code class="doc-prose__code">maxHeight</code> is required when sticky header is enabled - it is bound to <code class="doc-prose__code">[style.maxHeight]</code> only when <code class="doc-prose__code">stickyHeader()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table
+      [data]="stickyHeaderData()"
+      [columns]="stickyHeaderColumns()"
+      [stickyHeader]="true"
+      maxHeight="240px" />
+    <p class="doc-prose__p" style="margin: 0.75rem 0 0 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+      Scroll the body - the header stays fixed at <code class="doc-prose__code">maxHeight 240px</code>. Try with <code class="doc-prose__code">400px</code> for a taller viewport.
+    </p>
+  </div>
+  <rng-code-block [code]="stickyHeaderSnippet" language="html" title="sticky header - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Clickable cells</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">clickable: true</code> on a column to render its cells as <code class="doc-prose__code">rng-button variant="link"</code>.
+    Clicking emits <code class="doc-prose__code">(cellClickEvent)</code> with <code class="doc-prose__code">ITableCellClickEvent</code> (<code class="doc-prose__code">row</code> and <code class="doc-prose__code">field</code>). The check <code class="doc-prose__code">isCellClickable()</code> respects <code class="doc-prose__code">skipClickableFn</code> when provided.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-table
+        [data]="clickableData()"
+        [columns]="clickableColumns()"
+        (cellClickEvent)="onCellClick($event)" />
+      @if (lastClicked()) {
+        <div class="doc-callout" style="margin: 0;">
+          <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last click</p>
+          <p class="doc-prose__p" style="margin: 0;">
+            <code class="doc-prose__code">field: "{{ lastClicked()!.field }}"</code> - <code class="doc-prose__code">row: {{ lastClicked()!.row['name'] }} ({{ lastClicked()!.row['role'] }})</code>
+          </p>
+        </div>
+      } @else {
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">Click a name to emit <code class="doc-prose__code">cellClickEvent</code>. Only the <code class="doc-prose__code">Name</code> column is clickable.</p>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="clickableSnippet" language="typescript" title="clickable - columns + handler" variant="prose" />
+  <rng-code-block [code]="clickableTemplateSnippet" language="html" title="clickable - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Skip clickable for specific rows</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">skipClickableFn</code> on the column to suppress the link for individual rows.
+    When the function returns <code class="doc-prose__code">true</code>, the cell renders as plain text instead of a link. The demo below makes inactive rows non-clickable.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table
+      [data]="skipClickableData()"
+      [columns]="skipClickableColumns()"
+      (cellClickEvent)="onCellClick($event)" />
+    <p class="doc-prose__p" style="margin: 0.75rem 0 0 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+      <code class="doc-prose__code">Bob</code> has <code class="doc-prose__code">isActive: false</code> and renders without a link - <code class="doc-prose__code">skipClickableFn</code> returns <code class="doc-prose__code">true</code> for that row.
+    </p>
+  </div>
+  <rng-code-block [code]="skipClickableSnippet" language="typescript" title="skipClickableFn - columns" variant="prose" />
+
+  <h3 class="doc-prose__h3">Editable cells</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">editable: true</code> on a column to render cells as <code class="doc-prose__code">contenteditable="true"</code> divs with <code class="doc-prose__code">rngTableCellEdit</code>.
+    On blur, <code class="doc-prose__code">onCellEdit()</code> compares <code class="doc-prose__code">innerText.trim()</code> with the old value; if unchanged it restores <code class="doc-prose__code">cellValue(oldValue)</code> and returns. When valid and changed, it sets <code class="doc-prose__code">row[field] = newValue</code>, flags <code class="doc-prose__code">row._isEdited = true</code> so the row gains <code class="doc-prose__code">is--edited</code>, stores <code class="doc-prose__code">data-previous-value</code> on the cell, and emits <code class="doc-prose__code">(cellEditEvent)</code> with <code class="doc-prose__code">ITableCellEditEvent</code>.
+    On focus, <code class="doc-prose__code">onCellFocus()</code> clears the <code class="doc-prose__code">nullValuePlaceholder</code> text when the underlying value is empty.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-table
+        #editableTableRef
+        [data]="editableData()"
+        [columns]="editableColumns()"
+        (cellEditEvent)="onCellEdit($event)" />
+      @if (lastEdit()) {
+        <div class="doc-callout" style="margin: 0;">
+          <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last edit</p>
+          <p class="doc-prose__p" style="margin: 0;">
+            <code class="doc-prose__code">field: "{{ lastEdit()!.field }}"</code> - <code class="doc-prose__code">old: "{{ lastEdit()!.oldValue }}"</code> -> <code class="doc-prose__code">new: "{{ lastEdit()!.newValue }}"</code>
+          </p>
+        </div>
+      } @else {
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">Click a name cell to edit it, then blur (press Tab or click elsewhere) to commit. Edited rows get <code class="doc-prose__code">is--edited</code> styling. Input is controlled by <code class="doc-prose__code">TableCellEditDirective</code> - restrict to alphanumeric and limit length via <code class="doc-prose__code">maxCellEditLength</code>.</p>
+      }
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        <rng-button variant="primary" (clickEvent)="saveEditableEdits()">Save edits</rng-button>
+        <rng-button variant="ghost" (clickEvent)="clearEditableEdits()">Discard edits</rng-button>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="editableSnippet" language="typescript" title="editable - columns + handler" variant="prose" />
+  <rng-code-block [code]="editableTemplateSnippet" language="html" title="editable - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Validating edited values</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">editValidatorFn</code> on the column to validate the new value before committing.
+    The function receives <code class="doc-prose__code">string | number | null</code> and must return <code class="doc-prose__code">true</code> to accept. When it returns <code class="doc-prose__code">false</code>, the cell gains <code class="doc-prose__code">rng-table__cell--edit-error</code> and <code class="doc-prose__code">cellEditEvent</code> is not emitted.
+    Try entering <code class="doc-prose__code">0</code> or <code class="doc-prose__code">-5</code> in the quantity column below - it will show the error state.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-table [data]="validatorData()" [columns]="validatorColumns()" (cellEditEvent)="onCellEdit($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+        <code class="doc-prose__code">Quantity</code> requires <code class="doc-prose__code">Number(value) &gt; 0</code>. Invalid edits keep the error class until a valid value is entered. Note: <code class="doc-prose__code">restrictCellEditToAlphanumeric</code> and <code class="doc-prose__code">maxCellEditLength</code> can be set per column to further constrain input.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="editValidatorSnippet" language="typescript" title="editValidatorFn - columns" variant="prose" />
+
+  <h3 class="doc-prose__h3">Saving and discarding edits</h3>
+  <p class="doc-prose__p">
+    Edited rows carry an internal <code class="doc-prose__code">_isEdited</code> flag.
+    Call <code class="doc-prose__code">saveEdits()</code> to keep new values and clear the flag, or <code class="doc-prose__code">clearAllEdits()</code> to revert every edited cell to its original <code class="doc-prose__code">data-previous-value</code> and clear the flag plus the error class. Edits are stored in <code class="doc-prose__code">_cellEdits</code> and re-synced after pagination via <code class="doc-prose__code">_syncCellEditsAfterPagination()</code> inside a <code class="doc-prose__code">setTimeout</code>.
+  </p>
+  <rng-code-block [code]="saveClearSnippet" language="typescript" title="saveEdits / clearAllEdits - API" variant="prose" />
+
+  <h3 class="doc-prose__h3">Expandable rows</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[expandableRows]="true"</code> to add a leading toggle column with a <code class="doc-prose__code">rng-button variant="ghost"</code> showing <code class="doc-prose__code">plus-square / minus-square</code>.
+    Clicking toggles <code class="doc-prose__code">expandedRowIndexes</code> for that row index and renders <code class="doc-prose__code">#rngTableExpandedRow</code> below the row in a spanning <code class="doc-prose__code">rng-table__expanded-row</code> cell.
+    The expanded template context exposes <code class="doc-prose__code">$implicit: ITableData</code>, <code class="doc-prose__code">columns: ITableColumn[]</code> and <code class="doc-prose__code">index: number</code>. Without a template the default shows the row index.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="expandableData()" [columns]="expandableColumns()" [expandableRows]="true">
+      <ng-template #rngTableExpandedRow let-row let-columns="columns" let-rowIndex="index">
+        <div style="padding: 0.75rem;">
+          <p class="doc-prose__p" style="margin: 0;"><strong class="doc-prose__strong">Details for row {{ rowIndex }} - {{ row['name'] }}:</strong></p>
+          <p class="doc-prose__p" style="margin: 0.25rem 0 0 0; font-size: 0.875rem;">{{ row['details'] }}</p>
+          <p class="doc-prose__p" style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: var(--doc-text-muted);">Columns: <code class="doc-prose__code">{{ columns.length }} fields</code></p>
+        </div>
+      </ng-template>
+    </rng-table>
+  </div>
+  <rng-code-block [code]="expandableSnippet" language="html" title="expandable - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Skip expand button for specific rows</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">[skipExpandableRowFn]</code> to hide the toggle for rows that should not expand.
+    When the predicate returns <code class="doc-prose__code">true</code> for a row, <code class="doc-prose__code">isShowExpandButton()</code> returns <code class="doc-prose__code">false</code> and no button is rendered in that row.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table
+      [data]="conditionalExpandableData()"
+      [columns]="expandableColumns()"
+      [expandableRows]="true"
+      [skipExpandableRowFn]="skipExpandFn">
+      <ng-template #rngTableExpandedRow let-row>
+        <div style="padding: 0.75rem;">
+          <p class="doc-prose__p" style="margin: 0;">{{ row['details'] }}</p>
+        </div>
+      </ng-template>
+    </rng-table>
+    <p class="doc-prose__p" style="margin: 0.75rem 0 0 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+      <code class="doc-prose__code">Bob</code> has <code class="doc-prose__code">hasDetails: false</code> - no expand button is shown for that row.
+    </p>
+  </div>
+  <rng-code-block [code]="skipExpandSnippet" language="typescript" title="skipExpandableRowFn - predicate" variant="prose" />
+  <rng-code-block [code]="skipExpandTemplateSnippet" language="html" title="skipExpandableRowFn - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom cell template</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">rngTableCell</code> on an <code class="doc-prose__code">&lt;ng-template&gt;</code> to override rendering for a specific column field. The directive input must match the column <code class="doc-prose__code">field</code>.
+    The template context exposes <code class="doc-prose__code">$implicit: unknown (row[field])</code>, <code class="doc-prose__code">row: ITableData</code> and <code class="doc-prose__code">field: string</code>. It applies only to non-editable, non-<code class="doc-prose__code">func</code> cells; multiple directives can be used together - one per field - and are collected via <code class="doc-prose__code">customCellTemplateData()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="customCellData()" [columns]="customCellColumns()">
+      <ng-template rngTableCell="rate" let-value let-row="row"> $ {{ value }} / h </ng-template>
+      <ng-template rngTableCell="status" let-value>
+        @if (value === 'Active') {
+          <rng-badge type="success">{{ value }}</rng-badge>
+        } @else if (value === 'Pending') {
+          <rng-badge type="warning">{{ value }}</rng-badge>
+        } @else {
+          <rng-badge type="danger">{{ value }}</rng-badge>
+        }
+      </ng-template>
+    </rng-table>
+  </div>
+  <rng-code-block [code]="customCellImportSnippet" language="typescript" title="custom cell - columns" variant="prose" />
+  <rng-code-block [code]="customCellSnippet" language="html" title="custom cell - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom no-record template</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">#rngTableNoRecord</code> to display custom content when <code class="doc-prose__code">filteredItems()</code> is empty.
+    Otherwise <code class="doc-prose__code">[noDataText]</code> (default <code class="doc-prose__code">'No records found'</code>) is shown in <code class="doc-prose__code">rng-table__no-data</code> spanning all columns.
+    The <code class="doc-prose__code">colspan</code> accounts for selection: <code class="doc-prose__code">columnData().length + 1</code> when <code class="doc-prose__code">allowSelection</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; font-weight: 600;">With custom <code class="doc-prose__code">#rngTableNoRecord</code></p>
+      <rng-table [data]="emptyData()" [columns]="noRecordColumns()">
+        <ng-template #rngTableNoRecord>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem;">
+            <i class="iconoir-search" aria-hidden="true" style="font-size: 1.5rem; color: var(--doc-text-muted);"></i>
+            <span style="font-size: 0.875rem; color: var(--doc-text-muted);">No results match your search - try adjusting filters.</span>
+          </div>
+        </ng-template>
+      </rng-table>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; font-weight: 600;">With default <code class="doc-prose__code">noDataText</code></p>
+      <rng-table [data]="emptyData()" [columns]="noRecordColumns()" noDataText="No records found - add data to get started." />
+    </div>
+  </div>
+  <rng-code-block [code]="noRecordSnippet" language="html" title="no-record - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Null placeholder and noDataText</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[nullValuePlaceholder]</code> to render a fallback for <code class="doc-prose__code">null</code>, <code class="doc-prose__code">undefined</code> or empty-string cells via <code class="doc-prose__code">cellValue()</code>.
+    Editable cells clear that placeholder text on focus via <code class="doc-prose__code">_clearPlaceholderText()</code> so the user edits an empty field.
+  </p>
+  <div class="doc-prose__example">
+    <rng-table [data]="placeholderData()" [columns]="placeholderColumns()" nullValuePlaceholder="-" />
+  </div>
+  <p class="doc-prose__p"><code class="doc-prose__code">nullValuePlaceholder="-"</code> shows <code class="doc-prose__code">-</code> for empty <code class="doc-prose__code">note</code> cells. With no placeholder, empty values render as <code class="doc-prose__code">''</code>.</p>
+
+  <h3 class="doc-prose__h3">Custom header, body and footer templates</h3>
+  <p class="doc-prose__p">
+    Project <code class="doc-prose__code">#rngTableHeader</code>, <code class="doc-prose__code">#rngTableBody</code> or <code class="doc-prose__code">#rngTableFooter</code> to override the respective table sections.
+    <code class="doc-prose__code">#rngTableBody</code> receives <code class="doc-prose__code">$implicit: ITableData</code>, <code class="doc-prose__code">columns: ITableColumn[]</code> and <code class="doc-prose__code">index: number</code>; the header and footer receive no context by default.
+    The footer renders inside <code class="doc-prose__code">&lt;tfoot&gt;</code> only when <code class="doc-prose__code">footerTemplate()</code> is present.
+  </p>
+  <rng-code-block [code]="customTemplatesSnippet" language="html" title="header / body / footer - templates" variant="prose" />
+
+  <h3 class="doc-prose__h3">Export - CSV and JSON</h3>
+  <p class="doc-prose__p">
+    The exporter is framework-agnostic. Instantiate <code class="doc-prose__code">TableExporter</code>, call <code class="doc-prose__code">setStrategy()</code> with a <code class="doc-prose__code">ITableExportStrategy</code>, then either <code class="doc-prose__code">export(data, columns)</code> to get a string or <code class="doc-prose__code">download(data, columns, filename)</code> to trigger a browser <code class="doc-prose__code">&lt;a&gt;</code> download. The strategy provides <code class="doc-prose__code">extension</code> and <code class="doc-prose__code">mimeType</code>.
+    <code class="doc-prose__code">download()</code> throws if no strategy is set, creates a <code class="doc-prose__code">Blob</code>, generates an object URL, clicks a hidden anchor, then revokes the URL in a <code class="doc-prose__code">setTimeout</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-table [data]="exportData()" [columns]="exportColumns()" />
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-button variant="primary" (clickEvent)="previewCsv()">Preview CSV</rng-button>
+        <rng-button variant="secondary" (clickEvent)="previewJson()">Preview JSON</rng-button>
+        <rng-button variant="ghost" (clickEvent)="previewTsv()">Preview TSV (custom)</rng-button>
+        <rng-button (clickEvent)="downloadCsv()">Download CSV</rng-button>
+        <rng-button (clickEvent)="downloadJson()">Download JSON</rng-button>
+      </div>
+      @if (lastExportPreview()) {
+        <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+          <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; font-weight: 600;">Preview:</p>
+          <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace; white-space: pre-wrap;">{{ lastExportPreview() }}</pre>
+        </div>
+      } @else {
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">Click <code class="doc-prose__code">Preview CSV / JSON</code> to generate a string via <code class="doc-prose__code">export()</code> without downloading. <code class="doc-prose__code">Download</code> uses <code class="doc-prose__code">download()</code> with filename <code class="doc-prose__code">table_report</code>.</p>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="exportImportSnippet" language="typescript" title="export - imports" variant="prose" />
+  <rng-code-block [code]="exportVsDownloadSnippet" language="typescript" title="export vs download" variant="prose" />
+  <rng-code-block [code]="exportDownloadSnippet" language="typescript" title="download - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom export strategy</h3>
+  <p class="doc-prose__p">
+    Implement <code class="doc-prose__code">ITableExportStrategy</code> with <code class="doc-prose__code">extension</code>, <code class="doc-prose__code">mimeType</code> and <code class="doc-prose__code">export(data, columns): string</code> to add a new format. Set it via <code class="doc-prose__code">setStrategy()</code> just like the built-ins.
+  </p>
+  <rng-code-block [code]="customStrategySnippet" language="typescript" title="custom strategy - TSV" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining sorting, pagination, sticky header, selection, search, clickable cells with custom templates, truncate and export.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="max-width: 320px; width: 100%;">
+        <rng-search-input [(value)]="fullSearch" placeholder="Search full demo..." />
+      </div>
+      <rng-table
+        [data]="fullData()"
+        [columns]="fullColumns()"
+        [sortableColumns]="['name']"
+        [defaultSort]="{ field: 'name', direction: 'asc' }"
+        [paginate]="true"
+        [perPage]="10"
+        [maxPageItem]="5"
+        [stickyHeader]="true"
+        maxHeight="320px"
+        [searchTerm]="fullSearch()"
+        (cellClickEvent)="onCellClick($event)">
+        <ng-template rngTableCell="role" let-value>
+          <rng-badge type="primary">{{ value }}</rng-badge>
+        </ng-template>
+        <ng-template #rngTableNoRecord>
+          <span style="font-size: 0.875rem; color: var(--doc-text-muted);">No matches for "{{ fullSearch() }}"</span>
+        </ng-template>
+      </rng-table>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; font-size: 0.8125rem;">
+        @if (lastClicked()) {
+          <span>Last click: <code class="doc-prose__code">{{ lastClicked()!.field }} -> {{ lastClicked()!.row['name'] }}</code></span>
+        }
+        <rng-button variant="ghost" (clickEvent)="downloadCsv()">Download CSV from data</rng-button>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-table</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">data</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableData[]</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">-</td><td class="doc-prose__td">Row data. Cloned with <code class="doc-prose__code">_trackKey: uniqueId()</code> via input transform and stored in <code class="doc-prose__code">items()</code> / <code class="doc-prose__code">filteredItems()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">columns</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableColumn[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Column definitions - <code class="doc-prose__code">field</code> + <code class="doc-prose__code">label</code> plus optional display, interaction and validation config</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">sortableColumns</code></td><td class="doc-prose__td"><code class="doc-prose__code">string[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of <code class="doc-prose__code">field</code> values that should be sortable - sets <code class="doc-prose__code">columnData.sortable</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">defaultSort</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableSortColumn | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Initial sort state - <code class="doc-prose__code">&#123; field, direction &#125;</code>. Applied in <code class="doc-prose__code">_setColumnData</code> and <code class="doc-prose__code">_sortByColumnData</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">paginate</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Enables built-in pagination - renders <code class="doc-prose__code">rng-pagination</code> in <code class="doc-prose__code">rng-table__pagination</code>. Slices via <code class="doc-prose__code">_initializePagination</code> / <code class="doc-prose__code">_goToPage</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxPageItem</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">10</code></td><td class="doc-prose__td">Max visible page number buttons passed to <code class="doc-prose__code">rng-pagination</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">perPage</code></td><td class="doc-prose__td"><code class="doc-prose__code">PageSizeOptionType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">10</code></td><td class="doc-prose__td">Rows per page - <code class="doc-prose__code">model</code> signal two-way bindable via <code class="doc-prose__code">[(perPage)]</code>. Updated on <code class="doc-prose__code">pageSizeChange</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">allowSelection</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Enables row checkboxes and header select-all via <code class="doc-prose__code">TableHeaderCheckboxComponent</code> / <code class="doc-prose__code">TableCheckboxComponent</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">stickyConfig</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableStickyConfig | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Pins the first N columns with defined widths via <code class="doc-prose__code">ITableStickyDirectiveData</code> and <code class="doc-prose__code">[rngTableSticky]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">searchTerm</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Filters visible rows across all fields via <code class="doc-prose__code">_getFilteredData</code> + <code class="doc-prose__code">_searchTermChanged</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">limitCellContent</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Truncates overflowing cell text with ellipsis via <code class="doc-prose__code">rng-table--limit-cell-content</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">stickyHeader</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Pins the header row while the body scrolls - adds <code class="doc-prose__code">is--sticky-header</code> on the container</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxHeight</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No*</td><td class="doc-prose__td"><code class="doc-prose__code">'300px'</code></td><td class="doc-prose__td">Max height of the scrollable body. Required when <code class="doc-prose__code">stickyHeader</code> is <code class="doc-prose__code">true</code> - bound to <code class="doc-prose__code">[style.maxHeight]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">nullValuePlaceholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Text shown when a cell value is <code class="doc-prose__code">null</code> / <code class="doc-prose__code">undefined</code> / empty string via <code class="doc-prose__code">cellValue()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">noDataText</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'No records found'</code></td><td class="doc-prose__td">Message shown when no data is present and no <code class="doc-prose__code">#rngTableNoRecord</code> template is provided</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">expandableRows</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Adds a leading toggle column to expand / collapse individual rows via <code class="doc-prose__code">toggleRow</code> / <code class="doc-prose__code">isRowExpanded</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">skipExpandableRowFn</code></td><td class="doc-prose__td"><code class="doc-prose__code">(row: ITableData) =&gt; boolean | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">When provided, hides the expand button for rows where the function returns <code class="doc-prose__code">true</code> via <code class="doc-prose__code">isShowExpandButton</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-table</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectionChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">unknown[]</code></td><td class="doc-prose__td">Emits the array of selected row data on every checkbox change via the <code class="doc-prose__code">_selectedRows</code> effect</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">cellClickEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableCellClickEvent</code></td><td class="doc-prose__td">Emits when a <code class="doc-prose__code">clickable</code> cell is clicked via <code class="doc-prose__code">onCellClick(row, field)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">cellEditEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableCellEditEvent</code></td><td class="doc-prose__td">Emits when an <code class="doc-prose__code">editable</code> cell loses focus and its value has changed via <code class="doc-prose__code">onCellEdit(row, field, $event)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-table</code> Content templates</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Template reference</th><th class="doc-prose__th">Context variables</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngTableHeader</code></td><td class="doc-prose__td">-</td><td class="doc-prose__td">Custom content rendered in the <code class="doc-prose__code">&lt;thead&gt;</code> area via <code class="doc-prose__code">headerTemplate()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngTableBody</code></td><td class="doc-prose__td"><code class="doc-prose__code">$implicit: ITableData</code>, <code class="doc-prose__code">columns: ITableColumn[]</code>, <code class="doc-prose__code">index: number</code></td><td class="doc-prose__td">Overrides the default row rendering via <code class="doc-prose__code">bodyTemplate()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngTableFooter</code></td><td class="doc-prose__td">-</td><td class="doc-prose__td">Custom content rendered below the table body via <code class="doc-prose__code">footerTemplate()</code> inside <code class="doc-prose__code">&lt;tfoot&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngTableNoRecord</code></td><td class="doc-prose__td">-</td><td class="doc-prose__td">Shown when <code class="doc-prose__code">filteredItems().length === 0</code> (overrides <code class="doc-prose__code">noDataText</code>) via <code class="doc-prose__code">noRecordTemplate()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngTableExpandedRow</code></td><td class="doc-prose__td"><code class="doc-prose__code">$implicit: ITableData</code>, <code class="doc-prose__code">columns: ITableColumn[]</code>, <code class="doc-prose__code">index: number</code></td><td class="doc-prose__td">Content rendered inside the expanded row via <code class="doc-prose__code">expandedRowTemplate()</code>; requires <code class="doc-prose__code">[expandableRows]</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rngTableCell</code> directive</h3>
+  <p class="doc-prose__p">
+    Apply <code class="doc-prose__code">rngTableCell="&lt;field&gt;"</code> to an <code class="doc-prose__code">&lt;ng-template&gt;</code> inside <code class="doc-prose__code">rng-table</code> to provide a custom cell renderer for a specific column.
+    Can be used multiple times - once per column field. Collected via <code class="doc-prose__code">contentChildren(TableCellDirective)</code> into <code class="doc-prose__code">customCellTemplateData()</code>.
+    Only applies to non-editable, non-<code class="doc-prose__code">func</code> cells.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Context variable</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">$implicit</code></td><td class="doc-prose__td"><code class="doc-prose__code">unknown</code></td><td class="doc-prose__td">Raw cell value - <code class="doc-prose__code">row[field]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">row</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableData</code></td><td class="doc-prose__td">Full row data object</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Column field key of the cell</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">column</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableColumn</code></td><td class="doc-prose__td">Column definition for the cell (exposed as <code class="doc-prose__code">column</code> in the outlet context)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableColumn</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Key in the row data object</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Column header display text rendered in <code class="doc-prose__code">rng-table__header-label</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">func</code></td><td class="doc-prose__td"><code class="doc-prose__code">(row: ITableData) =&gt; string | number | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional transform - when provided its return value is displayed via <code class="doc-prose__code">cellValue(column.func(row))</code> instead of <code class="doc-prose__code">row[field]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">align</code></td><td class="doc-prose__td"><code class="doc-prose__code">'left' | 'center' | 'right'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Text alignment for header and cells - defaults to <code class="doc-prose__code">'left'</code> via <code class="doc-prose__code">is--text-center / is--text-right</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">width</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Column width in pixels - bound to <code class="doc-prose__code">[style.minWidth.px]</code> on <code class="doc-prose__code">&lt;col&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">editable</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Renders the cell as an inline-editable <code class="doc-prose__code">contenteditable</code> field with <code class="doc-prose__code">rngTableCellEdit</code>; triggers <code class="doc-prose__code">cellEditEvent</code> on blur when changed</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">restrictCellEditToAlphanumeric</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">When <code class="doc-prose__code">true</code>, restricts editable input to alphanumeric and spaces; otherwise unrestricted (handled by <code class="doc-prose__code">TableCellEditDirective</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxCellEditLength</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Max editable input length - defaults to <code class="doc-prose__code">100</code> via <code class="doc-prose__code">DEFAULT_MAX_CELL_EDIT_LENGTH</code>. Passed to <code class="doc-prose__code">[maxCellEditLength]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">editValidatorFn</code></td><td class="doc-prose__td"><code class="doc-prose__code">(value: string | number | null) =&gt; boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional validator called before committing an edit via <code class="doc-prose__code">_validateCellEdit</code>; when <code class="doc-prose__code">false</code> adds <code class="doc-prose__code">rng-table__cell--edit-error</code> and suppresses <code class="doc-prose__code">cellEditEvent</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clickable</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Renders the cell as a <code class="doc-prose__code">rng-button variant="link"</code>; triggers <code class="doc-prose__code">cellClickEvent</code> on click when <code class="doc-prose__code">isCellClickable</code> is true</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">skipClickableFn</code></td><td class="doc-prose__td"><code class="doc-prose__code">(row: ITableData) =&gt; boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">When provided, suppresses the link for rows where the function returns <code class="doc-prose__code">true</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">truncate</code></td><td class="doc-prose__td"><code class="doc-prose__code">&#123; maxContentLength: number; tooltipWidth: string; tooltipPosition: TooltipPositionType &#125;</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Truncates cell content at <code class="doc-prose__code">maxContentLength</code> chars and shows full value in <code class="doc-prose__code">rng-tooltip</code> with given <code class="doc-prose__code">width</code> and <code class="doc-prose__code">position</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableCellClickEvent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">row</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableData</code></td><td class="doc-prose__td">Full row data object that was clicked</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Column field key of the clicked cell</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableCellEditEvent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">row</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITableData</code></td><td class="doc-prose__td">Full row data object that was edited (mutated in place with new value)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Column field key of the edited cell</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">newValue</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td">Value after editing - <code class="doc-prose__code">innerText.trim()</code> from the contenteditable div</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">oldValue</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td">Value before editing</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableSortColumn</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Column field to sort</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">direction</code></td><td class="doc-prose__td"><code class="doc-prose__code">'asc' | 'desc' | 'default'</code></td><td class="doc-prose__td">Initial sort direction - <code class="doc-prose__code">default</code> restores the original order</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableStickyConfig</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">numberOfColumns</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Number of columns to pin from the left (includes selection and expand columns in the count)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">width</code></td><td class="doc-prose__td"><code class="doc-prose__code">number[]</code></td><td class="doc-prose__td">Width in pixels for each sticky column - index-matched to sticky position and used to compute <code class="doc-prose__code">left</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableStickyDirectiveData</code> (internal)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">index</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Sticky column index</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">width</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Width for this column (<code class="doc-prose__code">width[index]</code> or <code class="doc-prose__code">0</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">left</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Left offset as sum of preceding widths - bound via <code class="doc-prose__code">[rngTableSticky]</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Public methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">saveEdits()</code></td><td class="doc-prose__td"><code class="doc-prose__code">saveEdits(): void</code></td><td class="doc-prose__td">Commits pending edits - removes <code class="doc-prose__code">_isEdited</code> flag and <code class="doc-prose__code">data-previous-value</code> attributes while keeping new values; clears <code class="doc-prose__code">_cellEdits</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clearAllEdits()</code></td><td class="doc-prose__td"><code class="doc-prose__code">clearAllEdits(): void</code></td><td class="doc-prose__td">Reverts all edited cells to their original values via <code class="doc-prose__code">data-previous-value</code>, removes the error class and <code class="doc-prose__code">_isEdited</code>, and clears <code class="doc-prose__code">_cellEdits</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isRowExpanded</code></td><td class="doc-prose__td"><code class="doc-prose__code">isRowExpanded(rowIndex: number): boolean</code></td><td class="doc-prose__td">Whether the given row index is currently expanded (<code class="doc-prose__code">expandedRowIndexes().includes(index)</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">toggleRow</code></td><td class="doc-prose__td"><code class="doc-prose__code">toggleRow(row: ITableData, rowIndex: number): void</code></td><td class="doc-prose__td">Expands or collapses the given row index</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isCellClickable</code></td><td class="doc-prose__td"><code class="doc-prose__code">isCellClickable(column: ITableColumn, row: ITableData): boolean</code></td><td class="doc-prose__td">Whether a cell should render as a link given <code class="doc-prose__code">clickable</code> and <code class="doc-prose__code">skipClickableFn</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isShowExpandButton</code></td><td class="doc-prose__td"><code class="doc-prose__code">isShowExpandButton(row: ITableData): boolean</code></td><td class="doc-prose__td">Whether to show the expand toggle for a row given <code class="doc-prose__code">expandableRows</code> and <code class="doc-prose__code">skipExpandableRowFn</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">getStickyColumnDataByIndex</code></td><td class="doc-prose__td"><code class="doc-prose__code">getStickyColumnDataByIndex(index: number): ITableStickyDirectiveData | null</code></td><td class="doc-prose__td">Returns sticky positioning data for a column index or <code class="doc-prose__code">null</code> when no <code class="doc-prose__code">stickyConfig</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">cellValue</code></td><td class="doc-prose__td"><code class="doc-prose__code">cellValue(value: string | number | null | undefined): string | number</code></td><td class="doc-prose__td">Returns display value using <code class="doc-prose__code">nullValuePlaceholder</code> when value is empty; otherwise stringifies the value</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Export - <code class="doc-prose__code">TableExporter</code></h3>
+  <table class="doc-prose__table" style="table-layout: fixed;">
+    <colgroup>
+      <col />
+      <col />
+      <col style="width: 16rem;" />
+    </colgroup>
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th" style="width: 16rem; min-width: 16rem;">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">setStrategy</code></td><td class="doc-prose__td"><code class="doc-prose__code">setStrategy(strategy: ITableExportStrategy): void</code></td><td class="doc-prose__td" style="width: 16rem; min-width: 16rem;">Sets the active export strategy</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">export</code></td><td class="doc-prose__td"><code class="doc-prose__code">export(data: ITableData[], columns: ITableColumn[]): string</code></td><td class="doc-prose__td" style="width: 16rem; min-width: 16rem;">Returns the serialized string using the active strategy; throws if no strategy is set</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">download</code></td><td class="doc-prose__td"><code class="doc-prose__code">download(data: ITableData[], columns: ITableColumn[], filename: string): void</code></td><td class="doc-prose__td" style="width: 16rem; min-width: 16rem;">Serializes and triggers a browser file download. Extension and MIME type come from the strategy; throws if no strategy is set</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Built-in export strategies</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Class</th><th class="doc-prose__th">Extension</th><th class="doc-prose__th">MIME type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">TableCsvExportStrategy</code></td><td class="doc-prose__td"><code class="doc-prose__code">csv</code></td><td class="doc-prose__td"><code class="doc-prose__code">text/csv;charset=utf-8;</code></td><td class="doc-prose__td">Exports column-labelled CSV rows - cells with commas or quotes are escaped</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">TableJsonExportStrategy</code></td><td class="doc-prose__td"><code class="doc-prose__code">json</code></td><td class="doc-prose__td"><code class="doc-prose__code">application/json;charset=utf-8;</code></td><td class="doc-prose__td">Exports an array of objects keyed by camelCased column labels</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITableExportStrategy</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property / Method</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">extension</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">File extension without dot - appended as <code class="doc-prose__code">filename.extension</code> in <code class="doc-prose__code">download()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">mimeType</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">MIME type for the download <code class="doc-prose__code">Blob</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">export</code></td><td class="doc-prose__td"><code class="doc-prose__code">(data: ITableData[], columns: ITableColumn[]) =&gt; string</code></td><td class="doc-prose__td">Serializes the table data to a string</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMPORT_TABLE</code></h3>
+  <p class="doc-prose__p">
+    Includes <code class="doc-prose__code">TableComponent</code>, <code class="doc-prose__code">TableHeaderCheckboxComponent</code>, <code class="doc-prose__code">TableCheckboxComponent</code>, <code class="doc-prose__code">TableSortComponent</code>, <code class="doc-prose__code">TableStickyDirective</code>, <code class="doc-prose__code">TableCellEditDirective</code> and <code class="doc-prose__code">TableCellDirective</code>.
+    Use it to import all table pieces at once.
+  </p>
+  <rng-code-block [code]="importAllSnippet" language="typescript" title="IMPORT_TABLE" variant="prose" />
+
+  <rng-doc-pager />
+</article>

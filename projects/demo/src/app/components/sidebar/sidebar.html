@@ -1,0 +1,30 @@
+<aside class="doc-sidebar__inner">
+  @for (group of groups; track group.title) {
+    <div class="doc-sidebar__group" [class.doc-sidebar__group--collapsed]="isCollapsed(group.title)">
+      <button
+        type="button"
+        class="doc-sidebar__title"
+        (click)="toggle(group.title)"
+        [attr.aria-expanded]="!isCollapsed(group.title)"
+      >
+        <span>{{ group.title }}</span>
+        <i class="iconoir-nav-arrow-down doc-sidebar__chevron" aria-hidden="true"></i>
+      </button>
+      <div class="doc-sidebar__links">
+        @for (link of group.links; track link.route + (link.fragment ?? '')) {
+          @if (link.fragment) {
+            <a class="doc-sidebar__link" [routerLink]="link.route" [fragment]="link.fragment">{{ link.label }}</a>
+          } @else {
+            <a
+              class="doc-sidebar__link"
+              [routerLink]="link.route"
+              routerLinkActive="doc-sidebar__link--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              >{{ link.label }}</a
+            >
+          }
+        }
+      </div>
+    </div>
+  }
+</aside>

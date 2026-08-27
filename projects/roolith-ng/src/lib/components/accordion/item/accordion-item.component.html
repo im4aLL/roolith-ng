@@ -1,0 +1,15 @@
+<div
+  class="rng-accordion__item"
+  [class.rng-accordion__item--expanded]="expanded()"
+  [class.rng-accordion__item--disabled]="disabled()"
+  [class.rng-accordion__item--last-child]="lastChild()">
+  <a
+    href="#"
+    class="rng-accordion__header"
+    (click)="onClickHandler($event)">
+    {{ header() }}
+  </a>
+  <div class="rng-accordion__body">
+    <ng-content />
+  </div>
+</div>

@@ -1,0 +1,107 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-checkbox {
+  .rng-input-checkbox {
+    --rng-input-checkbox-color: var(--rng-color-accent);
+    --rng-input-checkbox-tick-color: var(--rng-surface-alt-text-color);
+    --rng-input-checkbox-label-color: var(--rng-input-label-color);
+    --rng-input-checkbox-border-color: var(--rng-input-border-color);
+    --rng-input-checkbox-size: #{rem(16)};
+
+    .theme-dark & {
+      --rng-input-checkbox-color: var(--rng-color-neutral-300);
+    }
+
+    position: relative;
+    font-size: rem(14);
+    line-height: rem(22);
+    padding-left: rem(25);
+    min-height: var(--rng-input-checkbox-size);
+    min-width: var(--rng-input-checkbox-size);
+    display: block;
+    color: var(--rng-input-checkbox-label-color);
+    user-select: none;
+
+    &::selection {
+      background: transparent;
+    }
+
+    .rng-input--disabled & {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .rng-input--error & {
+      --rng-input-border-color: var(--rng-color-danger);
+    }
+  }
+
+  .rng-input-checkbox__field {
+    appearance: none;
+    width: var(--rng-input-checkbox-size);
+    height: var(--rng-input-checkbox-size);
+    background-color: var(--rng-color-neutral);
+    border: rem(1) solid var(--rng-input-checkbox-border-color);
+    border-radius: rem(4);
+    position: absolute;
+    left: 0;
+    top: rem(3);
+    margin: 0;
+    @include m.transition('border');
+
+    &:hover {
+      border-color: var(--rng-input-border-hover-color);
+    }
+
+    &:before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      content: '';
+      display: block;
+    }
+
+    &:checked {
+      background-color: var(--rng-input-checkbox-color);
+      border-color: var(--rng-input-checkbox-color);
+    }
+
+    &:checked:before {
+      @extend .rng-icon, .rng-icon--check;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: var(--rng-input-checkbox-tick-color);
+      width: calc(var(--rng-input-checkbox-size) - #{rem(2)});
+      height: calc(var(--rng-input-checkbox-size) - #{rem(2)});
+    }
+
+    &.is--indeterminate {
+      background-color: var(--rng-color-neutral);
+      border-color: var(--rng-input-checkbox-color);
+
+      &:after {
+        @extend .rng-icon, .rng-icon--minus;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: var(--rng-input-checkbox-color);
+      }
+    }
+  }
+
+  .rng-input-checkbox--standalone {
+    padding-left: 0;
+    height: var(--rng-input-checkbox-size);
+
+    .rng-input-checkbox__field {
+      position: static;
+      margin: 0;
+
+      &:before {
+        margin: rem(1);
+      }
+    }
+  }
+}

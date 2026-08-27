@@ -1,0 +1,52 @@
+<div class="rng-filters">
+  <div class="rng-filter">
+    <rng-button
+      icon="delete"
+      iconPosition="right">
+      Name contains "example"
+    </rng-button>
+  </div>
+  <div class="rng-filter">
+    <rng-button
+      icon="delete"
+      iconPosition="right">
+      Status equals "active"
+    </rng-button>
+  </div>
+  <div class="rng-filter">
+    <rng-button
+      rngPopoverTarget="filter1"
+      icon="plus" />
+
+    <!-- popover -->
+    <rng-popover name="filter1">
+      <div class="rng-filter__input-group">
+        <div class="rng-filter__input-row">
+          <rng-select-input
+            [data]="filterableFields()"
+            [value]="filterableFields()[0]"
+            [dropdownWidth]="200"></rng-select-input>
+          <rng-select-input
+            [data]="filterTypes()"
+            [value]="filterTypes()[0]"
+            [dropdownWidth]="200"></rng-select-input>
+        </div>
+        <rng-search-input></rng-search-input>
+        <rng-radio-input
+          [options]="filterRadioOptions()"
+          [inline]="true"
+          (valueChange)="onRadioInputChange($event)"></rng-radio-input>
+        <rng-select-input
+          [data]="filterTypes()"
+          [value]="filterTypes()[0]"
+          [dropdownWidth]="200"></rng-select-input>
+        <rng-search-input></rng-search-input>
+        <div class="rng-filter__action">
+          <rng-button variant="dark">Add Filter</rng-button>
+          <rng-button>Cancel</rng-button>
+        </div>
+      </div>
+    </rng-popover>
+    <!-- popover -->
+  </div>
+</div>

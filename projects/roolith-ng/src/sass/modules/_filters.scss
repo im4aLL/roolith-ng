@@ -1,0 +1,67 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin filters {
+  .rng-filters {
+    --rng-filter-input-spacing: #{rem(8)};
+    --rng-filter-action-background-color: var(--rng-color-neutral-50);
+    --rng-filter-border-color: var(--rng-border-color);
+    --rng-filter-content-spacing: #{rem(10)};
+    --rng-filter-border-radius: var(--rng-border-radius);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: rem(6);
+  }
+
+  .rng-filter {
+    .rng-popover {
+      overflow: visible;
+      padding-block: var(--rng-popover-spacing);
+    }
+
+    .rng-input-group {
+      --rng-input-group-spacing: #{rem(8)};
+    }
+  }
+
+  .rng-filter__input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rng-filter-input-spacing);
+  }
+
+  .rng-filter__input-group-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rng-filter-input-spacing);
+    padding: var(--rng-filter-content-spacing);
+    padding-block-end: 0;
+
+    .rng-filter__action {
+      margin-inline: calc(var(--rng-filter-content-spacing) * -1);
+    }
+  }
+
+  .rng-filter__input-row {
+    display: flex;
+    gap: var(--rng-filter-input-spacing);
+    width: 100%;
+  }
+
+  .rng-filter__action {
+    display: flex;
+    gap: var(--rng-filter-input-spacing);
+    justify-content: space-between;
+    background-color: var(--rng-filter-action-background-color);
+    border-top: rem(1) solid var(--rng-filter-border-color);
+    padding: var(--rng-filter-content-spacing);
+    border-bottom-left-radius: var(--rng-filter-border-radius);
+    border-bottom-right-radius: var(--rng-filter-border-radius);
+  }
+
+  .rng-filter__popover {
+    --rng-popover-spacing: 0;
+  }
+}

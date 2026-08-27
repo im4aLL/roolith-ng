@@ -1,0 +1,98 @@
+@use './settings' as s;
+@use './functions' as *;
+
+@mixin theme-dark {
+  --rng-color-neutral: var(--rng-surface-bg-color);
+  --rng-color-neutral-900: hsl(from var(--rng-color-neutral) h s 98%);
+  --rng-color-neutral-800: hsl(from var(--rng-color-neutral) h s 94%);
+  --rng-color-neutral-700: hsl(from var(--rng-color-neutral) h s 88%);
+  --rng-color-neutral-600: hsl(from var(--rng-color-neutral) h s 78%);
+  --rng-color-neutral-500: hsl(from var(--rng-color-neutral) h s 65%);
+  --rng-color-neutral-400: hsl(from var(--rng-color-neutral) h s 50%);
+  --rng-color-neutral-300: hsl(from var(--rng-color-neutral) h s 35%);
+  --rng-color-neutral-200: hsl(from var(--rng-color-neutral) h s 22%);
+  --rng-color-neutral-150: hsl(from var(--rng-color-neutral) h s 17%);
+  --rng-color-neutral-100: hsl(from var(--rng-color-neutral) h s 12%);
+  --rng-color-neutral-50: hsl(from var(--rng-color-neutral) h s 6%);
+
+  --rng-surface-bg-color: #1b1b1b;
+  --rng-surface-text-color: var(--rng-color-neutral-600);
+  --rng-surface-alt-text-color: var(--rng-color-neutral-900);
+  --rng-border-color: var(--rng-color-neutral-200);
+
+  --rng-color-info: #3451b2;
+  --rng-color-secondary: #778da9;
+  --rng-color-primary-light: hsl(from var(--rng-color-primary) h s 40%);
+  --rng-color-primary-lighter: hsl(from var(--rng-color-primary) h s 60%);
+
+  --rng-color-accent: var(--rng-color-primary);
+}
+
+@mixin theme-default {
+  --rng-color-neutral: #{color('neutral')};
+  --rng-color-neutral-50: #{color('neutral-50')};
+  --rng-color-neutral-100: #{color('neutral-100')};
+  --rng-color-neutral-150: #{color('neutral-150')};
+  --rng-color-neutral-200: #{color('neutral-200')};
+  --rng-color-neutral-300: #{color('neutral-300')};
+  --rng-color-neutral-400: #{color('neutral-400')};
+  --rng-color-neutral-500: #{color('neutral-500')};
+  --rng-color-neutral-600: #{color('neutral-600')};
+  --rng-color-neutral-700: #{color('neutral-700')};
+  --rng-color-neutral-800: #{color('neutral-800')};
+  --rng-color-neutral-900: #{color('neutral-900')};
+
+  --rng-surface-bg-color: var(--rng-color-neutral);
+  --rng-surface-text-color: var(--rng-color-neutral-900);
+  --rng-surface-alt-text-color: var(--rng-color-neutral-100);
+  --rng-border-color: var(--rng-color-neutral-300);
+
+  --rng-color-accent: var(--rng-color-primary);
+  --rng-color-accent-light: hsl(from var(--rng-color-accent) h s calc(l - 5));
+  --rng-color-accent-dark: hsl(from var(--rng-color-accent) h s calc(l + 5));
+}
+
+@mixin css-variable() {
+  :root {
+    // Base
+    --rng-base-font-size: #{s.$base-font-size};
+    --rng-base-font-family: #{s.$base-font-family}, #{s.$base-backup-font-family};
+
+    // colors
+    --rng-color-primary: #{s.$primary-color};
+    --rng-color-secondary: #{s.$secondary-color};
+    --rng-color-warning: #{s.$warning-color};
+    --rng-color-danger: #{s.$danger-color};
+    --rng-color-success: #{s.$success-color};
+    --rng-color-info: #{s.$info-color};
+
+    --rng-color-primary-light: #{color('primary-light')};
+    --rng-color-primary-lighter: #{color('primary-lighter')};
+    --rng-color-secondary-light: #{color('secondary-light')};
+    --rng-color-secondary-dark: #{color('secondary-dark')};
+
+    // font weights
+    --rng-font-weight-regular: #{font-weight('regular')};
+    --rng-font-weight-semi-bold: #{font-weight('semi-bold')};
+    --rng-font-weight-bold: #{font-weight('bold')};
+
+    // animation
+    --rng-animation-easing: #{s.$animation-easing};
+    --rng-animation-duration: #{s.$animation-duration};
+
+    // misc
+    --rng-border-radius: #{s.$border-radius};
+    --rng-focus-outline: #{s.$focus-outline};
+    --rng-shadow: #{s.$shadow};
+    --rng-shadow-small: #{s.$shadow-small};
+    --rng-shadow-xsmall:
+      rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+      rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+
+    @include theme-default();
+  }
+
+  .theme-dark {
+    @include theme-dark();
+  }
+}

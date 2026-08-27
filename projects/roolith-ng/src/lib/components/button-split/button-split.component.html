@@ -1,0 +1,12 @@
+<div
+  class="rng-button-split"
+  [class]="classNames()">
+  <div class="rng-button-split__text">
+    <ng-content />
+  </div>
+  <button
+    class="rng-button-split__icon"
+    (click)="onClickHandler()">
+    <rng-icon [name]="actionIcon()" />
+  </button>
+</div>

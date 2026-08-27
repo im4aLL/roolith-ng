@@ -1,0 +1,231 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Icon</h1>
+  <p class="doc-prose__p">
+    A lightweight wrapper that renders an icon via the <code class="doc-prose__code">rng-icon</code> selector.
+    Each built-in <code class="doc-prose__code">name</code> maps to a generated <code class="doc-prose__code">rng-icon--&lt;name&gt;</code> class whose artwork comes from the library SCSS (mask-image).
+    Supports three predefined <code class="doc-prose__code">size</code> values, a fixed <code class="doc-prose__code">width</code> in pixels, an extra <code class="doc-prose__code">styleClass</code>, and a <code class="doc-prose__code">custom</code> mode for your own SVGs or third-party icon fonts.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic icon</h3>
+  <p class="doc-prose__p">
+    Provide a <code class="doc-prose__code">name</code> from the <code class="doc-prose__code">IconNameType</code> set.
+    The component renders an <code class="doc-prose__code">&lt;i&gt;</code> with <code class="doc-prose__code">rng-icon</code> and <code class="doc-prose__code">rng-icon--&lt;name&gt;</code> classes.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; font-size: 1.25rem;">
+      <rng-icon name="calendar" />
+      <rng-icon name="home" />
+      <rng-icon name="settings" />
+      <rng-icon name="search" />
+      <rng-icon name="check" />
+      <rng-icon name="info" />
+      <rng-icon name="alert" />
+      <rng-icon name="delete" />
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sized icon</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">size</code> to switch between <code class="doc-prose__code">'small'</code>, <code class="doc-prose__code">'default'</code> and <code class="doc-prose__code">'large'</code>.
+    <code class="doc-prose__code">'small'</code> adds <code class="doc-prose__code">rng-icon--small</code> and <code class="doc-prose__code">'large'</code> adds <code class="doc-prose__code">rng-icon--large</code> - default renders without a size modifier.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="settings" size="small" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">small</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="settings" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">default</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="settings" size="large" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">large</span>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="sizedSnippet" language="html" title="sized" variant="prose" />
+
+  <h3 class="doc-prose__h3">Fixed pixel width</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[width]</code> to an explicit number to control both width and height in pixels.
+    The value is bound to <code class="doc-prose__code">style.width.px</code> and <code class="doc-prose__code">style.height.px</code> on the inner <code class="doc-prose__code">&lt;i&gt;</code>. When <code class="doc-prose__code">null</code> the icon uses its CSS-defined size.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="home" [width]="16" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">16px</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="home" [width]="24" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">24px</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="home" [width]="32" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">32px</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+        <rng-icon name="home" [width]="48" />
+        <span style="font-size: 0.75rem; color: var(--doc-text-muted);">48px</span>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="widthSnippet" language="html" title="fixed width" variant="prose" />
+
+  <h3 class="doc-prose__h3">With additional CSS class</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">styleClass</code> to append extra class(es) to the icon element alongside <code class="doc-prose__code">rng-icon</code>, the name class and the optional size class.
+    Useful for color overrides, spacing or custom styling.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <rng-icon name="alert" styleClass="my-custom-class" />
+      <rng-icon name="info" styleClass="my-custom-class" />
+      <rng-icon name="check-solid" styleClass="my-custom-class" />
+    </div>
+  </div>
+  <rng-code-block [code]="styleClassSnippet" language="html" title="with styleClass" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom and third-party icons</h3>
+  <p class="doc-prose__p">
+    The built-in <code class="doc-prose__code">name</code> maps to a generated <code class="doc-prose__code">rng-icon--&lt;name&gt;</code> class whose artwork comes from the library SCSS (mask-image).
+  </p>
+  <p class="doc-prose__p">
+    For icons that live outside the library (your own SVGs, or a third-party icon font such as Font Awesome), pass <code class="doc-prose__code">[custom]="true"</code> and supply the class(es) yourself.
+    In custom mode the base <code class="doc-prose__code">rng-icon</code> class is omitted, so the library mask/background styling does not interfere with glyph fonts.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.875rem; color: var(--doc-text-muted);">
+        Custom icons require <code class="doc-prose__code">[custom]="true"</code> - the base <code class="doc-prose__code">rng-icon</code> class is omitted so the vendor font CSS controls rendering.
+        Iconoir is already loaded globally via <code class="doc-prose__code">index.html</code>; Font Awesome is loaded on this page via CDN for the demo (see snippet below).
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem;">
+          <rng-icon name="home" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted);">built-in (home)</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem;">
+          <rng-icon name="iconoir-home" [custom]="true" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted);">iconoir-home (custom)</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem;">
+          <rng-icon name="fa-solid fa-user" [custom]="true" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted);">fa-solid fa-user (custom)</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem;">
+          <rng-icon name="fa-solid fa-star" [custom]="true" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted);">fa-solid fa-star (custom)</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem;">
+          <rng-icon name="fa-solid fa-heart" [custom]="true" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted);">fa-solid fa-heart (custom)</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem;">
+          <rng-icon name="fa-brands fa-github" [custom]="true" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted);">fa-brands fa-github (custom)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="cdnSnippet" language="html" title="Font Awesome CDN - page only (or add to index.html)" variant="prose" />
+  <rng-code-block [code]="customSnippet" language="html" title="custom" variant="prose" />
+  <rng-code-block [code]="customScssSnippet" language="scss" title="custom - SCSS (your own SVG)" variant="prose" />
+  <div class="doc-callout" style="margin-top: 0.75rem;">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">
+      In custom mode the <code class="doc-prose__code">name</code> is used as-is for the class attribute - no <code class="doc-prose__code">rng-icon</code> prefix is added.
+      For Font Awesome style usage pass the full list, e.g. <code class="doc-prose__code">name="fa-solid fa-user"</code> or <code class="doc-prose__code">name="iconoir-home"</code>.
+      For your own SVG, create a matching SCSS rule <code class="doc-prose__code">.rng-icon--&lt;your-name&gt;</code> as shown above.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining basic, sized, fixed width, custom class and custom mode.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <rng-icon name="calendar" />
+      <rng-icon name="settings" size="large" />
+      <rng-icon name="home" [width]="32" />
+      <rng-icon name="alert" styleClass="my-custom-class" />
+      <rng-icon name="settings" size="small" />
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">Available icons</h2>
+  <p class="doc-prose__p">
+    The library ships with <code class="doc-prose__code">{{ availableIcons.length }}</code> built-in names via <code class="doc-prose__code">IconNameType</code>.
+    Any other string is also accepted as <code class="doc-prose__code">name</code> - it will still generate <code class="doc-prose__code">rng-icon--&lt;name&gt;</code> but requires matching SCSS.
+  </p>
+  <div class="doc-prose__example">
+    <p class="doc-prose__p" style="margin: 0 0 0.75rem; font-size: 0.875rem; color: var(--doc-text-muted);">Click any icon to copy its name.</p>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem;">
+      @for (iconName of availableIcons; track iconName) {
+        <button
+          type="button"
+          (click)="copyIconName(iconName)"
+          [attr.aria-label]="'Copy ' + iconName"
+          [attr.title]="'Click to copy ' + iconName"
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; padding: 1rem 0.5rem; border: 1px solid var(--doc-border); border-radius: 0.5rem; background: var(--doc-surface); cursor: pointer; font: inherit; transition: border-color var(--doc-duration) var(--doc-easing), background-color var(--doc-duration) var(--doc-easing);"
+          [style.borderColor]="copiedIcon() === iconName ? 'var(--doc-primary)' : 'var(--doc-border)'"
+        >
+          <rng-icon [name]="iconName" [width]="28" />
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted); text-align: center; word-break: break-all; line-height: 1.3;">{{ iconName }}</span>
+          @if (copiedIcon() === iconName) {
+            <span style="font-size: 0.6875rem; font-weight: 600; color: var(--doc-primary); display: inline-flex; align-items: center; gap: 0.25rem;"><i class="iconoir-check" aria-hidden="true"></i> Copied!</span>
+          } @else {
+            <span style="font-size: 0.6875rem; color: var(--doc-text-faint);">Click to copy</span>
+          }
+        </button>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="available icons - usage" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-icon</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType | string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">-</td><td class="doc-prose__td">Name of the icon. A built-in name generates <code class="doc-prose__code">rng-icon--&lt;name&gt;</code> - any string is allowed</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">size</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'small' | 'large'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Predefined size variant - adds <code class="doc-prose__code">rng-icon--small</code> or <code class="doc-prose__code">rng-icon--large</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">styleClass</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">-</td><td class="doc-prose__td">Additional CSS class(es) to apply to the icon</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">width</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Explicit width (and height) in pixels - bound to <code class="doc-prose__code">style.width.px</code> and <code class="doc-prose__code">style.height.px</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">custom</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">When <code class="doc-prose__code">true</code>, uses <code class="doc-prose__code">name</code> as-is for the class and skips the <code class="doc-prose__code">rng-icon</code> base class</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Available Icon Names (<code class="doc-prose__code">IconNameType</code>)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Name</th><th class="doc-prose__th">CSS class</th></tr>
+    </thead>
+    <tbody>
+      @for (iconName of availableIcons; track iconName) {
+        <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">{{ iconName }}</code></td><td class="doc-prose__td"><code class="doc-prose__code">rng-icon--{{ iconName }}</code></td></tr>
+      }
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Styling notes</h3>
+  <p class="doc-prose__p">
+    Each built-in icon is styled via SCSS mask-image (see <code class="doc-prose__code">rng-icon--&lt;name&gt;</code> in the library).
+    For custom SVG icons add the SCSS rule shown above.
+    In custom mode the base <code class="doc-prose__code">rng-icon</code> class is omitted to avoid mask/background interference with font glyphs.
+  </p>
+
+  <rng-doc-pager />
+</article>

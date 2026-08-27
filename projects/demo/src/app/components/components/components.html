@@ -1,0 +1,28 @@
+<div class="doc-components">
+  <div class="doc-prose">
+    <h1 class="doc-prose__h1">Components</h1>
+    <p class="doc-components__lead">
+      Beautifully designed components that you can copy and paste into your apps.
+      Every component is standalone, tree-shakable and themeable through <code class="doc-prose__code">--rng-*</code> tokens.
+    </p>
+    <p class="doc-components__meta">
+      {{ components.length }} components - Click any card to view its docs.
+      Individual pages use placeholder hash links (<code class="doc-prose__code">#</code>) for now and will be updated to dedicated routes as they are built.
+    </p>
+  </div>
+
+  <div class="doc-components__grid">
+    @for (item of components; track item.slug) {
+      <a
+        class="doc-components-card"
+        [routerLink]="item.route ?? '/guide/components'"
+        [fragment]="item.route ? undefined : item.slug"
+        [attr.id]="item.slug"
+        [attr.aria-label]="item.label"
+      >
+        <h3 class="doc-components-card__title">{{ item.label }}</h3>
+        <p class="doc-components-card__desc">{{ item.description }}</p>
+      </a>
+    }
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div
+  class="rng-input"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--readonly]="readonly()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+
+  <input
+    [type]="type()"
+    [id]="id()"
+    class="rng-input__field"
+    [placeholder]="placeholder() ?? ''"
+    [value]="value()"
+    (input)="value.set($event.target.value)"
+    (blur)="touched.set(true)"
+    [disabled]="disabled()"
+    [readonly]="readonly()"
+    [attr.aria-invalid]="invalid()"
+    [attr.aria-required]="required()"
+    [attr.name]="name()" />
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>

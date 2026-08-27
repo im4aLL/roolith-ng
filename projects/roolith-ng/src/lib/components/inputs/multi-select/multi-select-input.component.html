@@ -1,0 +1,119 @@
+<div
+  class="rng-input"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+
+  <div
+    class="rng-input__field-container"
+    [class.is--active]="isActive()">
+    <div
+      class="rng-input__field rng-input__field--select rng-input__field--select-multiple"
+      [class.has--item]="value().length > 0"
+      [class.rng-input__field--focused]="isFocused()"
+      tabindex="0"
+      (click)="onInputFocusHandler()"
+      (keydown.enter)="onInputFocusHandler()">
+      @for (chip of visibleChips(); track chip.value) {
+        <div class="rng-input-chip">
+          {{ chip.label }}
+          <button
+            type="button"
+            class="rng-input-chip__close"
+            (click)="onRemoveChip(chip, $event)">
+            <i class="rng-icon rng-icon--close"></i>
+          </button>
+        </div>
+      }
+
+      @if (remainingCount() > 0) {
+        <div class="rng-input-chip rng-input-chip__text">{{ remainingCount() }} more selected</div>
+      }
+
+      @if (searchable()) {
+        <input
+          type="text"
+          [id]="id()"
+          class="rng-input__plain"
+          [placeholder]="value().length === 0 ? placeholder() : ''"
+          [disabled]="disabled()"
+          [readonly]="!searchable()"
+          [attr.aria-invalid]="invalid()"
+          [attr.aria-required]="required()"
+          [attr.name]="name()"
+          (input)="onInput($event.target.value)"
+          #inputElement />
+      }
+
+      @if (!searchable() && value().length === 0) {
+        <span class="rng-input__placeholder">{{ placeholder() }}</span>
+      }
+
+      <i class="rng-icon rng-icon--chevron-down rng-input__icon"></i>
+    </div>
+
+    @if (filteredData().length > 0) {
+      <ul
+        class="rng-input-list rng-animation rng-reveal"
+        [class.rng-input-list--right]="rightAligned()"
+        [class.rng-input-list--top]="isShowListOnTop()"
+        [style.minWidth.px]="dropdownWidth()"
+        #listElement>
+        @if (allowSelectAll()) {
+          <li class="rng-input-list__item rng-input-list__item--select-all">
+            <rng-button
+              size="xsmall"
+              variant="link"
+              (clickEvent)="onSelectAllHandler()">
+              Select all
+            </rng-button>
+
+            <rng-button
+              size="xsmall"
+              variant="link"
+              (clickEvent)="onDeselectAllHandler()">
+              Deselect all
+            </rng-button>
+          </li>
+        }
+        @for (item of filteredData(); let i = $index; track item.value) {
+          <li
+            role="button"
+            class="rng-input-list__item"
+            [class.is--focused]="currentFocusedOptionIndex() === i"
+            tabindex="0"
+            (click)="onSelectHandler(item)"
+            (keydown.enter)="onSelectHandler(item)"
+            (keydown.space)="onSelectHandler(item)">
+            <ng-container
+              *ngTemplateOutlet="optionTemplate() || defaultTemplate; context: { $implicit: item }"></ng-container>
+
+            @if (isSelected(item)) {
+              <i class="rng-icon rng-icon--check rng-input-list__icon"></i>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>
+
+<ng-template
+  #defaultTemplate
+  let-item>
+  @if (item.icon) {
+    <i [class]="item.icon"></i>
+  }
+
+  {{ item.label }}
+</ng-template>

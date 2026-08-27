@@ -1,0 +1,13 @@
+<ul [class]="containerClasses()">
+  @for (item of items(); track item.value) {
+    <li
+      class="rng-toggle-group__item"
+      [class.rng-toggle-group__item--active]="item.value === value()">
+      <button
+        class="rng-toggle-group__button"
+        (click)="selectItem(item)">
+        {{ item.label }}
+      </button>
+    </li>
+  }
+</ul>

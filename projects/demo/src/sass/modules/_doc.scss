@@ -1,0 +1,361 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin doc() {
+  .doc-prose {
+    color: var(--doc-text);
+  }
+
+  // Headings - base shared styles.
+  .doc-prose__h1,
+  .doc-prose-h1,
+  .doc-prose__h2,
+  .doc-prose-h2,
+  .doc-prose__h3,
+  .doc-prose-h3,
+  .doc-prose__h4,
+  .doc-prose-h4,
+  .doc-prose__h5,
+  .doc-prose-h5,
+  .doc-prose__h6,
+  .doc-prose-h6 {
+    font-weight: var(--doc-font-weight-medium);
+    line-height: 1.3;
+    color: var(--doc-text);
+    scroll-margin-top: var(--doc-topbar-height);
+  }
+
+  .doc-prose__h1,
+  .doc-prose-h1 {
+    margin: 0 0 rem(16);
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  .doc-prose__h2,
+  .doc-prose-h2 {
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: rem(1) solid var(--doc-border);
+    line-height: 1.33;
+  }
+
+  .doc-prose__h3,
+  .doc-prose-h3 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+    line-height: 1.33;
+  }
+
+  .doc-prose__h4,
+  .doc-prose-h4 {
+    font-size: 1.125rem;
+    margin-top: 1.5rem;
+  }
+
+  .doc-prose__h5,
+  .doc-prose-h5,
+  .doc-prose__h6,
+  .doc-prose-h6 {
+    font-size: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .doc-prose__p,
+  .doc-prose-p {
+    margin: rem(16) 0;
+    line-height: 1.75;
+    color: var(--doc-text);
+  }
+
+  .doc-prose__link,
+  .doc-prose-link {
+    color: var(--doc-primary);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+    transition: color var(--doc-duration) var(--doc-easing);
+
+    &:hover {
+      color: var(--doc-secondary);
+    }
+  }
+
+  .doc-prose__strong,
+  .doc-prose-strong {
+    font-weight: var(--doc-font-weight-medium);
+  }
+
+  // Lists - class based, no tag selectors.
+  // Supports both new prose list classes and legacy .doc-list.
+  .doc-prose__ul,
+  .doc-prose-ul,
+  .doc-list {
+    list-style: disc;
+    margin: rem(16) 0;
+    padding-left: 1.25rem;
+  }
+
+  .doc-prose__ol,
+  .doc-prose-ol,
+  .doc-list--ordered {
+    list-style: decimal;
+    margin: rem(16) 0;
+    padding-left: 1.25rem;
+  }
+
+  // List item spacing - class based.
+  .doc-prose__li + .doc-prose__li,
+  .doc-prose-li + .doc-prose-li,
+  .doc-list__item + .doc-list__item {
+    margin-top: rem(8);
+  }
+
+  // Fallback for lists using generic children (covers <li> without explicit class
+  // when the list itself has a prose class). Uses universal selector to avoid tag name.
+  .doc-prose__ul > * + *,
+  .doc-prose-ul > * + *,
+  .doc-prose__ol > * + *,
+  .doc-prose-ol > * + *,
+  .doc-list > * + * {
+    margin-top: rem(8);
+  }
+
+  // Inline code - class based.
+  .doc-prose__code,
+  .doc-prose-code {
+    padding: 0;
+    border-radius: 0.25rem;
+    background-color: transparent;
+    color: var(--doc-primary);
+    font-size: 0.875em;
+    border-color: transparent;
+  }
+
+  // Pre block - class based fallback for raw pre.
+  .doc-prose__pre,
+  .doc-prose-pre {
+    margin: rem(16) 0;
+    padding: rem(20);
+    overflow-x: auto;
+    border-radius: var(--doc-radius);
+    background-color: var(--doc-surface);
+    font-size: 0.875rem;
+    line-height: 1.7;
+
+    @include m.nice-scroll();
+  }
+
+  // Code inside pre - class based.
+  .doc-prose__pre .doc-prose__code,
+  .doc-prose-pre .doc-prose-code,
+  .doc-prose__pre .doc-prose-code,
+  .doc-prose-pre .doc-prose__code {
+    background: none;
+    padding: 0;
+    color: var(--doc-text-muted);
+    border-color: transparent;
+  }
+
+  // Tables - class based.
+  .doc-prose__table,
+  .doc-prose-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: rem(20) 0;
+    display: block;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+
+  .doc-prose__tr,
+  .doc-prose-tr {
+    border-top: rem(1) solid var(--doc-border);
+    background-color: var(--doc-bg);
+  }
+
+  .doc-prose__tr:nth-child(2n),
+  .doc-prose-tr:nth-child(2n) {
+    background-color: var(--doc-surface);
+  }
+
+  .doc-prose__th,
+  .doc-prose-th,
+  .doc-prose__td,
+  .doc-prose-td {
+    border: rem(1) solid var(--doc-border);
+    padding: rem(8) rem(16);
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  .doc-prose__th,
+  .doc-prose-th {
+    background-color: var(--doc-surface);
+    color: var(--doc-text-muted);
+    font-weight: var(--doc-font-weight-medium);
+  }
+
+  .doc-prose__blockquote,
+  .doc-prose-blockquote {
+    margin: rem(16) 0;
+    padding-left: rem(16);
+    border-left: rem(2) solid var(--doc-border);
+    color: var(--doc-text-muted);
+    transition: border-color var(--doc-duration) var(--doc-easing);
+  }
+
+  .doc-prose__blockquote .doc-prose__p,
+  .doc-prose-blockquote .doc-prose-p,
+  .doc-prose__blockquote .doc-prose-p,
+  .doc-prose-blockquote .doc-prose__p {
+    margin: 0;
+  }
+
+  // Live component preview - wraps library components (e.g. breadcrumb) to
+  // provide vertical spacing.
+  .doc-prose__example,
+  .doc-prose-example {
+    margin: rem(25) 0;
+  }
+
+  // Callouts (VitePress custom blocks)
+  .doc-callout {
+    margin: rem(16) 0;
+    padding: rem(8) rem(16);
+    border: rem(1) solid transparent;
+    border-radius: var(--doc-radius);
+    background-color: var(--doc-primary-soft);
+    color: var(--doc-text);
+    font-size: 0.875rem;
+    line-height: 1.7;
+
+    p {
+      margin: rem(8) 0;
+      color: inherit;
+    }
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .doc-callout--warning {
+    background-color: var(--doc-warning-soft);
+
+    .doc-callout__title {
+      color: var(--doc-warning);
+    }
+  }
+
+  .doc-callout--danger {
+    background-color: var(--doc-danger-soft);
+
+    .doc-callout__title {
+      color: var(--doc-danger);
+    }
+  }
+
+  .doc-callout__title {
+    display: flex;
+    align-items: center;
+    gap: rem(8);
+    margin: 0 0 rem(4);
+    font-weight: var(--doc-font-weight-medium);
+  }
+
+  .doc-callout__title i {
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .doc-callout code,
+  .doc-callout :not(pre) > code,
+  .doc-callout__title code,
+  .doc-callout__title :not(pre) > code {
+    padding: 0;
+    border-radius: 0.25rem;
+    background-color: transparent;
+    color: var(--doc-primary);
+    font-size: 0.875em;
+    border-color: transparent;
+  }
+
+  .doc-step {
+    margin-top: rem(16);
+    padding: rem(16) rem(20);
+    border: rem(1) solid var(--doc-border);
+    border-radius: var(--doc-radius);
+    background-color: var(--doc-bg);
+  }
+
+  .doc-step__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: rem(24);
+    height: rem(24);
+    margin-right: rem(10);
+    border-radius: rem(999);
+    background-color: var(--doc-primary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: var(--doc-font-weight-bold);
+
+    .theme-dark & {
+      background-color: var(--doc-primary-strong);
+    }
+  }
+
+  .doc-step__title {
+    display: flex;
+    align-items: center;
+    margin: 0 0 rem(8);
+    font-size: 1rem;
+  }
+
+  .doc-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: rem(16);
+
+    @include m.breakpoint(medium-up) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &:last-child {
+      margin-bottom: rem(24);
+    }
+  }
+
+  // Cards rendered inside prose (guide/components) should not inherit prose
+  // heading/paragraph spacing - otherwise .doc-card__title gets h3 margin-top 2rem.
+  .doc-prose .doc-card__title {
+    display: flex;
+    align-items: center;
+    gap: rem(8);
+    margin: 0 0 rem(8);
+    padding: 0;
+    border: none;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .doc-prose .doc-card__title i {
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .doc-prose .doc-card__text {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--doc-text-muted);
+  }
+}

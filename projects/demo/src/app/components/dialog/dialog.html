@@ -1,0 +1,291 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Dialog</h1>
+  <p class="doc-prose__p">
+    A window overlaid on the primary window, rendering the content underneath inert.
+    Use <code class="doc-prose__code">DialogService</code> with <code class="doc-prose__code">rng-dialog-host</code> for imperative dialogs,
+    or drop <code class="doc-prose__code">rng-dialog</code> directly in a template for declarative control.
+    Supports <code class="doc-prose__code">header</code>, optional <code class="doc-prose__code">subheader</code>, body content, configurable
+    <code class="doc-prose__code">width</code> and footer action buttons. The close icon and <code class="doc-prose__code">Escape</code> key both emit
+    <code class="doc-prose__code">closeEvent</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Setup</h2>
+
+  <h3 class="doc-prose__h3">Host</h3>
+  <p class="doc-prose__p">
+    Place <code class="doc-prose__code">&lt;rng-dialog-host /&gt;</code> once in your root layout template.
+    The host reads <code class="doc-prose__code">DialogService.config()</code> and <code class="doc-prose__code">DialogService.isOpen()</code> and renders
+    <code class="doc-prose__code">rng-dialog</code> with the current <code class="doc-prose__code">header</code>, <code class="doc-prose__code">subheader</code>,
+    <code class="doc-prose__code">content</code>, <code class="doc-prose__code">width</code> and <code class="doc-prose__code">actionButtons</code>.
+    Without the host, calls to <code class="doc-prose__code">DialogService.open()</code> will update the signals but nothing will appear.
+  </p>
+  <rng-code-block [code]="hostSnippet" language="html" title="app.component.html" variant="prose" />
+
+  <h3 class="doc-prose__h3">Injecting the service</h3>
+  <p class="doc-prose__p">
+    Inject <code class="doc-prose__code">DialogService</code> in any component or service to open dialogs imperatively.
+    The service is <code class="doc-prose__code">providedIn: 'root'</code> so no extra provider is needed.
+  </p>
+  <rng-code-block [code]="injectSnippet" language="typescript" title="injecting DialogService" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+  <p class="doc-prose__p">
+    The dialog can be opened imperatively via <code class="doc-prose__code">DialogService</code> (with <code class="doc-prose__code">rng-dialog-host</code>) or declaratively by placing
+    <code class="doc-prose__code">rng-dialog</code> directly in your template. The sections below cover both approaches.
+  </p>
+
+  <h2 class="doc-prose__h2">Usage with service</h2>
+
+  <h3 class="doc-prose__h3">Confirmation dialog</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">dialogService.open()</code> with <code class="doc-prose__code">header</code>, <code class="doc-prose__code">content</code> and
+    <code class="doc-prose__code">actionButtons</code>. It returns an <code class="doc-prose__code">IDialogRef</code> with a signal
+    <code class="doc-prose__code">event</code> and a <code class="doc-prose__code">destroy()</code> callback. Use an <code class="doc-prose__code">effect</code> to react to the
+    emitted <code class="doc-prose__code">value</code> and then call <code class="doc-prose__code">destroy()</code> to close. Footer buttons are rendered
+    in reversed order inside <code class="doc-prose__code">rng-dialog__footer</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="danger" (clickEvent)="openConfirmation()">Delete record</rng-button>
+      <rng-button variant="secondary" (clickEvent)="openConfirmation()">Open confirmation</rng-button>
+    </div>
+  </div>
+  @if (lastAction) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">value: "{{ lastAction }}"</code>
+        @if (lastEvent) {
+          <span> • </span><code class="doc-prose__code">id: "{{ lastEvent.id }}"</code>
+        }
+        <span> - call <code class="doc-prose__code">destroy()</code> closed the dialog.</span>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="confirmationSnippet" language="typescript" title="confirmation dialog" variant="prose" />
+
+  <h3 class="doc-prose__h3">With subheader and custom width</h3>
+  <p class="doc-prose__p">
+    Add <code class="doc-prose__code">subheader</code> below the title and control the dialog width with
+    <code class="doc-prose__code">width</code> in pixels (defaults to <code class="doc-prose__code">400</code> via <code class="doc-prose__code">DialogService</code> and
+    <code class="doc-prose__code">500</code> fallback in <code class="doc-prose__code">DialogHostComponent</code> when falsy). The subheader renders inside
+    <code class="doc-prose__code">rng-dialog__subtitle</code> only when provided.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="openWithSubheader()">Upload file (600px)</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="subheaderSnippet" language="typescript" title="subheader + width" variant="prose" />
+
+  <h3 class="doc-prose__h3">Default dialog (no config)</h3>
+  <p class="doc-prose__p">
+    Calling <code class="doc-prose__code">open()</code> with no arguments uses the built-in defaults:
+    <code class="doc-prose__code">header: 'Confirmation'</code>, <code class="doc-prose__code">content: 'Are you sure you want to proceed with this action?'</code>,
+    <code class="doc-prose__code">width: 400</code> and buttons <code class="doc-prose__code">Yes (primary)</code> + <code class="doc-prose__code">Cancel</code>.
+    Useful for quick confirmations without custom copy.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button (clickEvent)="openDefault()">Open default dialog</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="defaultSnippet" language="typescript" title="default dialog" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage without service</h2>
+
+  <h3 class="doc-prose__h3">Using <code class="doc-prose__code">rng-dialog</code> directly</h3>
+  <p class="doc-prose__p">
+    Render <code class="doc-prose__code">rng-dialog</code> directly when you want declarative control or custom body content via
+    <code class="doc-prose__code">&lt;ng-content /&gt;</code>. Provide <code class="doc-prose__code">header</code> (required), optional
+    <code class="doc-prose__code">subheader</code>, <code class="doc-prose__code">[width]</code> and <code class="doc-prose__code">[footerButtons]</code>.
+    Listen to <code class="doc-prose__code">(actionEvent)</code> for footer button clicks and <code class="doc-prose__code">(closeEvent)</code> for the close icon or
+    <code class="doc-prose__code">Escape</code> key. The body is anything you project - no <code class="doc-prose__code">content</code> string needed.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="toggleDirectDialog()">
+        @if (showDirectDialog) {
+          Hide direct dialog
+        } @else {
+          Show direct dialog
+        }
+      </rng-button>
+      @if (directLastAction) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);">Last direct action: <code class="doc-prose__code">{{ directLastAction }}</code></span>
+      }
+    </div>
+    @if (showDirectDialog) {
+      <div style="margin-top: 1rem;">
+        <rng-dialog
+          header="Confirm Action"
+          subheader="This cannot be undone"
+          [width]="480"
+          [footerButtons]="directButtons"
+          (actionEvent)="onDirectAction($event)"
+          (closeEvent)="onDirectClose()">
+          <p style="margin: 0;">Custom dialog body content goes here. Project any markup you need inside <code class="doc-prose__code">rng-dialog</code>.</p>
+        </rng-dialog>
+      </div>
+    }
+  </div>
+  <rng-code-block [code]="directSnippet" language="html" title="direct rng-dialog" variant="prose" />
+  <rng-code-block [code]="directHandlerSnippet" language="typescript" title="direct - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Handling events and closing</h3>
+  <p class="doc-prose__p">
+    Footer buttons emit <code class="doc-prose__code">actionEvent</code> with their <code class="doc-prose__code">value</code> - the host forwards this via
+    <code class="doc-prose__code">DialogService.emitEvent(value)</code> which sets the <code class="doc-prose__code">event</code> signal to
+    <code class="doc-prose__code">&#123; id, value &#125;</code>. The close icon and <code class="doc-prose__code">Escape</code> emit
+    <code class="doc-prose__code">closeEvent</code> - the host calls <code class="doc-prose__code">DialogService.close()</code> which emits
+    <code class="doc-prose__code">'close'</code> and clears <code class="doc-prose__code">isOpen</code>. For action buttons you must call
+    <code class="doc-prose__code">destroy()</code> from the <code class="doc-prose__code">IDialogRef</code> to close; for the close path the service already handles it.
+    Check <code class="doc-prose__code">e.value === 'close'</code> to distinguish dismissal from an action.
+  </p>
+  <rng-code-block [code]="effectSnippet" language="typescript" title="handling close vs action" variant="prose" />
+
+  <h3 class="doc-prose__h3">Observable pattern with <code class="doc-prose__code">toObservable</code></h3>
+  <p class="doc-prose__p">
+    If you prefer RxJS over <code class="doc-prose__code">effect</code>, convert the <code class="doc-prose__code">event</code> signal with
+    <code class="doc-prose__code">toObservable(dialog.event, &#123; injector &#125;)</code> and pipe through
+    <code class="doc-prose__code">takeUntilDestroyed(destroyRef)</code>. It sets a fixed <code class="doc-prose__code">id: 'confirm-dialog'</code>, custom
+    <code class="doc-prose__code">header</code> / <code class="doc-prose__code">content</code> and only destroys the dialog when
+    <code class="doc-prose__code">event.value === 'confirm'</code>. Subscribe with <code class="doc-prose__code">Injector</code> and
+    <code class="doc-prose__code">DestroyRef</code> so the subscription is cleaned up with the component.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="openViaObservable()">Open via observable</rng-button>
+      <rng-button variant="secondary" (clickEvent)="openViaObservable()">Open confirm dialog</rng-button>
+    </div>
+  </div>
+  @if (lastAction) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event (observable)</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">value: "{{ lastAction }}"</code>
+        @if (lastEvent) {
+          <span> • </span><code class="doc-prose__code">id: "{{ lastEvent.id }}"</code>
+        }
+        @if (lastAction === 'confirm') {
+          <span> - <code class="doc-prose__code">dialog.destroy()</code> called on confirm.</span>
+        } @else if (lastAction === 'cancel') {
+          <span> - dismissed via Cancel.</span>
+        } @else if (lastAction === 'close') {
+          <span> - dismissed via X / Escape (<code class="doc-prose__code">'close'</code>).</span>
+        }
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="observableSnippet" language="typescript" title="observable - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Service setup, host placement and direct usage together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="danger" (clickEvent)="openConfirmation()">Full example - open via service</rng-button>
+      <rng-button variant="ghost" (clickEvent)="toggleDirectDialog()">Toggle direct dialog</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">DialogService</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Member</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">open</code></td><td class="doc-prose__td"><code class="doc-prose__code">open(config?: Partial&lt;IDialogConfig&gt;): IDialogRef</code></td><td class="doc-prose__td">Opens a dialog. Merges with defaults (auto-generates <code class="doc-prose__code">id</code> when missing), sets <code class="doc-prose__code">config</code> and <code class="doc-prose__code">isOpen</code> to <code class="doc-prose__code">true</code>, and returns <code class="doc-prose__code">event</code> signal plus <code class="doc-prose__code">destroy</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">close</code></td><td class="doc-prose__td"><code class="doc-prose__code">close(): void</code></td><td class="doc-prose__td">Emits <code class="doc-prose__code">'close'</code> via <code class="doc-prose__code">emitEvent</code> and clears the open state. Called by <code class="doc-prose__code">rng-dialog-host</code> on <code class="doc-prose__code">closeEvent</code> (X / Escape)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">emitEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">emitEvent(value: string): void</code></td><td class="doc-prose__td">Sets the current <code class="doc-prose__code">event</code> signal to <code class="doc-prose__code">&#123; id, value &#125;</code>. Called by the host on <code class="doc-prose__code">actionEvent</code> (footer button)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isOpen</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;boolean&gt; (readonly)</code></td><td class="doc-prose__td">Whether the dialog is currently open. Backed by a private <code class="doc-prose__code">_isDialogOpen</code> signal</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">config</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;IDialogConfig&gt; (readonly)</code></td><td class="doc-prose__td">The current dialog configuration as a readonly signal</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IDialogConfig</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">auto-generated <code class="doc-prose__code">dialog-&lt;uniqueId()&gt;</code></td><td class="doc-prose__td">Unique dialog identifier. Used to key the <code class="doc-prose__code">event</code> signal map</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td"><code class="doc-prose__code">'Confirmation'</code></td><td class="doc-prose__td">Dialog title rendered in <code class="doc-prose__code">rng-dialog__title</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">content</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td"><code class="doc-prose__code">'Are you sure you want to proceed with this action?'</code></td><td class="doc-prose__td">Body text rendered by <code class="doc-prose__code">rng-dialog-host</code> inside <code class="doc-prose__code">&lt;rng-dialog&gt;</code> via interpolation</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">subheader</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | undefined</code></td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Optional subtitle below the header. Rendered in <code class="doc-prose__code">rng-dialog__subtitle</code> only when truthy</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">width</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td"><code class="doc-prose__code">400</code></td><td class="doc-prose__td">Width of the dialog in pixels, bound to <code class="doc-prose__code">[style.width.px]</code> on <code class="doc-prose__code">rng-dialog__content</code>. Host falls back to <code class="doc-prose__code">500</code> when falsy</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">actionButtons</code></td><td class="doc-prose__td"><code class="doc-prose__code">IDialogFooterButton[]</code></td><td class="doc-prose__td"><code class="doc-prose__code">[&#123; label: 'Yes', value: 'yes', variant: 'primary' &#125;, &#123; label: 'Cancel', value: 'cancel' &#125;]</code></td><td class="doc-prose__td">Footer action buttons. Reversed before render and wrappers use <code class="doc-prose__code">rng-dialog__action-item</code>. Empty array hides the footer via <code class="doc-prose__code">hasButtons()</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IDialogFooterButton</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Button label text</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Value emitted via <code class="doc-prose__code">actionEvent</code> / <code class="doc-prose__code">DialogService.emitEvent</code> and available as <code class="doc-prose__code">IDialogEvent.value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">variant</code></td><td class="doc-prose__td"><code class="doc-prose__code">ButtonVariantType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Button visual variant. Defaults to <code class="doc-prose__code">'default'</code> then host maps falsy to <code class="doc-prose__code">'ghost'</code> on render</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IDialogEvent</code> &amp; <code class="doc-prose__code">IDialogRef</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Type</th><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">IDialogEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Dialog id that emitted the event</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">IDialogEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Button <code class="doc-prose__code">value</code> or <code class="doc-prose__code">'close'</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">IDialogRef</code></td><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Dialog id returned from <code class="doc-prose__code">open()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">IDialogRef</code></td><td class="doc-prose__td"><code class="doc-prose__code">event</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;IDialogEvent | null&gt;</code></td><td class="doc-prose__td">Readonly signal that emits on footer click or close. Starts as <code class="doc-prose__code">null</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">IDialogRef</code></td><td class="doc-prose__td"><code class="doc-prose__code">destroy</code></td><td class="doc-prose__td"><code class="doc-prose__code">() =&gt; void</code></td><td class="doc-prose__td">Closes the dialog and removes its event signal from the service map</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-dialog</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">-</td><td class="doc-prose__td">Dialog title. Rendered in <code class="doc-prose__code">rng-dialog__title</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">width</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">-</td><td class="doc-prose__td">Width in pixels. Bound to <code class="doc-prose__code">[style.width.px]</code> on <code class="doc-prose__code">rng-dialog__content</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">subheader</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Subtitle below the header in <code class="doc-prose__code">rng-dialog__subtitle</code>. Only rendered when truthy</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">footerButtons</code></td><td class="doc-prose__td"><code class="doc-prose__code">IDialogFooterButton[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Footer buttons. Reversed internally and hidden when empty via <code class="doc-prose__code">hasButtons()</code> / <code class="doc-prose__code">rng-dialog__content--no-footer</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-dialog</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">closeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emitted when the close (x) button or <code class="doc-prose__code">Escape</code> is pressed. Host maps this to <code class="doc-prose__code">DialogService.close()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">actionEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Emitted with the <code class="doc-prose__code">value</code> of the clicked footer button. Host maps this to <code class="doc-prose__code">DialogService.emitEvent(value)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-dialog</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Body content projected via <code class="doc-prose__code">&lt;ng-content /&gt;</code> inside <code class="doc-prose__code">rng-dialog__body</code>. The host projects <code class="doc-prose__code">content</code> string here; direct usage can project any markup</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>
+
+<!-- Dialog host for service-driven examples - renders the overlay when DialogService.isOpen() is true -->
+<rng-dialog-host />

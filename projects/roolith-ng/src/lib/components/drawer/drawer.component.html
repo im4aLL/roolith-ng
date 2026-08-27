@@ -1,0 +1,36 @@
+<div
+  class="rng-drawer"
+  [id]="name()"
+  popover
+  #drawerEl>
+  <div class="rng-drawer__content">
+    <!-- header -->
+    <div class="rng-drawer__header">
+      <div class="rng-drawer__header-text">
+        <h6 class="rng-drawer__hl">{{ header() }}</h6>
+        @if (subheader()) {
+          <div class="rng-drawer__subhl">{{ subheader() }}</div>
+        }
+      </div>
+      <div class="rng-drawer__action">
+        <rng-button
+          icon="delete"
+          variant="ghost"
+          (clickEvent)="close()" />
+      </div>
+    </div>
+    <!-- header -->
+
+    <!-- body -->
+    <div class="rng-drawer__body">
+      <ng-content />
+    </div>
+    <!-- body -->
+
+    <!-- footer -->
+    <div class="rng-drawer__footer">
+      <ng-content select="[rngDrawerAction]" />
+    </div>
+    <!-- footer -->
+  </div>
+</div>

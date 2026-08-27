@@ -1,0 +1,449 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Popover</h1>
+  <p class="doc-prose__p">
+    A floating panel anchored to a trigger element via the native <code class="doc-prose__code">popover</code> API.
+    Wire a trigger element with <code class="doc-prose__code">[rngPopoverTarget]</code> to the matching
+    <code class="doc-prose__code">name</code> of <code class="doc-prose__code">rng-popover</code>.
+    The popover is rendered with <code class="doc-prose__code">popover</code> and
+    <code class="doc-prose__code">position-anchor: --rng-&lt;name&gt;</code> and auto-positions to avoid viewport overflow.
+    Supports an optional <code class="doc-prose__code">header</code> and <code class="doc-prose__code">subtext</code> as plain strings or
+    rich <code class="doc-prose__code">&lt;ng-template&gt;</code> projection via <code class="doc-prose__code">#rngPopoverHeader</code> and
+    <code class="doc-prose__code">#rngPopoverSubtext</code>, any body markup through the default slot, and a
+    <code class="doc-prose__code">changeEvent</code> that emits <code class="doc-prose__code">'open' | 'close'</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">IMPORT_POPOVER</code> includes both <code class="doc-prose__code">PopoverComponent</code> and <code class="doc-prose__code">PopoverTargetDirective</code>.
+    Or import individually:
+  </p>
+  <rng-code-block [code]="importIndividualSnippet" language="typescript" title="individual import" variant="prose" />
+
+  <h2 class="doc-prose__h2">Wiring trigger and panel</h2>
+  <p class="doc-prose__p">
+    Place <code class="doc-prose__code">rngPopoverTarget="&lt;name&gt;"</code> on a wrapper element that contains the trigger button.
+    The directive finds the first clickable element inside the wrapper and sets
+    <code class="doc-prose__code">popovertarget="rng-popover-&lt;name&gt;"</code>, the <code class="doc-prose__code">rng-popover__trigger</code> class and
+    <code class="doc-prose__code">anchor-name: --rng-&lt;name&gt;</code> automatically.
+    The <code class="doc-prose__code">name</code> input on <code class="doc-prose__code">rng-popover</code> must match exactly.
+    The panel itself renders with <code class="doc-prose__code">id="rng-popover-&lt;name&gt;"</code>, <code class="doc-prose__code">popover</code> and
+    <code class="doc-prose__code">--rng-popover-anchor: --rng-&lt;name&gt;</code>.
+  </p>
+  <rng-code-block [code]="targetSnippet" language="html" title="trigger + panel" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    The simplest popover - a trigger wired via <code class="doc-prose__code">[rngPopoverTarget]</code> and a panel with body content.
+    Body markup is projected through the default slot into <code class="doc-prose__code">rng-popover__content</code>.
+    Click the button again, press <code class="doc-prose__code">Escape</code> or click outside to dismiss. The browser handles the <code class="doc-prose__code">popover</code> toggle.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-basic">
+        <rng-button>Show Info</rng-button>
+      </div>
+      <rng-popover name="demo-basic" (changeEvent)="onPopoverChange($event, 'basic')">
+        <p style="margin: 0;">This is the popover content. It can contain any markup you project into the default slot.</p>
+      </rng-popover>
+      @if (lastChangeSource() === 'basic' && lastChange(); as evt) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ evt.type }}</code></span
+        >
+      }
+    </div>
+  </div>
+  @if (lastChangeSource() === 'basic' && lastChange(); as evt) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">type: "{{ evt.type }}"</code>
+        @if (evt.type === 'open') {
+          <span> - popover opened (toggle <code class="doc-prose__code">newState: 'open'</code>).</span>
+        } @else {
+          <span> - popover closed via outside click, <code class="doc-prose__code">Escape</code> or <code class="doc-prose__code">hidePopover()</code>.</span>
+        }
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">With header and subtext (string inputs)</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">header</code> for a plain-text title and <code class="doc-prose__code">subtext</code> for a subtitle.
+    They render as <code class="doc-prose__code">&lt;h5 class="rng-popover__hl"&gt;</code> and
+    <code class="doc-prose__code">&lt;div class="rng-popover__subtext"&gt;</code> inside <code class="doc-prose__code">rng-popover__header</code>.
+    When no header template is present and at least one of them is set, the header area is rendered; otherwise only the body is shown.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-header">
+        <rng-button variant="ghost" icon="info">Details</rng-button>
+      </div>
+      <rng-popover
+        name="demo-header"
+        header="Popover Title"
+        subtext="Last updated 5 minutes ago"
+        (changeEvent)="onPopoverChange($event, 'header')">
+        <p style="margin: 0;">Detailed information goes here. The header and subtext are rendered above this body.</p>
+      </rng-popover>
+      @if (lastChangeSource() === 'header' && lastChange(); as evt) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ evt.type }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="withHeaderSnippet" language="html" title="header + subtext - string" variant="prose" />
+
+  <h3 class="doc-prose__h3">With header and subtext (template projection)</h3>
+  <p class="doc-prose__p">
+    For rich titles or subtitles, project <code class="doc-prose__code">&lt;ng-template #rngPopoverHeader&gt;</code> and
+    <code class="doc-prose__code">&lt;ng-template #rngPopoverSubtext&gt;</code> instead of the string inputs.
+    When either template is present the component renders them via <code class="doc-prose__code">NgTemplateOutlet</code> inside
+    <code class="doc-prose__code">rng-popover__header</code> and skips the string fallback entirely. This lets you use icons, badges or custom markup in the header area.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-template">
+        <rng-button variant="ghost" icon="info">Details (template)</rng-button>
+      </div>
+      <rng-popover name="demo-template" (changeEvent)="onPopoverChange($event, 'template')">
+        <ng-template #rngPopoverHeader>
+          <span style="display: inline-flex; align-items: center; gap: 0.375rem;">
+            <i class="iconoir-info-circle" aria-hidden="true"></i> Popover Title
+          </span>
+        </ng-template>
+        <ng-template #rngPopoverSubtext>
+          <span style="color: var(--doc-text-muted);">Last updated <strong>5 minutes ago</strong></span>
+        </ng-template>
+        <p style="margin: 0;">Detailed information goes here. The header and subtext are provided as templates so they can contain custom styling, icons or inline elements.</p>
+      </rng-popover>
+      @if (lastChangeSource() === 'template' && lastChange(); as evt) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ evt.type }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="withTemplateSnippet" language="html" title="header + subtext - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Rich body content</h3>
+  <p class="doc-prose__p">
+    Everything without a template selector is projected into <code class="doc-prose__code">rng-popover__content</code> via
+    <code class="doc-prose__code">&lt;ng-content /&gt;</code>. The content wrapper adds <code class="doc-prose__code">rng-popover__content--spacing</code> only when a header or subtext is present.
+    Use it for lists, actions, or any custom layout. You can include a close button that calls <code class="doc-prose__code">closePopover()</code> on the popover instance.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-rich">
+        <rng-button icon="help">Help</rng-button>
+      </div>
+      <rng-popover name="demo-rich" header="Heads up!" #richPopover (changeEvent)="onPopoverChange($event, 'rich')">
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <p style="margin: 0;">You can project any markup - lists, buttons or custom layouts - into the default slot.</p>
+          <ul style="margin: 0; padding-left: 1.125rem;">
+            <li>Anchored via <code class="doc-prose__code">--rng-popover-anchor</code></li>
+            <li>Dismisses on outside click or <code class="doc-prose__code">Escape</code></li>
+            <li>Works with keyboard and screen readers</li>
+          </ul>
+          <div style="display: flex; justify-content: flex-end;">
+            <rng-button size="xsmall" variant="dark" (clickEvent)="richPopover.closePopover()">Got it</rng-button>
+          </div>
+        </div>
+      </rng-popover>
+    </div>
+  </div>
+  <rng-code-block [code]="richContentSnippet" language="html" title="rich content" variant="prose" />
+
+  <h3 class="doc-prose__h3">Fixed alignment</h3>
+  <p class="doc-prose__p">
+    By default the popover auto-detects viewport overflow on the native <code class="doc-prose__code">toggle</code> event (when
+    <code class="doc-prose__code">newState === 'open'</code>) and applies the correct position class.
+    Pass <code class="doc-prose__code">alignment</code> to force a fixed position and skip that detection entirely - useful when the trigger is near a viewport edge.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-align-right">
+        <rng-button>Right</rng-button>
+      </div>
+      <rng-popover
+        name="demo-align-right"
+        alignment="right"
+        header="Right aligned"
+        (changeEvent)="onPopoverChange($event, 'align-right')">
+        <p style="margin: 0;">Always opens to the right via <code class="doc-prose__code">rng-popover--right</code>.</p>
+      </rng-popover>
+
+      <div rngPopoverTarget="demo-align-top">
+        <rng-button>Top</rng-button>
+      </div>
+      <rng-popover
+        name="demo-align-top"
+        alignment="top"
+        header="Top aligned"
+        (changeEvent)="onPopoverChange($event, 'align-top')">
+        <p style="margin: 0;">Always opens above via <code class="doc-prose__code">rng-popover--top</code>.</p>
+      </rng-popover>
+
+      <div rngPopoverTarget="demo-align-top-right">
+        <rng-button>Top Right</rng-button>
+      </div>
+      <rng-popover
+        name="demo-align-top-right"
+        alignment="top-right"
+        header="Top-right aligned"
+        (changeEvent)="onPopoverChange($event, 'align-top-right')">
+        <p style="margin: 0;">Always opens above and to the right via <code class="doc-prose__code">rng-popover--top-right</code>.</p>
+      </rng-popover>
+    </div>
+  </div>
+  <rng-code-block [code]="alignmentSnippet" language="html" title="alignment - template" variant="prose" />
+  <p class="doc-prose__p">
+    Auto-detection when <code class="doc-prose__code">alignment</code> is <code class="doc-prose__code">null</code> checks the bounding rect against <code class="doc-prose__code">window.innerWidth</code> and
+    <code class="doc-prose__code">window.innerHeight</code> inside a <code class="doc-prose__code">setTimeout</code> and sets one of:
+    <code class="doc-prose__code">rng-popover--right</code>, <code class="doc-prose__code">rng-popover--top</code> or
+    <code class="doc-prose__code">rng-popover--top-right</code>, or no class when there is sufficient space.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr">
+        <th class="doc-prose__th"><code class="doc-prose__code">alignment</code></th>
+        <th class="doc-prose__th">CSS class</th>
+        <th class="doc-prose__th">When to use</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><em>(not set)</em></td>
+        <td class="doc-prose__td">auto-detected</td>
+        <td class="doc-prose__td">Default - let the component decide</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">'right'</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">rng-popover--right</code></td>
+        <td class="doc-prose__td">Trigger is near the right edge</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">'top'</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">rng-popover--top</code></td>
+        <td class="doc-prose__td">Trigger is near the bottom edge</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">'top-right'</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">rng-popover--top-right</code></td>
+        <td class="doc-prose__td">Trigger is in a bottom-right corner</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Listening to open and close events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">changeEvent</code> is emitted from two places: a native <code class="doc-prose__code">toggle</code> listener registered in
+    <code class="doc-prose__code">ngAfterViewInit</code> and the <code class="doc-prose__code">(toggle)</code> handler <code class="doc-prose__code">onToggle</code>.
+    Both emit <code class="doc-prose__code">&#123; type: 'open' | 'close' &#125;</code>. Use it to sync state, fire analytics or lazily load content when the popover opens.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-events">
+        <rng-button icon="info">Track events</rng-button>
+      </div>
+      <rng-popover name="demo-events" header="Events demo" (changeEvent)="onPopoverChange($event, 'events')">
+        <p style="margin: 0;">Open and close this popover - the last event is shown below.</p>
+      </rng-popover>
+      @if (lastChangeSource() === 'events' && lastChange(); as evt) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ evt.type }}</code></span
+        >
+      }
+    </div>
+  </div>
+  @if (lastChangeSource() === 'events' && lastChange(); as evt) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event (events demo)</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">type: "{{ evt.type }}"</code>
+        @if (evt.type === 'open') {
+          <span> - emitted when the popover opened (<code class="doc-prose__code">newState: 'open'</code>).</span>
+        } @else {
+          <span> - emitted when the popover closed (<code class="doc-prose__code">newState: 'closed'</code>).</span>
+        }
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="changeEventSnippet" language="html" title="changeEvent - template" variant="prose" />
+  <rng-code-block [code]="changeEventHandlerSnippet" language="typescript" title="changeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Closing programmatically</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">closePopover()</code> on the popover instance to dismiss it via
+    <code class="doc-prose__code">hidePopover()</code>. Use a template reference (<code class="doc-prose__code">#infoPopover</code>) and trigger it from a button inside the popover or from component logic via <code class="doc-prose__code">viewChild</code>.
+    Outside clicks and <code class="doc-prose__code">Escape</code> still close the popover natively and emit <code class="doc-prose__code">changeEvent</code> with <code class="doc-prose__code">type: 'close'</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-close">
+        <rng-button>Open (with close)</rng-button>
+      </div>
+      <rng-popover name="demo-close" header="Dismissible" #closePopover (changeEvent)="onPopoverChange($event, 'close')">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <p style="margin: 0;">This popover includes an explicit close button that calls <code class="doc-prose__code">closePopover()</code>.</p>
+          <div style="display: flex; justify-content: flex-end;">
+            <rng-button size="xsmall" variant="dark" (clickEvent)="closePopover.closePopover()">Close</rng-button>
+          </div>
+        </div>
+      </rng-popover>
+      @if (lastChangeSource() === 'close' && lastChange(); as evt) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ evt.type }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="closeSnippet" language="html" title="programmatic close - template" variant="prose" />
+  <p class="doc-prose__p">Or via <code class="doc-prose__code">viewChild</code> in the component class:</p>
+  <rng-code-block [code]="closeTsSnippet" language="typescript" title="programmatic close - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Trigger, header, subtext, rich body, fixed or auto position and close handling together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngPopoverTarget="demo-full">
+        <rng-button variant="primary" icon="info">Full Example</rng-button>
+      </div>
+      <rng-popover
+        name="demo-full"
+        header="Popover Title"
+        subtext="Last updated 5 minutes ago"
+        (changeEvent)="onPopoverChange($event, 'full')"
+        #fullPopover>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <p style="margin: 0;">Detailed information goes here. Combine string header inputs or swap them for <code class="doc-prose__code">&lt;ng-template&gt;</code> projection when you need custom markup.</p>
+          <div style="display: flex; justify-content: flex-end;">
+            <rng-button size="xsmall" variant="ghost" (clickEvent)="fullPopover.closePopover()">Dismiss</rng-button>
+          </div>
+        </div>
+      </rng-popover>
+      @if (lastChangeSource() === 'full' && lastChange(); as evt) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ evt.type }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">Position (auto-detection)</h2>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">alignment</code> is <code class="doc-prose__code">null</code> (the default) the popover listens to the native
+    <code class="doc-prose__code">toggle</code> event. On open it measures its <code class="doc-prose__code">getBoundingClientRect()</code> against
+    <code class="doc-prose__code">window.innerWidth</code> / <code class="doc-prose__code">window.innerHeight</code> inside a <code class="doc-prose__code">setTimeout</code> and sets the appropriate class.
+    On close it resets the position class to <code class="doc-prose__code">null</code>. When a fixed <code class="doc-prose__code">alignment</code> is set, that logic is skipped.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Condition</th><th class="doc-prose__th">Class applied</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Sufficient space below and to the right</td><td class="doc-prose__td"><em>(none)</em></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Would overflow the right edge</td><td class="doc-prose__td"><code class="doc-prose__code">rng-popover--right</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Would overflow the bottom edge</td><td class="doc-prose__td"><code class="doc-prose__code">rng-popover--top</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Would overflow both bottom and right edges</td><td class="doc-prose__td"><code class="doc-prose__code">rng-popover--top-right</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rngPopoverTarget</code> Directive</h3>
+  <p class="doc-prose__p">
+    Applied to the <strong>wrapper</strong> element of the trigger. The directive targets the first child element (or the element itself when it is a
+    <code class="doc-prose__code">&lt;button&gt;</code> / <code class="doc-prose__code">&lt;a&gt;</code>) and automatically sets all required Popover API attributes.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rngPopoverTarget</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Must match the <code class="doc-prose__code">name</code> input of <code class="doc-prose__code">rng-popover</code>. Sets <code class="doc-prose__code">popovertarget="rng-popover-&lt;name&gt;"</code>, class <code class="doc-prose__code">rng-popover__trigger</code> and <code class="doc-prose__code">anchor-name: --rng-&lt;name&gt;</code> on the inner trigger element</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-popover</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Unique name - links with <code class="doc-prose__code">rngPopoverTarget</code>. Rendered as <code class="doc-prose__code">id="rng-popover-&lt;name&gt;"</code> and <code class="doc-prose__code">--rng-popover-anchor: --rng-&lt;name&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">alignment</code></td><td class="doc-prose__td"><code class="doc-prose__code">'right' | 'top' | 'top-right' | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Forces a fixed position - skips auto-detection when set. Maps to <code class="doc-prose__code">rng-popover--right</code> / <code class="doc-prose__code">--top</code> / <code class="doc-prose__code">--top-right</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Plain-text title rendered as <code class="doc-prose__code">&lt;h5 class="rng-popover__hl"&gt;</code> inside <code class="doc-prose__code">rng-popover__header</code>. Ignored when <code class="doc-prose__code">#rngPopoverHeader</code> is present</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">subtext</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Plain-text subtitle rendered in <code class="doc-prose__code">rng-popover__subtext</code>. Ignored when <code class="doc-prose__code">#rngPopoverSubtext</code> is present</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">styleClass</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Custom CSS class appended to <code class="doc-prose__code">rng-popover rng-animation rng-reveal</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-popover</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">OutputEmitterRef&lt;IPopoverChangeEvent&gt;</code></td><td class="doc-prose__td">Emitted when the popover opens or closes. Backed by both a native <code class="doc-prose__code">toggle</code> listener in <code class="doc-prose__code">ngAfterViewInit</code> and the <code class="doc-prose__code">(toggle)</code> binding. Payload is <code class="doc-prose__code">&#123; type: 'open' | 'close' &#125;</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-popover</code> Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">closePopover</code></td><td class="doc-prose__td"><code class="doc-prose__code">closePopover(): void</code></td><td class="doc-prose__td">Closes the popover by calling <code class="doc-prose__code">hidePopover()</code> on the native element. No-op when the element ref is missing</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IPopoverChangeEvent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'open' | 'close'</code></td><td class="doc-prose__td">Whether the popover opened or closed</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-popover</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Main body content of the popover, rendered inside <code class="doc-prose__code">rng-popover__content</code>. Gets <code class="doc-prose__code">rng-popover__content--spacing</code> only when a header or subtext is present</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngPopoverHeader</code></td><td class="doc-prose__td"><code class="doc-prose__code">&lt;ng-template&gt;</code> for the popover title / heading. When present, takes precedence over the <code class="doc-prose__code">header</code> string</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngPopoverSubtext</code></td><td class="doc-prose__td"><code class="doc-prose__code">&lt;ng-template&gt;</code> for a subtitle below the heading. When present, takes precedence over the <code class="doc-prose__code">subtext</code> string</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">PopoverAlignment</code> &amp; <code class="doc-prose__code">PopoverPositionClass</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Type</th><th class="doc-prose__th">Values</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">PopoverAlignment</code></td><td class="doc-prose__td"><code class="doc-prose__code">'right' | 'top' | 'top-right'</code></td><td class="doc-prose__td">Input for <code class="doc-prose__code">alignment</code> - forces a fixed position</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">PopoverPositionClass</code></td><td class="doc-prose__td"><code class="doc-prose__code">'rng-popover--right' | 'rng-popover--top' | 'rng-popover--top-right' | null</code></td><td class="doc-prose__td">Internal resolved class - computed from <code class="doc-prose__code">alignment</code> or auto-detection via <code class="doc-prose__code">_positionClass</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMPORT_POPOVER</code></h3>
+  <p class="doc-prose__p">
+    Includes <code class="doc-prose__code">PopoverComponent</code> and <code class="doc-prose__code">PopoverTargetDirective</code>.
+    Use it to import all popover pieces at once.
+  </p>
+  <rng-code-block [code]="importSnippet" language="typescript" title="IMPORT_POPOVER" variant="prose" />
+
+  <rng-doc-pager />
+</article>

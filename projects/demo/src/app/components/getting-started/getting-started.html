@@ -1,0 +1,111 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Getting Started</h1>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">@im4all/roolith-ng</code> is a standalone Angular component library - no <code class="doc-prose__code">NgModule</code>, tree-shakable with <code class="doc-prose__code">sideEffects: false</code>.
+    Install it from npm, add the SCSS tokens, and import the components you need.
+  </p>
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-spark" aria-hidden="true"></i> At a glance</p>
+    <p class="doc-prose__p">
+      Published as <code class="doc-prose__code">@im4all/roolith-ng</code> on npm - standalone components, SCSS design tokens, and overlay primitives for Angular 21+.
+    </p>
+  </div>
+
+  <h2 class="doc-prose__h2">Prerequisites</h2>
+  <p class="doc-prose__p">Make sure your project meets the peer requirements before installing:</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Requirement</th><th class="doc-prose__th">Version</th><th class="doc-prose__th">Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Angular</td><td class="doc-prose__td"><code class="doc-prose__code">&gt;=21.0.0</code></td><td class="doc-prose__td"><code class="doc-prose__code">@angular/core</code>, <code class="doc-prose__code">@angular/common</code>, <code class="doc-prose__code">@angular/forms</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Node.js</td><td class="doc-prose__td"><code class="doc-prose__code">&gt;=20.11</code> or <code class="doc-prose__code">22+</code></td><td class="doc-prose__td">Required by Angular 21</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">TypeScript</td><td class="doc-prose__td"><code class="doc-prose__code">~5.9</code></td><td class="doc-prose__td">As shipped with Angular 21</td></tr>
+    </tbody>
+  </table>
+  <p class="doc-prose__p">
+    Runtime dependencies <code class="doc-prose__code">lodash-es</code>, <code class="doc-prose__code">luxon</code> and <code class="doc-prose__code">tslib</code> are installed automatically with the package - you do not need to add them manually.
+  </p>
+
+  <h2 class="doc-prose__h2">Installation</h2>
+  <p class="doc-prose__p">Install the package with your preferred package manager:</p>
+
+  <rng-code-block [code]="installNpm" language="bash" title="npm" variant="prose" />
+  <rng-code-block [code]="installYarn" language="bash" title="yarn" variant="prose" />
+  <rng-code-block [code]="installPnpm" language="bash" title="pnpm" variant="prose" />
+  <rng-code-block [code]="installBun" language="bash" title="bun" variant="prose" />
+
+  <div class="doc-callout doc-callout--warning">
+    <p class="doc-callout__title"><i class="iconoir-warning-triangle" aria-hidden="true"></i> Peer dependencies</p>
+    <p class="doc-prose__p">
+      If your project was created with Angular 21, <code class="doc-prose__code">@angular/core</code>, <code class="doc-prose__code">@angular/common</code> and <code class="doc-prose__code">@angular/forms</code> are already present.
+      No extra install is needed - npm / yarn / pnpm will warn only if they are missing.
+    </p>
+  </div>
+
+  <h2 class="doc-prose__h2">Add styles</h2>
+  <p class="doc-prose__p">Add the global tokens and component styles once - typically in <code class="doc-prose__code">src/styles.scss</code>:</p>
+  <rng-code-block [code]="stylesSnippet" language="scss" title="src/styles.scss" variant="prose" />
+
+  <p class="doc-prose__p">
+    This includes base styles, resets, typography, layout and all component modules via <code class="doc-prose__code">rng-everything()</code> from
+    <code class="doc-prose__code">@im4all/roolith-ng/sass/rng-scss</code>.
+    See <code class="doc-prose__code">projects/roolith-ng/src/sass/rng-scss.scss:77</code> for the full mixin.
+  </p>
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-settings" aria-hidden="true"></i> Modular import</p>
+    <p class="doc-prose__p">Need less CSS? Import only what you use instead of <code class="doc-prose__code">rng-everything()</code>:</p>
+  </div>
+  <rng-code-block [code]="modularSnippet" language="scss" title="modular import" variant="prose" />
+
+  <p class="doc-prose__p">Override brand tokens at runtime with CSS variables - no rebuild or SCSS fork needed:</p>
+  <rng-code-block [code]="overrideSnippet" language="css" title="override with CSS variables" variant="prose" />
+  <p class="doc-prose__p">
+    Every component reads the <code class="doc-prose__code">--rng-*</code> tokens (e.g. <code class="doc-prose__code">--rng-color-primary</code>, <code class="doc-prose__code">--rng-border-radius</code>).
+    Details and dark-mode tokens are on the <a class="doc-prose__link" routerLink="/guide/theming">Theming</a> page.
+  </p>
+
+  <h2 class="doc-prose__h2">Usage</h2>
+  <p class="doc-prose__p">Every component is standalone - import only what you need:</p>
+  <rng-code-block [code]="usageSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <p class="doc-prose__p">Verify the install by rendering a component in your app:</p>
+  <rng-code-block [code]="verifySnippet" language="typescript" title="quick check" variant="prose" />
+
+  <ul class="doc-prose__ul doc-list">
+    <li class="doc-prose__li doc-list__item">Prefix is <code class="doc-prose__code">rng</code> - e.g. <code class="doc-prose__code">&lt;rng-button&gt;</code>, <code class="doc-prose__code">&lt;rng-card&gt;</code>, <code class="doc-prose__code">&lt;rng-table&gt;</code>.</li>
+    <li class="doc-prose__li doc-list__item">All components are tree-shakable - unused components are removed from the build.</li>
+    <li class="doc-prose__li doc-list__item">No global registration or <code class="doc-prose__code">NgModule</code> import required.</li>
+  </ul>
+
+  <h2 class="doc-prose__h2">Forms</h2>
+  <p class="doc-prose__p">Inputs work with both <code class="doc-prose__code">ReactiveForms</code> and <code class="doc-prose__code">ngModel</code>. Import <code class="doc-prose__code">ReactiveFormsModule</code> or <code class="doc-prose__code">FormsModule</code> as needed:</p>
+  <rng-code-block [code]="formsSnippet" language="typescript" title="forms setup" variant="prose" />
+  <p class="doc-prose__p">
+    Example: <code class="doc-prose__code">&lt;rng-text-input formControlName="email" placeholder="Email" /&gt;</code> or
+    <code class="doc-prose__code">&lt;rng-select-input [data]="options" [(value)]="selected" /&gt;</code>.
+    Validation, disabled and error states are built in.
+  </p>
+
+  <h2 class="doc-prose__h2">Theming</h2>
+  <p class="doc-prose__p">
+    Design tokens ship as SCSS variables and CSS custom properties under <code class="doc-prose__code">--rng-*</code>.
+    Override a variable before the mixin or set the CSS variable at runtime - every component follows.
+  </p>
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-palette" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">See <a class="doc-prose__link" routerLink="/guide/theming">Theming</a> for the full token list, dark mode with <code class="doc-prose__code">.theme-dark</code>, and brand customization patterns.</p>
+  </div>
+
+  <rng-doc-pager />
+
+  <div class="doc-callout" style="margin-top: 1.5rem;">
+    <p class="doc-callout__title"><i class="iconoir-github-circle" aria-hidden="true"></i> Source and issues</p>
+    <p class="doc-prose__p">
+      Found a bug or want to contribute? Open an issue or PR on
+      <a class="doc-prose__link" href="https://github.com/im4aLL/roolith-ng" target="_blank" rel="noopener noreferrer">github.com/im4aLL/roolith-ng</a>.
+    </p>
+  </div>
+</article>

@@ -1,0 +1,14 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-time-picker {
+  .rng-input--time-picker {
+    font-size: rem(14);
+
+    .rng-input__field-wrapper {
+      display: flex;
+      align-items: center;
+      gap: rem(8);
+    }
+  }
+}

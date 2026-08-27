@@ -1,0 +1,91 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin toggle-group {
+  .rng-toggle-group {
+    --rng-toggle-group-background: var(--rng-color-neutral-100);
+    --rng-toggle-group-border-radius: var(--rng-border-radius);
+    --rng-toggle-group-item-active-background: var(--rng-color-neutral);
+    --rng-toggle-group-item-border-radius: var(--rng-border-radius);
+    --rng-toggle-group-item-color: var(--rng-color-neutral-700);
+    --rng-toggle-group-item-color-active: var(--rng-surface-text-color);
+    --rng-toggle-group-item-shadow: var(--rng-shadow-small);
+    --rng-toggle-group-height: #{rem(32)};
+    --rng-toggle-group-item-gutter: #{rem(3)};
+
+    .theme-dark & {
+      --rng-toggle-group-background: var(--rng-color-neutral-200);
+    }
+
+    display: inline-flex;
+    border-radius: var(--rng-toggle-group-border-radius);
+    background-color: var(--rng-toggle-group-background);
+    height: var(--rng-toggle-group-height);
+    padding: var(--rng-toggle-group-item-gutter);
+  }
+
+  .rng-toggle-group__item {
+    border-radius: var(--rng-toggle-group-item-border-radius);
+    color: var(--rng-toggle-group-item-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    @include m.transition('background-color, box-shadow');
+
+    &--active {
+      background-color: var(--rng-toggle-group-item-active-background);
+      color: var(--rng-toggle-group-item-color-active);
+      border-radius: var(--rng-toggle-group-item-border-radius);
+      box-shadow: var(--rng-toggle-group-item-shadow);
+    }
+  }
+
+  .rng-toggle-group__button {
+    height: calc(var(--rng-toggle-group-height) - var(--rng-toggle-group-item-gutter) * 2);
+    background: none;
+    border: none;
+    padding-inline: rem(8);
+    display: flex;
+    align-items: center;
+    border-radius: var(--rng-toggle-group-item-border-radius);
+    color: var(--rng-toggle-group-item-color);
+    cursor: pointer;
+    font-size: rem(13);
+    width: 100%;
+    @include m.transition('color');
+
+    .rng-toggle-group__item--active & {
+      color: var(--rng-toggle-group-item-color-active);
+    }
+
+    &:active {
+      transform: translateY(rem(1));
+    }
+
+    &:hover {
+      color: var(--rng-toggle-group-item-color-active);
+    }
+  }
+
+  .rng-toggle-group--vertical {
+    flex-direction: column;
+    height: auto;
+
+    .rng-toggle-group__item {
+      margin: var(--rng-toggle-group-item-gutter);
+    }
+  }
+
+  .rng-toggle-group--block {
+    display: flex;
+    width: 100%;
+
+    .rng-toggle-group__item {
+      flex: 1;
+    }
+
+    .rng-toggle-group__button {
+      justify-content: center;
+    }
+  }
+}

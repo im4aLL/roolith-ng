@@ -1,0 +1,53 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin pagination {
+  .rng-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: rem(10);
+
+    @include m.breakpoint(medium-up) {
+      justify-content: space-between;
+    }
+  }
+
+  .rng-pagination__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(2);
+    align-items: center;
+  }
+
+  .rng-pagination__item--break {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rng-pagination__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(10);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rng-pagination__info {
+    font-size: rem(14);
+  }
+
+  .rng-pagination__selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(10);
+    align-items: center;
+    font-size: rem(14);
+  }
+
+  .rng-pagination__selector-field {
+    max-width: rem(120);
+  }
+}

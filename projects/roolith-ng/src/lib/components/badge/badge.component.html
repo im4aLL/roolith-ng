@@ -1,0 +1,10 @@
+<span
+  class="rng-badge"
+  [class]="classNames()">
+  @if (icon()) {
+    <rng-icon
+      [name]="icon()!"
+      [styleClass]="iconColorClassName()"></rng-icon>
+  }
+  <ng-content></ng-content>
+</span>

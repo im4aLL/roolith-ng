@@ -1,0 +1,285 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Filter Button</h1>
+  <p class="doc-prose__p">
+    A popover-driven filter control that lets users select one or more items from a searchable list.
+    The trigger is a <code class="doc-prose__code">rng-button--filter</code> that shows the active selection inline as
+    <code class="doc-prose__code">rng-badge</code> chips and a badge count when the selection exceeds
+    <code class="doc-prose__code">maxSelectedItemsToShow</code>.
+    Selection state is emitted via <code class="doc-prose__code">changeEvent</code> with a <code class="doc-prose__code">type</code> of <code class="doc-prose__code">'change'</code> or <code class="doc-prose__code">'clear'</code>.
+    Internally the popover contains an <code class="doc-prose__code">rng-search-input</code> for filtering by label and a list of <code class="doc-prose__code">rng-checkbox-input</code> rows with optional <code class="doc-prose__code">counter</code> values.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Interfaces</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilterButtonItem</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Display text shown in the dropdown list and as inline badge chips</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Unique identifier - used to match checked state and as track key</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selected</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Initial selected state. Defaults to <code class="doc-prose__code">false</code> when omitted</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">counter</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional count rendered on the right of the list row as <code class="doc-prose__code">rng-button-filter-list__count</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilterChangeEvent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'change' | 'clear'</code></td><td class="doc-prose__td"><code class="doc-prose__code">'change'</code> when a checkbox is toggled, <code class="doc-prose__code">'clear'</code> when <code class="doc-prose__code">Clear filters</code> is clicked</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">payload</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterButtonItem[]</code></td><td class="doc-prose__td">Current array of selected items at the time of emit</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">[items]</code> and listen to <code class="doc-prose__code">(changeEvent)</code>.
+    Project the button label via the default slot - for example <code class="doc-prose__code">Status</code>.
+    Clicking the trigger opens an <code class="doc-prose__code">rng-popover</code> anchored via <code class="doc-prose__code">rngPopoverTarget</code> with a search header and a checkbox list.
+    Each toggle emits <code class="doc-prose__code">&#123; type: 'change', payload: selectedItems &#125;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-filter-button
+          [items]="basicItems()"
+          (changeEvent)="onBasicChange($event)">
+          Status
+        </rng-filter-button>
+        @if (basicLastEvent()) {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+            Last: <code class="doc-prose__code">{{ basicLastEvent()!.type }}</code> - {{ basicLastEvent()!.payload.length }} selected
+          </span>
+        } @else {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">No selection yet - open the popover and toggle an item.</span>
+        }
+      </div>
+      @if (basicLastEvent()) {
+        <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatEvent(basicLastEvent()) }}</pre>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="basicItemsSnippet" language="typescript" title="basic - component" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+  <rng-code-block [code]="handlerSnippet" language="typescript" title="changeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Pre-selected items</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">selected: true</code> on any <code class="doc-prose__code">IFilterButtonItem</code> to render it as initially selected.
+    The button shows selected labels inline as <code class="doc-prose__code">rng-badge</code> chips inside <code class="doc-prose__code">rng-button__filter-items</code>.
+    The icon switches from <code class="doc-prose__code">filter</code> to <code class="doc-prose__code">filter-solid</code> and gains <code class="doc-prose__code">rng-color-secondary</code> when at least one item is selected.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-filter-button
+          [items]="preSelectedItems()"
+          (changeEvent)="onPreSelectedChange($event)">
+          Status
+        </rng-filter-button>
+        @if (preSelectedLastEvent()) {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+            Last: <code class="doc-prose__code">{{ preSelectedLastEvent()!.type }}</code> - {{ preSelectedLastEvent()!.payload.length }} selected
+          </span>
+        } @else {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">Two items are pre-selected - open to see badges and toggle state.</span>
+        }
+      </div>
+      @if (preSelectedLastEvent()) {
+        <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatEvent(preSelectedLastEvent()) }}</pre>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="preSelectedSnippet" language="typescript" title="pre-selected - data" variant="prose" />
+  <rng-code-block [code]="preSelectedTemplateSnippet" language="html" title="pre-selected - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">With item counters</h3>
+  <p class="doc-prose__p">
+    Add <code class="doc-prose__code">counter</code> to display a count alongside each label in <code class="doc-prose__code">rng-button-filter-list__count</code>.
+    Useful for showing how many results match each filter option.
+    Counters are purely presentational - they do not affect selection logic.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-filter-button
+          [items]="counterItems()"
+          (changeEvent)="onCounterChange($event)">
+          Status
+        </rng-filter-button>
+        @if (counterLastEvent()) {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+            Last: <code class="doc-prose__code">{{ counterLastEvent()!.type }}</code> - {{ counterLastEvent()!.payload.length }} selected
+          </span>
+        } @else {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">Open to see counters (12, 4, 7) on the right of each row.</span>
+        }
+      </div>
+      @if (counterLastEvent()) {
+        <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatEvent(counterLastEvent()) }}</pre>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="counterSnippet" language="typescript" title="with counters - data" variant="prose" />
+  <rng-code-block [code]="counterTemplateSnippet" language="html" title="with counters - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Limiting inline badges with <code class="doc-prose__code">maxSelectedItemsToShow</code></h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">[maxSelectedItemsToShow]</code> controls how many selected labels are shown inline in the trigger.
+    Defaults to <code class="doc-prose__code">2</code>. When <code class="doc-prose__code">selectedCount() &gt; maxSelectedItemsToShow()</code> the button collapses to a single
+    <code class="doc-prose__code">rng-button__filter-item</code> showing <code class="doc-prose__code">"{{ '{{' }} selectedCount() {{ '}}' }} selected"</code>.
+    Otherwise each selected item is rendered as its own <code class="doc-prose__code">rng-badge</code> separated by <code class="doc-prose__code">rng-button__filter-sep</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted); min-width: 6rem;">max = 1:</span>
+          <rng-filter-button
+            [items]="maxShowItems()"
+            [maxSelectedItemsToShow]="1"
+            (changeEvent)="onMaxShowChange($event)">
+            Status
+          </rng-filter-button>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+          <span style="font-size: 0.75rem; color: var(--doc-text-muted); min-width: 6rem;">max = 2 (default):</span>
+          <rng-filter-button
+            [items]="maxShowItems()"
+            [maxSelectedItemsToShow]="2"
+            (changeEvent)="onMaxShowChange($event)">
+            Status
+          </rng-filter-button>
+        </div>
+        <p style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+          Three items start selected - with <code class="doc-prose__code">max=1</code> you see "3 selected", with <code class="doc-prose__code">max=2</code> you also see "3 selected" (threshold exceeded). Deselect to 1 or 2 to see inline badges.
+        </p>
+        @if (maxShowLastEvent()) {
+          <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace; width: 100%;">{{ formatEvent(maxShowLastEvent()) }}</pre>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="maxSnippet" language="html" title="maxSelectedItemsToShow" variant="prose" />
+
+  <h3 class="doc-prose__h3">Search and clear</h3>
+  <p class="doc-prose__p">
+    The popover header contains an <code class="doc-prose__code">rng-search-input</code> that filters the list by <code class="doc-prose__code">label</code> case-insensitively via
+    <code class="doc-prose__code">onSearchInputChange</code>. Passing <code class="doc-prose__code">null</code> or an empty string resets
+    <code class="doc-prose__code">filteredItems</code> to the full <code class="doc-prose__code">_items</code> list.
+    When at least one item is selected the footer shows a block <code class="doc-prose__code">rng-button</code> labelled "Clear filters" that calls
+    <code class="doc-prose__code">clearFilters()</code> - it resets both signals to the original <code class="doc-prose__code">items()</code> input and emits
+    <code class="doc-prose__code">&#123; type: 'clear', payload: selectedItems &#125;</code>.
+    On open the popover emits <code class="doc-prose__code">IPopoverChangeEvent</code> with <code class="doc-prose__code">type: 'open'</code> and the component focuses the search input via
+    <code class="doc-prose__code">viewChild(SearchInputComponent)</code>.
+  </p>
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">
+      Type in the search box after opening the popover - e.g. <code class="doc-prose__code">act</code> matches <code class="doc-prose__code">Active</code> and <code class="doc-prose__code">Inactive</code>.
+      Use <code class="doc-prose__code">Clear filters</code> in the footer to reset all selections at once.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Disabled state</h3>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">[items]</code> is an empty array the trigger computes <code class="doc-prose__code">isDisabled() === true</code> and renders with
+    <code class="doc-prose__code">rng-button--disabled</code>. Provide at least one item to enable the filter.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-filter-button
+        [items]="emptyItems()"
+        (changeEvent)="onBasicChange($event)">
+        Status
+      </rng-filter-button>
+      <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">Disabled - <code class="doc-prose__code">items</code> is empty (<code class="doc-prose__code">isDisabled() === true</code>).</span>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled - empty items" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Counters, pre-selected state and a custom <code class="doc-prose__code">[maxSelectedItemsToShow]</code> together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-filter-button
+          [items]="fullItems()"
+          [maxSelectedItemsToShow]="2"
+          (changeEvent)="onFullChange($event)">
+          Status
+        </rng-filter-button>
+        @if (fullLastEvent()) {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+            Last: <code class="doc-prose__code">{{ fullLastEvent()!.type }}</code> - {{ fullLastEvent()!.payload.length }} selected
+          </span>
+        } @else {
+          <span style="font-size: 0.8125rem; color: var(--doc-text-muted);">One item starts selected - toggle more and watch the badge collapse after 2.</span>
+        }
+      </div>
+      @if (fullLastEvent()) {
+        <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatEvent(fullLastEvent()) }}</pre>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-filter-button</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterButtonItem[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Full list of selectable items - synced to internal <code class="doc-prose__code">_items</code> and <code class="doc-prose__code">filteredItems</code> via an <code class="doc-prose__code">effect</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxSelectedItemsToShow</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">2</code></td><td class="doc-prose__td">Max number of selected labels shown inline - when exceeded shows <code class="doc-prose__code">"n selected"</code> instead</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-filter-button</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">OutputEmitterRef&lt;IFilterChangeEvent&gt;</code></td><td class="doc-prose__td">Emits on toggle (<code class="doc-prose__code">type: 'change'</code>) or clear (<code class="doc-prose__code">type: 'clear'</code>) with the current <code class="doc-prose__code">selectedItems()</code> as payload</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-filter-button</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Label text inside the trigger button - e.g. <code class="doc-prose__code">Status</code> - rendered in <code class="doc-prose__code">rng-button__filter-text</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Internal state (read-only)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedItems()</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterButtonItem[]</code></td><td class="doc-prose__td">Computed from <code class="doc-prose__code">_items().filter(i =&gt; i.selected)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hasSelectedItems()</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">True when at least one item is selected - controls badge display and footer visibility</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedCount()</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Length of <code class="doc-prose__code">selectedItems()</code> - used for collapsed label</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isDisabled()</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">True when <code class="doc-prose__code">items().length === 0</code> - adds <code class="doc-prose__code">rng-button--disabled</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">filteredItems()</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterButtonItem[]</code></td><td class="doc-prose__td">Search-filtered view - updated by <code class="doc-prose__code">onSearchInputChange</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

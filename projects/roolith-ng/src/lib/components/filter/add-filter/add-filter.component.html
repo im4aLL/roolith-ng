@@ -1,0 +1,114 @@
+<div class="rng-filter__input-group">
+  <div class="rng-filter__input-group-wrapper">
+    <div class="rng-filter__input-row">
+      <rng-select-input
+        [data]="filterableFields()"
+        [value]="selectedField()"
+        [dropdownWidth]="200"
+        (valueChange)="onFieldChange($event)"></rng-select-input>
+      @if (!isShowCustomTemplate()) {
+        <rng-select-input
+          [data]="filterTypes()"
+          [value]="filterTypes()[0]"
+          [dropdownWidth]="200"
+          (valueChange)="onFirstFilterTypeChange($event)"></rng-select-input>
+      }
+    </div>
+
+    <ng-container *ngTemplateOutlet="isShowCustomTemplate() ? customTpl : defaultTpl"></ng-container>
+  </div>
+
+  @if (!isShowCustomTemplate()) {
+    <div class="rng-filter__action">
+      <rng-button
+        variant="dark"
+        (clickEvent)="addFilter()">
+        Add Filter
+      </rng-button>
+      <rng-button (clickEvent)="cancelFilter()">Cancel</rng-button>
+    </div>
+  }
+</div>
+
+<ng-template #customTpl>
+  <ng-container *ngTemplateOutlet="customTemplateData()[selectedField()?.value ?? '']"></ng-container>
+</ng-template>
+
+<ng-template #defaultTpl>
+  @if (isShowFirstFilter()) {
+    @switch (selectedFieldType()) {
+      @case ('string') {
+        <ng-container *ngTemplateOutlet="firstStringFieldTpl"></ng-container>
+      }
+      @case ('number') {
+        <ng-container *ngTemplateOutlet="firstNumberFieldTpl"></ng-container>
+      }
+      @case ('date') {
+        <ng-container *ngTemplateOutlet="firstDateFieldTpl"></ng-container>
+      }
+    }
+  }
+
+  @if (isShowOperators()) {
+    <rng-radio-input
+      [options]="filterOperatorOptions()"
+      [value]="operator()"
+      [inline]="true"
+      (valueChange)="onFilterOperatorChange($event)"></rng-radio-input>
+    <rng-select-input
+      [data]="filterTypes()"
+      [value]="filterTypes()[0]"
+      [dropdownWidth]="200"
+      (valueChange)="onSecondFilterTypeChange($event)"></rng-select-input>
+  }
+
+  @if (isShowSecondFilter()) {
+    @switch (selectedFieldType()) {
+      @case ('string') {
+        <ng-container *ngTemplateOutlet="secondStringFieldTpl"></ng-container>
+      }
+      @case ('number') {
+        <ng-container *ngTemplateOutlet="secondNumberFieldTpl"></ng-container>
+      }
+      @case ('date') {
+        <ng-container *ngTemplateOutlet="secondDateFieldTpl"></ng-container>
+      }
+    }
+  }
+</ng-template>
+
+<ng-template #firstStringFieldTpl>
+  <rng-search-input
+    #firstSearchInputEl
+    (valueChange)="onFirstSearchInputChange($event)"></rng-search-input>
+</ng-template>
+
+<ng-template #firstNumberFieldTpl>
+  <rng-number-input
+    #firstNumberInputEl
+    (valueChange)="onFirstNumberInputChange($event)"></rng-number-input>
+</ng-template>
+
+<ng-template #firstDateFieldTpl>
+  <rng-date-picker-input
+    #firstDateInputEl
+    (valueChange)="onFirstDateInputChange($event)"></rng-date-picker-input>
+</ng-template>
+
+<ng-template #secondStringFieldTpl>
+  <rng-search-input
+    #secondSearchInputEl
+    (valueChange)="onSecondSearchInputChange($event)"></rng-search-input>
+</ng-template>
+
+<ng-template #secondNumberFieldTpl>
+  <rng-number-input
+    #secondNumberInputEl
+    (valueChange)="onSecondNumberInputChange($event)"></rng-number-input>
+</ng-template>
+
+<ng-template #secondDateFieldTpl>
+  <rng-date-picker-input
+    #secondDateInputEl
+    (valueChange)="onSecondDateInputChange($event)"></rng-date-picker-input>
+</ng-template>

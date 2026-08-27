@@ -1,0 +1,37 @@
+@use '../functions' as *;
+
+@mixin card() {
+  .doc-card {
+    height: 100%;
+    padding: rem(24);
+    border: rem(1) solid var(--doc-border);
+    border-radius: var(--doc-radius);
+    background-color: var(--doc-surface);
+  }
+
+  .doc-card__title {
+    display: flex;
+    align-items: center;
+    gap: rem(8);
+    margin: 0 0 rem(8);
+    font-size: 1rem;
+    font-weight: var(--doc-font-weight-medium);
+    color: var(--doc-text);
+  }
+
+  .doc-card__title i {
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .doc-card__text {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--doc-text-muted);
+  }
+
+  .doc-card .doc-btn {
+    margin-top: rem(16);
+  }
+}

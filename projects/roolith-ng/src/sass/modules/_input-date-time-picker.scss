@@ -1,0 +1,64 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-date-time-picker {
+  .rng-input--date-time-picker {
+    .rng-input__field-wrapper {
+      position: relative;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+
+      &:focus .rng-input__field {
+        box-shadow: var(--rng-input-focus-shadow);
+      }
+    }
+
+    .rng-input__field {
+      display: block;
+      padding-right: rem(32);
+      width: 100%;
+      text-align: left;
+    }
+
+    .rng-input__icon {
+      pointer-events: none;
+      position: absolute;
+      right: rem(10);
+      top: rem(8);
+    }
+  }
+
+  .rng-date-time-picker-popover {
+    --rng-date-time-picker-popover-anchor: --rng-date-time-picker-popover;
+
+    position-anchor: var(--rng-date-time-picker-popover-anchor);
+    position: absolute;
+    top: calc(anchor(bottom) + #{rem(4)});
+    left: anchor(left);
+    transform-origin: top left;
+    border-radius: var(--rng-border-radius);
+    border: rem(1) solid var(--rng-border-color);
+    background: var(--rng-surface-bg-color);
+    box-shadow: var(--rng-shadow-small);
+
+    .rng-calendar {
+      --rng-calendar-border-color: transparent;
+    }
+  }
+
+  .rng-date-time-picker-popover__time {
+    display: flex;
+    align-items: center;
+    gap: rem(8);
+    padding: rem(12);
+    border-top: rem(1) solid var(--rng-border-color);
+    font-size: rem(14);
+  }
+
+  .rng-date-time-picker-popover__colon {
+    color: var(--rng-surface-text-color);
+    font-weight: var(--rng-font-weight-semi-bold);
+  }
+}

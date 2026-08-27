@@ -1,0 +1,241 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Search Input</h1>
+  <p class="doc-prose__p">
+    A search field built as <code class="doc-prose__code">rng-search-input</code>.
+    Emits the input value via a debounced <code class="doc-prose__code">debouncedChange</code> output (default <code class="doc-prose__code">250ms</code>) with
+    <code class="doc-prose__code">distinctUntilChanged</code>, shows a clear button when a value is present, and exposes the current query as a
+    <code class="doc-prose__code">string | null</code> model via <code class="doc-prose__code">[(value)]</code>.
+    It does not implement <code class="doc-prose__code">FormValueControl</code> - it is intended as a standalone UI search control.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Listen to <code class="doc-prose__code">(debouncedChange)</code> to react to the debounced query.
+    The output is backed by <code class="doc-prose__code">outputFromObservable(toObservable(value).pipe(debounceTime(debouncedTime()), distinctUntilChanged()))</code>
+    and emits only after the configured delay. Typing updates <code class="doc-prose__code">value</code> immediately via <code class="doc-prose__code">onInput</code> but the output waits for the debounce.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-search-input (debouncedChange)="onBasicDebouncedChange($event)" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b); width: 100%;">
+        <p class="doc-prose__p" style="margin: 0;">
+          Debounced value: <code class="doc-prose__code">{{ basicDebounced() === null || basicDebounced() === '' ? 'empty' : basicDebounced() }}</code>
+        </p>
+        <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">
+          Type to see the debounced output after <code class="doc-prose__code">250ms</code> - duplicate consecutive values are ignored via <code class="doc-prose__code">distinctUntilChanged</code>.
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for immediate two-way sync or use <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;string | null&gt;</code> with default <code class="doc-prose__code">null</code> - empty input syncs as <code class="doc-prose__code">''</code> after typing.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-search-input [(value)]="twoWayValue" />
+      <rng-search-input [value]="twoWayValue()" (valueChange)="onTwoWayValueChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Current: <code class="doc-prose__code">{{ twoWayValue() === null ? 'null' : '"' + twoWayValue() + '"' }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ twoWayValue() === null ? 'null' : typeof twoWayValue() }})</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="twoWayTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Debounce timing</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[debouncedTime]</code> to configure the debounce delay in milliseconds.
+    Default is <code class="doc-prose__code">250</code>. Set to <code class="doc-prose__code">500</code> for a slower search or <code class="doc-prose__code">0</code> to disable debouncing and emit on every keystroke.
+    The debounced pipeline also applies <code class="doc-prose__code">distinctUntilChanged</code> so duplicate consecutive values do not re-emit.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <div style="display: flex; flex-direction: column; gap: 0.375rem; width: 100%;">
+        <span style="font-size: 0.8125rem; font-weight: 600;">Custom 500ms</span>
+        <rng-search-input [debouncedTime]="500" [(value)]="customValue" (debouncedChange)="onCustomDebouncedChange($event)" />
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+          value: <code class="doc-prose__code">{{ customValue() === null ? 'null' : '"' + customValue() + '"' }}</code> |
+          debounced: <code class="doc-prose__code">{{ customDebounced() === null || customDebounced() === '' ? 'empty' : '"' + customDebounced() + '"' }}</code>
+        </p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.375rem; width: 100%;">
+        <span style="font-size: 0.8125rem; font-weight: 600;">No debounce (0ms)</span>
+        <rng-search-input [debouncedTime]="0" [(value)]="noDebounceValue" (debouncedChange)="onNoDebounceDebouncedChange($event)" />
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+          value: <code class="doc-prose__code">{{ noDebounceValue() === null ? 'null' : '"' + noDebounceValue() + '"' }}</code> |
+          debounced: <code class="doc-prose__code">{{ noDebounceDebounced() === null || noDebounceDebounced() === '' ? 'empty' : '"' + noDebounceDebounced() + '"' }}</code>
+        </p>
+        <span style="font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">With <code class="doc-prose__code">0</code> the debounced output emits immediately - compare typing speed with the 500ms field above.</span>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="customDebounceSnippet" language="html" title="custom debounce - 500ms" variant="prose" />
+  <rng-code-block [code]="noDebounceSnippet" language="html" title="no debounce - 0ms" variant="prose" />
+  <rng-code-block [code]="debounceSnippet" language="html" title="debounce - all variants" variant="prose" />
+
+  <h3 class="doc-prose__h3">Disabled</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[disabled]="true"</code> to disable the field.
+    The component adds <code class="doc-prose__code">rng-input--disabled</code> to the wrapper and forwards <code class="doc-prose__code">[disabled]</code> to the native <code class="doc-prose__code">&lt;input&gt;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-search-input [disabled]="true" />
+      <rng-search-input [disabled]="true" [(value)]="disabledValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Disabled value: <code class="doc-prose__code">{{ disabledValue() === null ? 'null' : '"' + disabledValue() + '"' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+
+  <h3 class="doc-prose__h3">Clear button</h3>
+  <p class="doc-prose__p">
+    The clear button (<code class="doc-prose__code">rng-input__search-clear-button</code> with <code class="doc-prose__code">rng-icon--close</code>) appears automatically when <code class="doc-prose__code">isShowClearButton()</code> is <code class="doc-prose__code">true</code>.
+    Typing a non-empty value via <code class="doc-prose__code">onInput</code> sets the flag to <code class="doc-prose__code">true</code>, clearing via <code class="doc-prose__code">clearInput()</code> resets <code class="doc-prose__code">value</code> to <code class="doc-prose__code">''</code>, hides the button and resets the native input value via <code class="doc-prose__code">inputElement()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-search-input [(value)]="clearableValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ clearableValue() === null ? 'null' : '"' + clearableValue() + '"' }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> - type to show the clear button, click it to reset to <code class="doc-prose__code">''</code>.</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="clearSnippet" language="html" title="clear button" variant="prose" />
+
+  <h3 class="doc-prose__h3">Focus method</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">focus()</code> on the component instance to programmatically focus the native <code class="doc-prose__code">&lt;input&gt;</code> via <code class="doc-prose__code">inputElement()</code>.
+    The method guards against a missing element and is a no-op when <code class="doc-prose__code">inputElement()</code> is <code class="doc-prose__code">undefined</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-search-input #searchInputRef [(value)]="focusValue" />
+      <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+        <button type="button" class="doc-button" (click)="focusSearchInput()">Focus input</button>
+        <span style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+          Value: <code class="doc-prose__code">{{ focusValue() === null ? 'null' : '"' + focusValue() + '"' }}</code>
+        </span>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="focusSnippet" language="html" title="focus - template" variant="prose" />
+  <rng-code-block [code]="focusTsSnippet" language="typescript" title="focus - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example - live filter</h3>
+  <p class="doc-prose__p">
+    Combine <code class="doc-prose__code">[(value)]</code> with <code class="doc-prose__code">(debouncedChange)</code> to build a live search.
+    The immediate <code class="doc-prose__code">value</code> drives the input while the debounced value drives filtering - useful for API calls or heavy lists.
+    The list below filters <code class="doc-prose__code">{{ fullItems().length }}</code> frameworks by the debounced query.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-search-input [(value)]="fullQuery" (debouncedChange)="onFullDebouncedChange($event)" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.375rem 0;">
+          Query: <code class="doc-prose__code">{{ fullQuery() === null || fullQuery() === '' ? 'empty' : '"' + fullQuery() + '"' }}</code> |
+          Debounced: <code class="doc-prose__code">{{ fullDebouncedQuery() === null || fullDebouncedQuery() === '' ? 'empty' : '"' + fullDebouncedQuery() + '"' }}</code> |
+          Results: <code class="doc-prose__code">{{ filteredItems().length }}</code>
+        </p>
+        @if (filteredItems().length > 0) {
+          <ul style="margin: 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            @for (item of filteredItems(); track item) {
+              <li><code class="doc-prose__code">{{ item }}</code></li>
+            }
+          </ul>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">
+            No results for <code class="doc-prose__code">{{ fullDebouncedQuery() }}</code>
+          </p>
+        }
+        @if (fullQuery() !== null && fullQuery() !== '' || fullDebouncedQuery() !== null && fullDebouncedQuery() !== '') {
+          <div style="margin-top: 0.5rem;">
+            <button type="button" class="doc-button doc-button--link" (click)="clearFullQuery()">Clear search</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-search-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">debouncedTime</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">250</code></td><td class="doc-prose__td">Debounce delay in ms before <code class="doc-prose__code">debouncedChange</code> emits. Set to <code class="doc-prose__code">0</code> to disable debouncing - piped via <code class="doc-prose__code">debounceTime(debouncedTime())</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the input via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-search-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">The current search text - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>; updated immediately on <code class="doc-prose__code">input</code> via <code class="doc-prose__code">onInput</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-search-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">debouncedChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">Emits the debounced search value on input - backed by <code class="doc-prose__code">outputFromObservable(toObservable(value).pipe(debounceTime(...), distinctUntilChanged()))</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">Emits the immediate value on change - used by <code class="doc-prose__code">[(value)]</code> two-way binding</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-search-input</code> Signals and View Queries</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">'Search'</code></td><td class="doc-prose__td">Placeholder text for the native <code class="doc-prose__code">&lt;input&gt;</code> - defaults to <code class="doc-prose__code">'Search'</code> via <code class="doc-prose__code">signal('Search')</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isShowClearButton</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;boolean&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Whether the clear button is visible - set to <code class="doc-prose__code">true</code> when input has a value in <code class="doc-prose__code">onInput</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">inputElement</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;ElementRef&lt;HTMLInputElement&gt; | undefined&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">View child for the native <code class="doc-prose__code">&lt;input #inputElement&gt;</code> - used by <code class="doc-prose__code">clearInput</code> and <code class="doc-prose__code">focus</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onInput</code></td><td class="doc-prose__td"><code class="doc-prose__code">onInput(event: Event): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">input</code> - sets <code class="doc-prose__code">value</code> from <code class="doc-prose__code">event.target.value</code> and toggles <code class="doc-prose__code">isShowClearButton</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clearInput</code></td><td class="doc-prose__td"><code class="doc-prose__code">clearInput(): void</code></td><td class="doc-prose__td">Resets <code class="doc-prose__code">value</code> to <code class="doc-prose__code">''</code>, hides the clear button and clears the native input via <code class="doc-prose__code">_resetInputValue</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">focus</code></td><td class="doc-prose__td"><code class="doc-prose__code">focus(): void</code></td><td class="doc-prose__td">Focuses the native input element via <code class="doc-prose__code">inputElement().nativeElement.focus()</code> - no-op if element is unavailable</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Notes</h3>
+  <ul class="doc-prose__ul">
+    <li class="doc-prose__li">Does not implement <code class="doc-prose__code">FormValueControl</code> - use as a standalone UI control, not with <code class="doc-prose__code">[formField]</code>.</li>
+    <li class="doc-prose__li">The outer wrapper uses <code class="doc-prose__code">rng-input rng-input--search</code> with a leading <code class="doc-prose__code">rng-icon--search</code> icon and an optional <code class="doc-prose__code">rng-input__search-clear-button</code>.</li>
+    <li class="doc-prose__li">Debounced output uses <code class="doc-prose__code">distinctUntilChanged</code> - typing the same value consecutively does not re-emit.</li>
+  </ul>
+
+  <rng-doc-pager />
+</article>

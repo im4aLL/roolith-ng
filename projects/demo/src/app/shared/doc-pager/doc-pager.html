@@ -1,0 +1,18 @@
+@if (hasPager()) {
+  <nav class="doc-pager" aria-label="Page navigation">
+    @if (prevLink(); as previous) {
+      <a class="doc-btn" [routerLink]="previous.route">
+        <i class="iconoir-arrow-left" aria-hidden="true"></i>
+        {{ previous.label }}
+      </a>
+    } @else {
+      <span></span>
+    }
+    @if (nextLink(); as nxt) {
+      <a class="doc-btn doc-btn--primary" [routerLink]="nxt.route">
+        {{ nxt.label }}
+        <i class="iconoir-arrow-right" aria-hidden="true"></i>
+      </a>
+    }
+  </nav>
+}

@@ -1,0 +1,90 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">List</h1>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-list</code> renders an unordered list from a structured array of items.
+    Each entry is an <code class="doc-prose__code">IListItem</code> with required <code class="doc-prose__code">content</code> and optional
+    <code class="doc-prose__code">title</code>. When <code class="doc-prose__code">title</code> is present it is rendered as a header
+    above the content inside <code class="doc-prose__code">rng-list__item</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass an array of <code class="doc-prose__code">IListItem</code> to <code class="doc-prose__code">[items]</code>.
+    Each item only needs <code class="doc-prose__code">content</code> - the list renders a plain
+    <code class="doc-prose__code">&lt;ul class="rng-list"&gt;</code> with <code class="doc-prose__code">rng-list__content</code> inside each
+    <code class="doc-prose__code">rng-list__item</code>.
+  </p>
+  <div class="doc-prose__example">
+    <rng-list [items]="basicItems" />
+  </div>
+  <rng-code-block [code]="basicDataSnippet" language="typescript" title="list - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">With titles</h3>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">title</code> is provided it renders as a header above the item content
+    inside <code class="doc-prose__code">rng-list__header</code>. The title is also used as the tracking key for
+    <code class="doc-prose__code">&#64;for</code> - items without a title fall back to the array index.
+  </p>
+  <div class="doc-prose__example">
+    <rng-list [items]="withTitlesItems" />
+  </div>
+  <rng-code-block [code]="withTitlesDataSnippet" language="typescript" title="with titles - data" variant="prose" />
+  <rng-code-block [code]="withTitlesSnippet" language="html" title="with titles" variant="prose" />
+
+  <h3 class="doc-prose__h3">Mixed content</h3>
+  <p class="doc-prose__p">
+    Mix titled and plain items in the same list. Only items with a <code class="doc-prose__code">title</code>
+    render the header element - others show just the content.
+  </p>
+  <div class="doc-prose__example">
+    <rng-list [items]="mixedItems" />
+  </div>
+  <rng-code-block [code]="structureSnippet" language="html" title="rendered - with title" variant="prose" />
+  <rng-code-block [code]="structureWithoutTitleSnippet" language="html" title="rendered - without title" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Plain and titled items together, covering the typical use case.</p>
+  <div class="doc-prose__example">
+    <rng-list [items]="fullItems" />
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-list</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">IListItem[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Array of items to render as <code class="doc-prose__code">&lt;li&gt;</code> elements inside <code class="doc-prose__code">rng-list</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IListItem</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">content</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Main text displayed inside the list item (<code class="doc-prose__code">rng-list__content</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">title</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Header shown above <code class="doc-prose__code">content</code> inside <code class="doc-prose__code">rng-list__header</code>. Also used as the tracking key for <code class="doc-prose__code">&#64;for</code> when present, otherwise the index is used</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Tracking</h3>
+  <p class="doc-prose__p">
+    The component transforms <code class="doc-prose__code">items</code> internally and assigns <code class="doc-prose__code">_trackBy</code>
+    as <code class="doc-prose__code">title ?? index</code>. Duplicate titles will share the same track key - prefer unique
+    titles or omit the title when uniqueness cannot be guaranteed.
+  </p>
+
+  <rng-doc-pager />
+</article>

@@ -1,0 +1,186 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '../settings' as s;
+@use '../mixins' as m;
+
+$grid-small-gutter: math.div(map.get(s.$grid-gutter, 'small'), 2);
+$grid-medium-gutter: math.div(map.get(s.$grid-gutter, 'medium'), 2);
+$grid-large-gutter: math.div(map.get(s.$grid-gutter, 'large'), 2);
+$grid-xxlarge-gutter: math.div(map.get(s.$grid-gutter, 'xxlarge'), 2);
+
+@mixin add-gutter() {
+  padding-left: $grid-small-gutter;
+  padding-right: $grid-small-gutter;
+
+  @include m.breakpoint(medium-up) {
+    padding-left: $grid-medium-gutter;
+    padding-right: $grid-medium-gutter;
+  }
+
+  @include m.breakpoint(large-up) {
+    padding-left: $grid-large-gutter;
+    padding-right: $grid-large-gutter;
+  }
+
+  @include m.breakpoint(xxlarge-up) {
+    padding-left: $grid-xxlarge-gutter;
+    padding-right: $grid-xxlarge-gutter;
+  }
+}
+
+@mixin grid() {
+  .container {
+    max-width: s.$container-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .row {
+    @include m.clearfix();
+    @include add-gutter();
+  }
+
+  .columns {
+    float: left;
+    @include add-gutter();
+  }
+
+  .column {
+    padding-left: map.get(s.$grid-gutter, 'small');
+    padding-right: map.get(s.$grid-gutter, 'small');
+
+    @include m.breakpoint(medium-up) {
+      padding-left: map.get(s.$grid-gutter, 'medium');
+      padding-right: map.get(s.$grid-gutter, 'medium');
+    }
+
+    @include m.breakpoint(large-up) {
+      padding-left: map.get(s.$grid-gutter, 'large');
+      padding-right: map.get(s.$grid-gutter, 'large');
+    }
+
+    @include m.breakpoint(xxlarge-up) {
+      padding-left: map.get(s.$grid-gutter, 'xxlarge');
+      padding-right: map.get(s.$grid-gutter, 'xxlarge');
+    }
+  }
+
+  [class*='large-'],
+  [class*='medium-'] {
+    width: 100%;
+  }
+
+  @for $i from 1 through s.$grid-column-count {
+    .small-#{$i} {
+      width: math.percentage(math.div($i, s.$grid-column-count));
+    }
+
+    .small-offset-#{$i} {
+      margin-left: math.percentage(math.div($i, s.$grid-column-count));
+    }
+
+    .small-pull-#{$i} {
+      position: relative;
+      left: - math.percentage(math.div($i, s.$grid-column-count));
+    }
+
+    .small-push-#{$i} {
+      position: relative;
+      left: math.percentage(math.div($i, s.$grid-column-count));
+    }
+  }
+
+  @include m.breakpoint(medium-up) {
+    @for $i from 1 through s.$grid-column-count {
+      .medium-#{$i} {
+        width: math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .medium-offset-#{$i} {
+        margin-left: math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .medium-pull-#{$i} {
+        position: relative;
+        left: - math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .medium-push-#{$i} {
+        position: relative;
+        left: math.percentage(math.div($i, s.$grid-column-count));
+      }
+    }
+  }
+
+  @include m.breakpoint(large-up) {
+    @for $i from 1 through s.$grid-column-count {
+      .large-#{$i} {
+        width: math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .large-offset-#{$i} {
+        margin-left: math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .large-pull-#{$i} {
+        position: relative;
+        left: - math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .large-push-#{$i} {
+        position: relative;
+        left: math.percentage(math.div($i, s.$grid-column-count));
+      }
+    }
+  }
+
+  @include m.breakpoint(xxlarge-up) {
+    @for $i from 1 through s.$grid-column-count {
+      .xxlarge-#{$i} {
+        width: math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .xxlarge-offset-#{$i} {
+        margin-left: math.percentage(math.div($i, s.$grid-column-count));
+      }
+
+      .xxlarge-pull-#{$i} {
+        position: relative;
+        left: -(math.percentage(math.div($i, s.$grid-column-count)));
+      }
+
+      .xxlarge-push-#{$i} {
+        position: relative;
+        left: math.percentage(math.div($i, s.$grid-column-count));
+      }
+    }
+  }
+
+  .column .row,
+  .row .row,
+  .row .column {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: -$grid-small-gutter;
+    margin-right: -$grid-small-gutter;
+
+    @include m.breakpoint(medium-up) {
+      margin-left: -$grid-medium-gutter;
+      margin-right: -$grid-medium-gutter;
+    }
+
+    @include m.breakpoint(large-up) {
+      margin-left: -$grid-large-gutter;
+      margin-right: -$grid-large-gutter;
+    }
+
+    @include m.breakpoint(xxlarge-up) {
+      margin-left: -$grid-xxlarge-gutter;
+      margin-right: -$grid-xxlarge-gutter;
+    }
+  }
+
+  .new-row {
+    clear: left;
+  }
+}

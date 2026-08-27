@@ -1,0 +1,56 @@
+<div
+  class="rng-input rng-input--date-time-picker"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--error]="error() || errors().length > 0">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+
+  <button
+    [id]="id()"
+    class="rng-input__field-wrapper"
+    [attr.popovertarget]="'rng-date-time-picker-el' + id()"
+    [style]="'anchor-name: --rng-date-time-picker-popover-' + id()">
+    <span
+      class="rng-input__field"
+      [class.rng-input__field--placeholder]="isShowPlaceholder()">
+      {{ dateTimeFieldLabel() || placeholder() }}
+    </span>
+    <i class="rng-icon rng-icon--calendar rng-input__icon"></i>
+  </button>
+
+  <div
+    #popoverEl
+    [id]="'rng-date-time-picker-el' + id()"
+    class="rng-date-time-picker-popover rng-animation rng-reveal"
+    popover
+    [style]="'--rng-date-time-picker-popover-anchor: --rng-date-time-picker-popover-' + id()">
+    <rng-calendar
+      [value]="calendarValue()"
+      (valueChange)="onCalendarValueChange($event)" />
+
+    <div class="rng-date-time-picker-popover__time">
+      <rng-select-plain
+        [data]="hours()"
+        [value]="selectedHour()"
+        (valueChange)="onChangeHour($event)"></rng-select-plain>
+      <span class="rng-date-time-picker-popover__colon">:</span>
+      <rng-select-plain
+        [data]="minutes()"
+        [value]="selectedMinute()"
+        (valueChange)="onChangeMinute($event)"></rng-select-plain>
+      <rng-button-group
+        [labels]="hourFormats()"
+        [activeLabel]="selectedHourFormat()"
+        (labelSelected)="onChangeHourFormat($event)"></rng-button-group>
+    </div>
+  </div>
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>

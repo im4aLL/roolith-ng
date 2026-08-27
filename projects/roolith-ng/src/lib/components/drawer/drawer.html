@@ -1,0 +1,43 @@
+<button
+  class="rng-button"
+  popovertarget="drawer">
+  Open Drawer
+</button>
+<div
+  class="rng-drawer"
+  id="drawer"
+  popover>
+  <div class="rng-drawer__content">
+    <!-- header -->
+    <div class="rng-drawer__header">
+      <div class="rng-drawer__header-text">
+        <h6 class="rng-drawer__hl">Drawer title</h6>
+        <div class="rng-drawer__subhl">Drawer subtitle</div>
+      </div>
+      <div class="rng-drawer__action">
+        <rng-button
+          icon="delete"
+          size="xsmall" />
+      </div>
+    </div>
+    <!-- header -->
+
+    <!-- body -->
+    <div class="rng-drawer__body">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, eaque. This is the body of the drawer
+      component.
+    </div>
+    <!-- body -->
+
+    <!-- footer -->
+    <div class="rng-drawer__footer">
+      <rng-button
+        variant="dark"
+        [block]="true">
+        Action 1
+      </rng-button>
+      <rng-button [block]="true">Action 2</rng-button>
+    </div>
+    <!-- footer -->
+  </div>
+</div>

@@ -1,0 +1,222 @@
+<div
+  class="rng-table__container"
+  [class.is--sticky-header]="stickyHeader()"
+  [style.maxHeight]="stickyHeader() ? maxHeight() : null">
+  <table
+    class="rng-table"
+    [class.rng-table--limit-cell-content]="limitCellContent()">
+    <colgroup>
+      @if (allowSelection()) {
+        <col style="width: 40px" />
+      }
+      @for (column of columnData(); track column.field) {
+        <col [style.minWidth.px]="column.width" />
+      }
+    </colgroup>
+    <thead>
+      <ng-container
+        *ngTemplateOutlet="headerTemplate() || defaultHeader; context: { $implicit: columnData() }"></ng-container>
+    </thead>
+    <tbody>
+      @for (row of filteredItems(); let i = $index; track row._trackKey) {
+        <ng-container
+          *ngTemplateOutlet="
+            bodyTemplate() || defaultBody;
+            context: { $implicit: row, columns: columnData(), index: i }
+          "></ng-container>
+      } @empty {
+        <tr>
+          <td
+            [attr.colspan]="allowSelection() ? columnData().length + 1 : columnData().length"
+            class="rng-table__no-data">
+            @if (noRecordTemplate()) {
+              <ng-container *ngTemplateOutlet="noRecordTemplate()"></ng-container>
+            } @else {
+              {{ noDataText() }}
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+    @if (footerTemplate()) {
+      <tfoot>
+        <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+      </tfoot>
+    }
+  </table>
+</div>
+
+@if (paginate()) {
+  <div class="rng-table__pagination">
+    <rng-pagination
+      [total]="totalRecords()"
+      [perPage]="perPage()"
+      [maxPageItem]="maxPageItem()"
+      [selectedPageNumber]="currentPage()"
+      (changeEvent)="onPaginationChange($event)"></rng-pagination>
+  </div>
+}
+
+@let skipColumnCount = (allowSelection() ? 1 : 0) + (expandableRows() ? 1 : 0);
+
+<!-- Default header template -->
+<ng-template
+  #defaultHeader
+  let-columns>
+  <tr>
+    @if (allowSelection()) {
+      <th [rngTableSticky]="getStickyColumnDataByIndex(0)">
+        <rng-table-header-checkbox />
+      </th>
+    }
+    @if (expandableRows()) {
+      <th [rngTableSticky]="getStickyColumnDataByIndex(allowSelection() ? 1 : 0)"></th>
+    }
+
+    @for (column of columns; track column.field; let i = $index) {
+      <th
+        [rngTableSticky]="getStickyColumnDataByIndex(skipColumnCount + i)"
+        [class.is--text-right]="column.align === 'right'"
+        [class.is--text-center]="column.align === 'center'">
+        @if (column.sortable) {
+          <rng-table-sort
+            [name]="column.field"
+            [direction]="column.sortDirection"
+            (sortChange)="onSortChange($event)">
+            <ng-container *ngTemplateOutlet="columnLabel; context: { $implicit: column }"></ng-container>
+          </rng-table-sort>
+        } @else {
+          <ng-container *ngTemplateOutlet="columnLabel; context: { $implicit: column }"></ng-container>
+        }
+      </th>
+    }
+  </tr>
+</ng-template>
+
+<!-- Default column label template -->
+<ng-template
+  #columnLabel
+  let-column>
+  <span class="rng-table__header-label">
+    @if (column.editable) {
+      <rng-icon
+        name="edit"
+        styleClass="rng-table__header-label-icon" />
+    }
+    {{ column.label }}
+  </span>
+</ng-template>
+
+<!-- Default body template -->
+<ng-template
+  #defaultBody
+  let-row
+  let-columns="columns"
+  let-rowIndex="index">
+  <tr [class.is--edited]="row._isEdited">
+    @if (allowSelection()) {
+      <td [rngTableSticky]="getStickyColumnDataByIndex(0)">
+        <rng-table-checkbox [value]="row" />
+      </td>
+    }
+
+    @if (expandableRows()) {
+      <td [rngTableSticky]="getStickyColumnDataByIndex(allowSelection() ? 1 : 0)">
+        @if (isShowExpandButton(row)) {
+          <rng-button
+            (clickEvent)="toggleRow(row, rowIndex)"
+            variant="ghost"
+            [icon]="isRowExpanded(rowIndex) ? 'minus-square' : 'plus-square'"></rng-button>
+        }
+      </td>
+    }
+
+    @for (column of columns; track column.field; let i = $index) {
+      <td
+        [rngTableSticky]="getStickyColumnDataByIndex(skipColumnCount + i)"
+        [class.is--text-right]="column.align === 'right'"
+        [class.is--text-center]="column.align === 'center'">
+        @if (column.func) {
+          {{ cellValue(column.func(row)) }}
+        } @else {
+          @if (column.editable) {
+            <div
+              contenteditable="true"
+              class="rng-table__editable-cell"
+              [attr.data-field]="column.field"
+              [attr.data-key]="row._trackKey"
+              rngTableCellEdit
+              [restrictCellEditToAlphanumeric]="column.restrictCellEditToAlphanumeric === true"
+              [maxCellEditLength]="column.maxCellEditLength ?? defaultMaxCellEditLength"
+              (focus)="onCellFocus(row, column.field, $event)"
+              (blur)="onCellEdit(row, column.field, $event)">
+              {{ cellValue(row[column.field]) }}
+            </div>
+          } @else if (isCellClickable(column, row)) {
+            <rng-button
+              variant="link"
+              (clickEvent)="onCellClick(row, column.field)">
+              <ng-container
+                *ngTemplateOutlet="
+                  customCellTemplateData()[column.field] || defaultCellTpl;
+                  context: { $implicit: row[column.field], row: row, field: column.field, column }
+                "></ng-container>
+            </rng-button>
+          } @else {
+            <ng-container
+              *ngTemplateOutlet="
+                customCellTemplateData()[column.field] || defaultCellTpl;
+                context: { $implicit: row[column.field], row: row, field: column.field, column }
+              "></ng-container>
+          }
+        }
+      </td>
+    }
+  </tr>
+
+  @if (isRowExpanded(rowIndex)) {
+    <tr class="rng-table__expanded-row">
+      <td
+        [attr.colspan]="skipColumnCount + columns.length"
+        class="rng-table__expanded-row-cell">
+        <ng-container
+          *ngTemplateOutlet="
+            expandedRowTemplate() || defaultExpandedRow;
+            context: { $implicit: row, columns: columnData(), index: rowIndex }
+          "></ng-container>
+      </td>
+    </tr>
+  }
+</ng-template>
+
+<!-- Default expanded row template -->
+<ng-template
+  #defaultExpandedRow
+  let-row
+  let-columns="columns"
+  let-rowIndex="index">
+  {{ rowIndex }}
+</ng-template>
+
+<!-- Default cell template -->
+<ng-template
+  #defaultCellTpl
+  let-content
+  let-row="row"
+  let-field="field"
+  let-column="column">
+  @if (column.truncate) {
+    @if (content?.length > column.truncate.maxContentLength) {
+      <rng-tooltip
+        [text]="content"
+        [width]="column.truncate.tooltipWidth"
+        [position]="column.truncate.tooltipPosition">
+        {{ content | slice: 0 : column.truncate.maxContentLength }}...
+      </rng-tooltip>
+    } @else {
+      {{ cellValue(content) }}
+    }
+  } @else {
+    {{ cellValue(content) }}
+  }
+</ng-template>

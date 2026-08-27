@@ -1,0 +1,111 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Breadcrumb</h1>
+  <p class="doc-prose__p">
+    Displays the path to the current resource using a hierarchy of links.
+    Each item is rendered as an <code class="doc-prose__code">&lt;a&gt;</code> with <code class="doc-prose__code">href</code> from <code class="doc-prose__code">link</code>
+    (falls back to <code class="doc-prose__code">#</code> when omitted). The last item in <code class="doc-prose__code">data</code> is
+    automatically styled as active.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass an array of <code class="doc-prose__code">IBreadcrumbItem</code> to <code class="doc-prose__code">[data]</code>.
+    The last entry has no <code class="doc-prose__code">link</code> and is rendered as the active (current) page.
+  </p>
+  <div class="doc-prose__example">
+    <rng-breadcrumb [data]="basicBreadcrumbs" (clickEvent)="onBreadcrumbClick($event)"></rng-breadcrumb>
+  </div>
+  <rng-code-block [code]="dataSnippet" language="typescript" title="breadcrumbs - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">With explicit links</h3>
+  <p class="doc-prose__p">
+    Every item except the current page typically has a <code class="doc-prose__code">link</code>.
+    Links can be absolute paths, hash fragments or full URLs handled by your click handler.
+  </p>
+  <div class="doc-prose__example">
+    <rng-breadcrumb [data]="withLinksBreadcrumbs" (clickEvent)="onBreadcrumbClick($event)"></rng-breadcrumb>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Without link (fallback)</h3>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">link</code> is omitted the anchor falls back to <code class="doc-prose__code">href="#"</code>.
+    This is intentional for the active/current item - you still receive the item in
+    <code class="doc-prose__code">clickEvent</code> if the user clicks it, but no navigation occurs by default.
+  </p>
+  <div class="doc-prose__example">
+    <rng-breadcrumb [data]="noLinkBreadcrumbs" (clickEvent)="onBreadcrumbClick($event)"></rng-breadcrumb>
+  </div>
+  <rng-code-block [code]="withoutLinkSnippet" language="typescript" title="fallback" variant="prose" />
+
+  <h3 class="doc-prose__h3">Listening to click events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">clickEvent</code> fires for every item click and emits the full
+    <code class="doc-prose__code">IBreadcrumbItem</code>. The component calls <code class="doc-prose__code">event.preventDefault()</code>
+    internally so no browser navigation happens - handle routing in your callback
+    (e.g. with <code class="doc-prose__code">Router.navigateByUrl</code>).
+  </p>
+  <div class="doc-prose__example">
+    <rng-breadcrumb [data]="basicBreadcrumbs" (clickEvent)="onBreadcrumbClick($event)"></rng-breadcrumb>
+  </div>
+  @if (lastClicked) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last clicked</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">label: "{{ lastClicked.label }}"</code> •
+        <code class="doc-prose__code">link: "{{ lastClicked.link ?? '#' }}"</code>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicSnippet" language="html" title="clickEvent - template" variant="prose" />
+  <rng-code-block [code]="clickHandlerSnippet" language="typescript" title="clickEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Data definition, template binding and click handling together.</p>
+  <div class="doc-prose__example">
+    <rng-breadcrumb [data]="basicBreadcrumbs" (clickEvent)="onFullClick($event)"></rng-breadcrumb>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-breadcrumb</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">data</code></td><td class="doc-prose__td"><code class="doc-prose__code">IBreadcrumbItem[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Array of breadcrumb items to render. The last item is styled as active</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-breadcrumb</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clickEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">IBreadcrumbItem</code></td><td class="doc-prose__td">Emitted when any breadcrumb item is clicked. Default anchor navigation is prevented</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IBreadcrumbItem</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Display text of the breadcrumb item</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">link</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">href value for the anchor. Falls back to <code class="doc-prose__code">#</code> when omitted. Navigation is handled by the consumer via <code class="doc-prose__code">clickEvent</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

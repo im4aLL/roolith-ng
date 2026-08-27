@@ -1,0 +1,201 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Button</h1>
+  <p class="doc-prose__p">
+    A button for triggering actions.
+    Supports eleven color <code class="doc-prose__code">variant</code> options, four <code class="doc-prose__code">size</code> values, optional <code class="doc-prose__code">icon</code>
+    with <code class="doc-prose__code">iconPosition</code>, a <code class="doc-prose__code">showLoading</code> state that replaces the icon with a spinner and suppresses
+    <code class="doc-prose__code">clickEvent</code>, plus <code class="doc-prose__code">block</code> for full-width layouts and <code class="doc-prose__code">disabled</code> styling.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Variants</h3>
+  <p class="doc-prose__p">
+    The <code class="doc-prose__code">variant</code> input controls the visual style. Defaults to <code class="doc-prose__code">'default'</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button>Default</rng-button>
+      <rng-button variant="primary">Primary</rng-button>
+      <rng-button variant="secondary">Secondary</rng-button>
+      <rng-button variant="success">Success</rng-button>
+      <rng-button variant="danger">Danger</rng-button>
+      <rng-button variant="warning">Warning</rng-button>
+      <rng-button variant="info">Info</rng-button>
+      <rng-button variant="dark">Dark</rng-button>
+      <rng-button variant="gray">Gray</rng-button>
+      <rng-button variant="ghost">Ghost</rng-button>
+      <rng-button variant="link">Link</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="variantsSnippet" language="html" title="variants" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sizes</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">size</code> to change the button scale.
+    <code class="doc-prose__code">'xsmall'</code> maps to <code class="doc-prose__code">rng-button--xsmall</code>,
+    <code class="doc-prose__code">'small'</code> to <code class="doc-prose__code">rng-button--small</code> and
+    <code class="doc-prose__code">'large'</code> to <code class="doc-prose__code">rng-button--large</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button size="xsmall">Extra Small</rng-button>
+      <rng-button size="small">Small</rng-button>
+      <rng-button>Default</rng-button>
+      <rng-button size="large">Large</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="sizesSnippet" language="html" title="sizes" variant="prose" />
+
+  <h3 class="doc-prose__h3">With icon</h3>
+  <p class="doc-prose__p">
+    Provide an <code class="doc-prose__code">icon</code> from the <code class="doc-prose__code">IconNameType</code> set.
+    By default the icon appears on the left - set <code class="doc-prose__code">iconPosition="right"</code> to move it to the right.
+    Omit the projected label for an icon-only button.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button icon="calendar">Schedule</rng-button>
+      <rng-button icon="arrow-right" iconPosition="right">Next</rng-button>
+      <rng-button icon="delete" variant="ghost"></rng-button>
+      <rng-button icon="calendar" variant="secondary">With Icon</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="withIconSnippet" language="html" title="with icon" variant="prose" />
+
+  <h3 class="doc-prose__h3">Loading state</h3>
+  <p class="doc-prose__p">
+    While <code class="doc-prose__code">[showLoading]="true"</code> the click handler is suppressed,
+    the icon (if any) is hidden and a spinner is shown. Useful for async actions such as saving.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button [showLoading]="isSaving" (clickEvent)="onSavingClick()">
+        @if (isSaving) {
+          Saving
+        } @else {
+          Save
+        }
+      </rng-button>
+      <rng-button [showLoading]="true" variant="primary">Downloading</rng-button>
+      <rng-button [showLoading]="true" variant="secondary">Processing</rng-button>
+    </div>
+  </div>
+  @if (isSaving) {
+    <div class="doc-callout" style="margin-top: 0.75rem;">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Loading active</p>
+      <p class="doc-prose__p">Clicks are suppressed while <code class="doc-prose__code">showLoading</code> is <code class="doc-prose__code">true</code>. The spinner will hide after 1.5 seconds.</p>
+    </div>
+  }
+  <rng-code-block [code]="loadingSnippet" language="html" title="loading state" variant="prose" />
+
+  <h3 class="doc-prose__h3">Disabled</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[disabled]="true"</code> to style the button as disabled via <code class="doc-prose__code">rng-button--disabled</code>.
+    The native <code class="doc-prose__code">&lt;button&gt;</code> still receives clicks through <code class="doc-prose__code">clickEvent</code> unless combined with
+    <code class="doc-prose__code">showLoading</code> to suppress the handler.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button [disabled]="true">Disabled</rng-button>
+      <rng-button variant="primary" [disabled]="true">Primary Disabled</rng-button>
+      <rng-button variant="ghost" [disabled]="true">Ghost Disabled</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+
+  <h3 class="doc-prose__h3">Block (full width)</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[block]="true"</code> to make the button expand to its container width via
+    <code class="doc-prose__code">rng-button--block</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <rng-button [block]="true" variant="primary">Full Width</rng-button>
+      <rng-button [block]="true" variant="secondary">Full Width Secondary</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="blockSnippet" language="html" title="block" variant="prose" />
+
+  <h3 class="doc-prose__h3">Click event</h3>
+  <p class="doc-prose__p">
+    Listen to <code class="doc-prose__code">clickEvent</code> - emitted on button click and automatically suppressed when
+    <code class="doc-prose__code">showLoading</code> is <code class="doc-prose__code">true</code>.
+    Provide an optional <code class="doc-prose__code">key</code> to set an <code class="doc-prose__code">id</code> on the inner <code class="doc-prose__code">&lt;button&gt;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="onSave()">Save ({{ clickCount }})</rng-button>
+      <rng-button variant="secondary" (clickEvent)="onSave()">Click me</rng-button>
+    </div>
+  </div>
+  @if (clickCount > 0) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last click</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">clickEvent</code> fired <code class="doc-prose__code">{{ clickCount }}</code> time(s).
+        Clicks while loading would be suppressed and not counted.
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="clickEventSnippet" language="html" title="clickEvent - template" variant="prose" />
+  <rng-code-block [code]="clickHandlerSnippet" language="typescript" title="clickEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining variants, icon, loading, block and click handling.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-button variant="primary" icon="check" (clickEvent)="onSave()">Save</rng-button>
+        <rng-button [showLoading]="isSaving" variant="secondary" (clickEvent)="onSavingClick()">Saving</rng-button>
+      </div>
+      <rng-button [block]="true" variant="primary">Full Width Action</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">variant</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'gray' | 'ghost' | 'link'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Visual style variant</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">size</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'small' | 'xsmall' | 'large'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Button size</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">icon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Icon to show alongside the label</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">iconPosition</code></td><td class="doc-prose__td"><code class="doc-prose__code">'left' | 'right'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'left'</code></td><td class="doc-prose__td">Side on which the icon appears</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">showLoading</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Replaces icon with a spinner and blocks <code class="doc-prose__code">clickEvent</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">block</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">When <code class="doc-prose__code">true</code>, the button expands to full container width</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Adds disabled styling via <code class="doc-prose__code">rng-button--disabled</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">key</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Optional <code class="doc-prose__code">id</code> attribute for the inner <code class="doc-prose__code">&lt;button&gt;</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clickEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emitted on button click (suppressed when <code class="doc-prose__code">showLoading</code> is <code class="doc-prose__code">true</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Text or content inside the button (empty for icon-only buttons)</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

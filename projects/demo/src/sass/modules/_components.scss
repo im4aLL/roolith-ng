@@ -1,0 +1,102 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin components() {
+  .doc-components {
+    display: block;
+  }
+
+  .doc-components__lead {
+    margin: rem(16) 0 rem(12) !important;
+    font-size: 1.0625rem !important;
+    line-height: 1.7 !important;
+    color: var(--doc-text-muted) !important;
+  }
+
+  .doc-components__meta {
+    margin: 0 0 rem(24) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    color: var(--doc-text-faint) !important;
+
+    code {
+      font-size: 0.8125em;
+    }
+  }
+
+  .doc-components__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: rem(12);
+
+    @include m.breakpoint(medium-up) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include m.breakpoint(xlarge-up) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .doc-components-card {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8);
+    padding: rem(18) rem(18) rem(16);
+    border: rem(1) solid var(--doc-border);
+    border-radius: var(--doc-radius);
+    background-color: var(--doc-surface-2);
+    text-decoration: none;
+    scroll-margin-top: calc(var(--doc-topbar-height) + rem(16));
+    transition:
+      border-color var(--doc-duration) var(--doc-easing),
+      background-color var(--doc-duration) var(--doc-easing),
+      box-shadow var(--doc-duration) var(--doc-easing),
+      transform var(--doc-duration) var(--doc-easing);
+
+    &:hover {
+      background-color: var(--doc-surface);
+      box-shadow: var(--doc-shadow-small);
+      text-decoration: none;
+      transform: translateY(-rem(1));
+
+      .doc-components-card__title {
+        color: var(--doc-primary);
+      }
+    }
+
+    &:focus-visible {
+      outline: rem(2) solid var(--doc-primary);
+      outline-offset: rem(2);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .doc-components-card__title {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--doc-text);
+    transition: color var(--doc-duration) var(--doc-easing);
+  }
+
+  .doc-components-card__desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--doc-text-muted);
+  }
+
+  // When navigated via hash, highlight target briefly
+  .doc-components-card:target {
+    border-color: var(--doc-primary);
+    box-shadow: 0 0 0 rem(3) color-mix(in srgb, var(--doc-primary) 16%, transparent);
+  }
+}

@@ -1,0 +1,479 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Multi Select</h1>
+  <p class="doc-prose__p">
+    A multi-value select input built as <code class="doc-prose__code">rng-multi-select-input</code>.
+    Selected items appear as removable chips inside the field with an overflow badge when the limit is exceeded.
+    Supports search filtering, keyboard navigation, typeahead, custom option templates, <code class="doc-prose__code">Select All</code> / <code class="doc-prose__code">Deselect All</code>,
+    and <code class="doc-prose__code">FormValueControl&lt;IMultiSelectInputOption[]&gt;</code> integration for signals forms.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMultiSelectInputOption</code></h3>
+  <p class="doc-prose__p">
+    Each option has a <code class="doc-prose__code">label</code> for display and a <code class="doc-prose__code">value</code> for identity.
+    Optional <code class="doc-prose__code">icon</code> and <code class="doc-prose__code">subtext</code> are used by the custom template and the default template.
+  </p>
+  <rng-code-block [code]="interfaceSnippet" language="typescript" title="IMultiSelectInputOption" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">[data]</code>, <code class="doc-prose__code">label</code> and <code class="doc-prose__code">placeholder</code>.
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync - <code class="doc-prose__code">value</code> is a <code class="doc-prose__code">model&lt;IMultiSelectInputOption[]&gt;</code>.
+    Clicking the field calls <code class="doc-prose__code">onInputFocusHandler()</code> which shows focus and the dropdown via <code class="doc-prose__code">isActive()</code>.
+    Clicking an option toggles it via <code class="doc-prose__code">onSelectHandler(item)</code> and removes a chip via <code class="doc-prose__code">onRemoveChip(item, $event)</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Countries"
+        placeholder="Select countries..."
+        [(value)]="basicSelected" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        @if (basicSelected().length > 0) {
+          <span>Selected: </span>
+          @for (item of basicSelected(); track item.value) {
+            <code class="doc-prose__code">{{ item.label }}</code>@if (!$last) { <span>, </span> }
+          }
+          <span> ({{ basicSelected().length }} item(s))</span>
+        } @else {
+          <span>No selection - open the dropdown and pick one or more countries.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Searchable (filtering)</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[searchable]="true"</code> to render a text <code class="doc-prose__code">&lt;input&gt;</code> inside the field.
+    The option list is filtered via the <code class="doc-prose__code">filteredData</code> computed which does a case-insensitive <code class="doc-prose__code">label.includes()</code> on <code class="doc-prose__code">inputValue()</code>.
+    When <code class="doc-prose__code">searchable</code> is <code class="doc-prose__code">false</code> the component instead buffers keystrokes and focuses the first matching option (typeahead, 300ms debounce) via <code class="doc-prose__code">_watchForTypeahead</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Countries (searchable)"
+        placeholder="Search and select..."
+        [searchable]="true"
+        [(value)]="searchableSelected" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        @if (searchableSelected().length > 0) {
+          <span>Selected: </span>
+          @for (item of searchableSelected(); track item.value) {
+            <code class="doc-prose__code">{{ item.label }}</code>@if (!$last) { <span>, </span> }
+          }
+        } @else {
+          <span>Type inside the field to filter - e.g. <code class="doc-prose__code">ger</code> or <code class="doc-prose__code">ca</code>.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="searchableSnippet" language="html" title="searchable" variant="prose" />
+  <rng-code-block [code]="searchableTsSnippet" language="typescript" title="searchable - behavior" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field.
+    It renders via <code class="doc-prose__code">hintMessage()</code> when not overridden by an error.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Countries"
+        hint="Pick one or more countries"
+        placeholder="Select..."
+        [(value)]="hintSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ hintSelected().length }}</code> item(s)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Countries"
+        [error]="true"
+        errorMessage="At least one country is required"
+        [(value)]="errorSelected" />
+      <rng-multi-select-input
+        [data]="countries"
+        label="Countries"
+        hint="Pick one or more countries"
+        [error]="true"
+        errorMessage="At least one country is required"
+        [(value)]="errorSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">{{ errorSelected().length > 0 ? errorSelected()[0].label : 'none' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">Limit visible chips (<code class="doc-prose__code">maxChipsShown</code>)</h3>
+  <p class="doc-prose__p">
+    By default <code class="doc-prose__code">maxChipsShown</code> is <code class="doc-prose__code">5</code> (see <code class="doc-prose__code">maxChipsShown = input&lt;number&gt;(5)</code>).
+    Only <code class="doc-prose__code">visibleChips()</code> (<code class="doc-prose__code">value().slice(0, maxChipsShown())</code>) are rendered.
+    When <code class="doc-prose__code">remainingCount()</code> is greater than <code class="doc-prose__code">0</code> a badge <code class="doc-prose__code">"N more selected"</code> is shown.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Default (max 5)"
+        [(value)]="maxChipsSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Showing <code class="doc-prose__code">{{ maxChipsSelected().length }} selected</code> with default limit - badge shows <code class="doc-prose__code">{{ maxChipsSelected().length > 5 ? (maxChipsSelected().length - 5) + ' more selected' : 'no overflow' }}</code>.
+      </p>
+      <rng-multi-select-input
+        [data]="countries"
+        label="Limited to 2"
+        [maxChipsShown]="2"
+        [(value)]="maxChipsSelected2" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        With <code class="doc-prose__code">[maxChipsShown]="2"</code>: selected <code class="doc-prose__code">{{ maxChipsSelected2().length }}</code>
+        @if (maxChipsSelected2().length > 2) {
+          <span> - badge: <code class="doc-prose__code">{{ maxChipsSelected2().length - 2 }} more selected</code></span>
+        }
+      </p>
+      <rng-multi-select-input
+        [data]="countries"
+        label="Limited to 2 (pre-filled 5)"
+        [maxChipsShown]="2"
+        [value]="maxChipsSelected()" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Pre-filled 5 items with <code class="doc-prose__code">maxChipsShown=2</code> renders 2 chips + <code class="doc-prose__code">"3 more selected"</code>.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="maxChipsSnippet" language="html" title="maxChipsShown" variant="prose" />
+  <rng-code-block [code]="maxChipsTsSnippet" language="typescript" title="maxChipsShown - computed" variant="prose" />
+
+  <h3 class="doc-prose__h3">Select All / Deselect All</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[allowSelectAll]="true"</code> to show <code class="doc-prose__code">Select all</code> and <code class="doc-prose__code">Deselect all</code> buttons at the top of the dropdown via
+    <code class="doc-prose__code">rng-input-list__item--select-all</code>.
+    <code class="doc-prose__code">onSelectAllHandler()</code> sets <code class="doc-prose__code">value</code> to all items in <code class="doc-prose__code">data</code> (not just the filtered subset).
+    <code class="doc-prose__code">onDeselectAllHandler()</code> clears <code class="doc-prose__code">value</code>.
+    Both clear <code class="doc-prose__code">inputValue</code> and re-focus the input.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Countries"
+        [allowSelectAll]="true"
+        [(value)]="selectAllSelected" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        @if (selectAllSelected().length > 0) {
+          <span>Selected {{ selectAllSelected().length }} / {{ countries.length }}: </span>
+          @for (item of selectAllSelected(); track item.value) {
+            <code class="doc-prose__code">{{ item.label }}</code>@if (!$last) { <span>, </span> }
+          }
+        } @else {
+          <span>Use <code class="doc-prose__code">Select all</code> inside the dropdown to pick all countries.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="selectAllSnippet" language="html" title="allowSelectAll" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom option template</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">#rngMultiSelectInputOptionTemplate</code> with <code class="doc-prose__code">let-item</code> to customize each option row.
+    By default it shows <code class="doc-prose__code">item.icon</code> as <code class="doc-prose__code">&lt;i [class]="item.icon"&gt;</code> with the label and a check when selected.
+    For flags, put the CDN URL in <code class="doc-prose__code">icon</code> (e.g. <code class="doc-prose__code">https://flagcdn.com/w20/us.png</code>) and render it as <code class="doc-prose__code">&lt;img [src]="item.icon"&gt;</code> next to <code class="doc-prose__code">rng-input-list__item-content</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countriesWithMeta"
+        label="Countries (custom row)"
+        placeholder="Select..."
+        [(value)]="customSelected">
+        <ng-template #rngMultiSelectInputOptionTemplate let-item>
+          <img
+            [src]="item.icon"
+            [alt]="item.label"
+            width="20"
+            height="15"
+            style="width: 1.25rem; height: 0.9375rem; object-fit: cover; border-radius: 0.125rem; margin-top: 0.1875rem; flex-shrink: 0;"
+            loading="lazy" />
+          <span class="rng-input-list__item-content" style="margin-left: 0.25rem;">
+            <span class="rng-input-list__item-content-hl">{{ item.label }}</span>
+            @if (item.subtext) {
+              <span class="rng-input-list__item-content-body">{{ item.subtext }}</span>
+            }
+          </span>
+        </ng-template>
+      </rng-multi-select-input>
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        @if (customSelected().length > 0) {
+          <span>Selected: </span>
+          @for (item of customSelected(); track item.value) {
+            <code class="doc-prose__code">{{ item.label }}</code>@if (!$last) { <span>, </span> }
+          }
+        } @else {
+          <span>Each row shows a CDN flag (<code class="doc-prose__code">https://flagcdn.com/w20/&lt;code&gt;.png</code> in <code class="doc-prose__code">icon</code>) + <code class="doc-prose__code">label</code> + <code class="doc-prose__code">subtext</code> stacked via <code class="doc-prose__code">rng-input-list__item-content</code>.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="customTemplateSnippet" language="html" title="custom template" variant="prose" />
+  <rng-code-block [code]="customTemplateDataSnippet" language="typescript" title="custom template - data" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[readonly]="true"</code> for read-only, <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    <code class="doc-prose__code">[rightAligned]="true"</code> to align the dropdown to the right edge via <code class="doc-prose__code">rng-input-list--right</code>,
+    <code class="doc-prose__code">[dropdownWidth]</code> to set <code class="doc-prose__code">min-width</code> in pixels on the list,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countries"
+        label="Disabled"
+        [disabled]="true"
+        [value]="disabledSelected()" />
+      <rng-multi-select-input
+        [data]="countries"
+        label="Readonly"
+        [readonly]="true"
+        [(value)]="readonlySelected" />
+      <rng-multi-select-input
+        [data]="countries"
+        label="Required"
+        [required]="true"
+        placeholder="Required field"
+        [(value)]="requiredSelected" />
+      <rng-multi-select-input
+        [data]="countries"
+        label="Right aligned"
+        [rightAligned]="true"
+        placeholder="Dropdown aligns to right"
+        [(value)]="rightAlignedSelected" />
+      <rng-multi-select-input
+        [data]="countries"
+        label="Dropdown width 320px"
+        [dropdownWidth]="320"
+        placeholder="minWidth 320px"
+        [(value)]="dropdownWidthSelected" />
+      <rng-multi-select-input
+        [data]="countries"
+        label="With name"
+        name="countries"
+        [(value)]="nameSelected" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Right aligned: <code class="doc-prose__code">{{ rightAlignedSelected().length }}</code> |
+        Width 320: <code class="doc-prose__code">{{ dropdownWidthSelected().length }}</code> |
+        Name: <code class="doc-prose__code">{{ nameSelected().length }}</code> (<code class="doc-prose__code">name="countries"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="readonlySnippet" language="html" title="readonly" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="rightAlignedSnippet" language="html" title="rightAligned" variant="prose" />
+  <rng-code-block [code]="dropdownWidthSnippet" language="html" title="dropdownWidth" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and <code class="doc-prose__code">valueChange</code></h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;IMultiSelectInputOption[]&gt;</code>.
+    Selecting an option toggles it, removing a chip calls <code class="doc-prose__code">onRemoveChip</code> which stops propagation and filters the value.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input [(value)]="twoWaySelected" [data]="countries" label="Two-way binding" placeholder="Select..." />
+      <rng-multi-select-input [data]="countries" [value]="twoWaySelected()" (valueChange)="onValueChange($event)" label="With valueChange handler" placeholder="Select..." />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Current: <code class="doc-prose__code">{{ twoWaySelected().length }}</code> item(s)
+          @if (twoWaySelected().length > 0) {
+            <span> - </span>
+            @for (item of twoWaySelected(); track item.value) {
+              <code class="doc-prose__code">{{ item.label }}</code>@if (!$last) { <span>, </span> }
+            }
+          }
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="twoWayTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Keyboard and overlay behavior</h3>
+  <p class="doc-prose__p">
+    The field is focusable via <code class="doc-prose__code">tabindex="0"</code> and opens on <code class="doc-prose__code">click</code> and <code class="doc-prose__code">keydown.enter</code>.
+    While open, <code class="doc-prose__code">ArrowUp</code> / <code class="doc-prose__code">ArrowDown</code> cycle focus through options (wrapping), <code class="doc-prose__code">Escape</code> calls <code class="doc-prose__code">hideOptions()</code>,
+    and <code class="doc-prose__code">document:click</code> outside the component calls <code class="doc-prose__code">removeFocus().hideOptions()</code>.
+    The dropdown position flips to the top when there is insufficient space below, via <code class="doc-prose__code">_calculateListPosition()</code> which checks <code class="doc-prose__code">window.innerHeight - inputRect.bottom</code> against <code class="doc-prose__code">list.offsetHeight</code> and sets <code class="doc-prose__code">isShowListOnTop()</code> to toggle <code class="doc-prose__code">rng-input-list--top</code>.
+  </p>
+  <rng-code-block [code]="keyboardSnippet" language="typescript" title="keyboard - handlers" variant="prose" />
+
+  <h3 class="doc-prose__h3">With <code class="doc-prose__code">FormField</code> (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-multi-select-input</code> implements <code class="doc-prose__code">FormValueControl&lt;IMultiSelectInputOption[]&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, hint, searchable filtering, Select All, max chips, dropdown width and custom row.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-multi-select-input
+        [data]="countriesWithMeta"
+        label="Countries"
+        placeholder="Select countries..."
+        hint="Search, use Select All, or pick a custom row"
+        [searchable]="true"
+        [allowSelectAll]="true"
+        [maxChipsShown]="3"
+        [dropdownWidth]="280"
+        [(value)]="fullSelected">
+        <ng-template #rngMultiSelectInputOptionTemplate let-item>
+          <img
+            [src]="item.icon"
+            [alt]="item.label"
+            width="20"
+            height="15"
+            style="width: 1.25rem; height: 0.9375rem; object-fit: cover; border-radius: 0.125rem; margin-top: 0.1875rem; flex-shrink: 0;"
+            loading="lazy" />
+          <span class="rng-input-list__item-content" style="margin-left: 0.25rem;">
+            <span class="rng-input-list__item-content-hl">{{ item.label }}</span>
+            @if (item.subtext) {
+              <span class="rng-input-list__item-content-body">{{ item.subtext }}</span>
+            }
+          </span>
+        </ng-template>
+      </rng-multi-select-input>
+      <div style="font-size: 0.8125rem; width: 100%;">
+        @if (fullSelected().length > 0) {
+          <p class="doc-prose__p" style="margin: 0 0 0.375rem 0;">Selected ({{ fullSelected().length }}):</p>
+          <ul style="margin: 0 0 0.5rem 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            @for (item of fullSelected(); track item.value) {
+              <li><code class="doc-prose__code">{{ item.label }}</code> - <code class="doc-prose__code">{{ item.value }}</code> @if (item.subtext) { <span>- {{ item.subtext }}</span> }</li>
+            }
+          </ul>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No countries selected yet - try <code class="doc-prose__code">Select all</code> or search for <code class="doc-prose__code">ger</code>.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-multi-select-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">data</code></td><td class="doc-prose__td"><code class="doc-prose__code">IMultiSelectInputOption[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of available options</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the input via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Placeholder shown when no items are selected - for searchable it is the input placeholder, otherwise a <code class="doc-prose__code">rng-input__placeholder</code> span</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the input via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">invalid()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code> on the inner input</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">searchable</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Enables free-text filtering of options via <code class="doc-prose__code">inputValue()</code> and <code class="doc-prose__code">filteredData()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rightAligned</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Aligns the dropdown to the right edge via <code class="doc-prose__code">rng-input-list--right</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">dropdownWidth</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Minimum pixel width of the dropdown list via <code class="doc-prose__code">[style.minWidth.px]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxChipsShown</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">5</code></td><td class="doc-prose__td">Max chips rendered before an overflow badge - <code class="doc-prose__code">visibleChips()</code> and <code class="doc-prose__code">remainingCount()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">allowSelectAll</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Shows <code class="doc-prose__code">Select All</code> / <code class="doc-prose__code">Deselect All</code> buttons via <code class="doc-prose__code">rng-input-list__item--select-all</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">readonly</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the field read-only</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required via <code class="doc-prose__code">aria-required</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-multi-select-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">IMultiSelectInputOption[]</code></td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">The currently selected items - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-multi-select-input</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Template ref</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngMultiSelectInputOptionTemplate</code></td><td class="doc-prose__td">Custom template for each option row in the dropdown - receives <code class="doc-prose__code">let-item</code> as <code class="doc-prose__code">IMultiSelectInputOption</code>. Falls back to <code class="doc-prose__code">defaultTemplate</code> which renders <code class="doc-prose__code">item.icon</code> and <code class="doc-prose__code">item.label</code> plus a check when selected</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;IMultiSelectInputOption[]&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and other control state.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;IMultiSelectInputOption[]&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.countries"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isSelected</code></td><td class="doc-prose__td"><code class="doc-prose__code">isSelected(item: IMultiSelectInputOption): boolean</code></td><td class="doc-prose__td">Checks if the item is in <code class="doc-prose__code">value()</code> by comparing <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onSelectHandler</code></td><td class="doc-prose__td"><code class="doc-prose__code">onSelectHandler(item: IMultiSelectInputOption): void</code></td><td class="doc-prose__td">Toggles the item in <code class="doc-prose__code">value</code>, clears <code class="doc-prose__code">inputValue</code> and re-focuses the input</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onRemoveChip</code></td><td class="doc-prose__td"><code class="doc-prose__code">onRemoveChip(item: IMultiSelectInputOption, event: MouseEvent): void</code></td><td class="doc-prose__td">Removes the chip - calls <code class="doc-prose__code">event.stopPropagation()</code> and filters <code class="doc-prose__code">value</code> by <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onInput</code></td><td class="doc-prose__td"><code class="doc-prose__code">onInput(value: string): void</code></td><td class="doc-prose__td">Updates <code class="doc-prose__code">inputValue</code> for filtering</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onSelectAllHandler</code></td><td class="doc-prose__td"><code class="doc-prose__code">onSelectAllHandler(): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">value</code> to all <code class="doc-prose__code">data</code>, clears <code class="doc-prose__code">inputValue</code> and focuses input</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onDeselectAllHandler</code></td><td class="doc-prose__td"><code class="doc-prose__code">onDeselectAllHandler(): void</code></td><td class="doc-prose__td">Clears <code class="doc-prose__code">value</code>, clears <code class="doc-prose__code">inputValue</code> and focuses input</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMultiSelectInputOption</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Display label for the option</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Unique identifier used for selection and chip tracking (compared with <code class="doc-prose__code">===</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">icon</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">CSS class for an icon - rendered as <code class="doc-prose__code">&lt;i [class]="item.icon"&gt;</code> in the default template</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">subtext</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Secondary text for the option - available in the template context as <code class="doc-prose__code">item.subtext</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

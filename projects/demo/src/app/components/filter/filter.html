@@ -1,0 +1,438 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Filter</h1>
+  <p class="doc-prose__p">
+    A composable filter bar that lets users add, display and remove field-level filter conditions.
+    Supports <code class="doc-prose__code">string</code>, <code class="doc-prose__code">number</code> and <code class="doc-prose__code">date</code> field types with type-appropriate filter operators.
+    Selected filters are rendered as <code class="doc-prose__code">rng-button-split</code> chips with a human-readable label and a delete action.
+    The add-filter popover is powered by <code class="doc-prose__code">rng-popover</code> and collects conditions via <code class="doc-prose__code">rng-add-filter</code> internally.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">
+    When using a custom field template, also import <code class="doc-prose__code">FilterFieldTemplateDirective</code>:
+  </p>
+  <rng-code-block [code]="importWithDirectiveSnippet" language="typescript" title="with custom template" variant="prose" />
+
+  <h2 class="doc-prose__h2">Interfaces</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilterableField</code></h3>
+  <p class="doc-prose__p">
+    Extends <code class="doc-prose__code">ISelectInput</code> with a <code class="doc-prose__code">type</code> discriminator.
+    Use <code class="doc-prose__code">hasTemplate</code> to mark fields that render a custom <code class="doc-prose__code">&lt;ng-template&gt;</code> instead of the default input UI.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Human-readable field name shown in the field select</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Field key used in <code class="doc-prose__code">IFilterData.field</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'string' | 'number' | 'date'</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Determines which operators and input are shown in the popover</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hasTemplate</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">When <code class="doc-prose__code">true</code>, selecting the field renders your projected <code class="doc-prose__code">rngFilterFieldTemplate</code> instead of the default controls</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilterData</code></h3>
+  <p class="doc-prose__p">Represents active filter conditions for a single field.</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Field key (matches <code class="doc-prose__code">IFilterableField.value</code>). Use <code class="doc-prose__code">'*'</code> for "any field" / global search</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterItem[]</code></td><td class="doc-prose__td">One or more conditions on that field - merged when the same field is added again</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilterItem</code></h3>
+  <p class="doc-prose__p">A single condition within an <code class="doc-prose__code">IFilterData</code>.</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">filterType</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterType | string</code></td><td class="doc-prose__td">Operator key (e.g. <code class="doc-prose__code">'contains'</code>, <code class="doc-prose__code">'equals'</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | DateTime | null</code></td><td class="doc-prose__td">The comparison value. <code class="doc-prose__code">null</code> for <code class="doc-prose__code">isEmpty</code> / <code class="doc-prose__code">isNotEmpty</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">operator</code></td><td class="doc-prose__td"><code class="doc-prose__code">'and' | 'or'</code></td><td class="doc-prose__td">How to combine with other items on the same field (defaults to <code class="doc-prose__code">'and'</code> inside the render label)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Supported <code class="doc-prose__code">filterType</code> values</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Key</th><th class="doc-prose__th">Label</th><th class="doc-prose__th">Types</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">contains</code></td><td class="doc-prose__td">Contains</td><td class="doc-prose__td">string</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">doesNotContain</code></td><td class="doc-prose__td">Does not contain</td><td class="doc-prose__td">string</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">equals</code></td><td class="doc-prose__td">Equals</td><td class="doc-prose__td">string, number, date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">notEqualTo</code></td><td class="doc-prose__td">Not equal to</td><td class="doc-prose__td">string, number, date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">startsWith</code></td><td class="doc-prose__td">Starts with</td><td class="doc-prose__td">string</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">endsWith</code></td><td class="doc-prose__td">Ends with</td><td class="doc-prose__td">string</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isEmpty</code></td><td class="doc-prose__td">Is empty</td><td class="doc-prose__td">string, number, date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isNotEmpty</code></td><td class="doc-prose__td">Is not empty</td><td class="doc-prose__td">string, number, date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">greaterThan</code></td><td class="doc-prose__td">Greater than</td><td class="doc-prose__td">number</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">greaterThanOrEqualTo</code></td><td class="doc-prose__td">Greater than or equal to</td><td class="doc-prose__td">number</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">lessThan</code></td><td class="doc-prose__td">Less than</td><td class="doc-prose__td">number</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">lessThanOrEqualTo</code></td><td class="doc-prose__td">Less than or equal to</td><td class="doc-prose__td">number</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">before</code></td><td class="doc-prose__td">Before</td><td class="doc-prose__td">date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">after</code></td><td class="doc-prose__td">After</td><td class="doc-prose__td">date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">beforeOrEqualTo</code></td><td class="doc-prose__td">Before or equal to</td><td class="doc-prose__td">date</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">afterOrEqualTo</code></td><td class="doc-prose__td">After or equal to</td><td class="doc-prose__td">date</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">filterableFields</code> and listen to <code class="doc-prose__code">changeEvent</code>.
+    Click the <code class="doc-prose__code">+</code> button to open the add-filter popover - choose a field, an operator and a value, then click <code class="doc-prose__code">Add Filter</code>.
+    Each added filter is shown as a <code class="doc-prose__code">rng-button-split</code> chip with a human-readable label (<code class="doc-prose__code">_forHuman</code>) and a delete icon that calls <code class="doc-prose__code">onRemoveFilter</code> internally.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-filter
+        [filterableFields]="basicFields()"
+        (changeEvent)="onBasicChange($event)" />
+      <div style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+        @if (basicLastFilters()) {
+          <span>Last <code class="doc-prose__code">changeEvent</code>:</span>
+          <pre style="margin: 0.5rem 0 0 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatFilters(basicLastFilters()) }}</pre>
+        } @else {
+          <span>No filters yet - click <code class="doc-prose__code">+</code> to add one.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="basicFieldsSnippet" language="typescript" title="basic - component" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Pre-populated filters</h3>
+  <p class="doc-prose__p">
+    Pass an initial <code class="doc-prose__code">[value]</code> to display existing conditions on load.
+    The component merges incoming <code class="doc-prose__code">value</code> changes into its internal <code class="doc-prose__code">_filterData</code> via an <code class="doc-prose__code">effect</code> - empty arrays are ignored, so clearing must be done by removing chips.
+    The chip label is generated by <code class="doc-prose__code">_transformItemToFilter</code> (e.g. <code class="doc-prose__code">Name &lt;em&gt;contains&lt;/em&gt; 'Acme'</code>).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-filter
+        [filterableFields]="prePopFields()"
+        [value]="preFilters()"
+        (changeEvent)="onPrePopChange($event)" />
+      <div style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+        Initial <code class="doc-prose__code">[value]</code> is <code class="doc-prose__code">name contains 'Acme'</code> - chips are rendered immediately.
+        @if (prePopLastFilters()) {
+          <pre style="margin: 0.5rem 0 0 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatFilters(prePopLastFilters()) }}</pre>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="prePopulatedTsSnippet" language="typescript" title="pre-populated - component" variant="prose" />
+  <rng-code-block [code]="prePopulatedSnippet" language="html" title="pre-populated - template" variant="prose" />
+  <div class="doc-callout" style="margin-top: 0.75rem;">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">
+      <code class="doc-prose__code">[value]</code> is additive - each change appends to the internal list via <code class="doc-prose__code">_addFilter</code> and merges items for the same <code class="doc-prose__code">field</code>.
+      It does not replace the current filter set. Remove chips to clear or manage state externally via <code class="doc-prose__code">changeEvent</code>.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Global / any-field search</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">field: '*'</code> to represent a cross-field search condition (e.g. a global search bar linked to the filter).
+    When the user removes this condition the <code class="doc-prose__code">globalSearchRemoveEvent</code> output fires so you can clear the linked search input.
+    The chip label renders as <code class="doc-prose__code">Any Field &lt;em&gt;contains&lt;/em&gt; 'example'</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-filter
+        [filterableFields]="globalFields()"
+        [value]="globalFilters()"
+        (changeEvent)="onGlobalChange($event)"
+        (globalSearchRemoveEvent)="onGlobalRemove()" />
+      <div style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Initial global filter is <code class="doc-prose__code">'*' contains 'example'</code>. Remove it to trigger <code class="doc-prose__code">globalSearchRemoveEvent</code>.
+          @if (globalRemovedCount() > 0) {
+            <span> Fired <code class="doc-prose__code">{{ globalRemovedCount() }}</code> time(s).</span>
+          }
+        </p>
+        @if (globalLastFilters()) {
+          <pre style="margin: 0.5rem 0 0 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatFilters(globalLastFilters()) }}</pre>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="globalSearchTsSnippet" language="typescript" title="global search - component" variant="prose" />
+  <rng-code-block [code]="globalSearchSnippet" language="html" title="global search - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Multiple conditions on the same field</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">changeEvent</code> returns an array of <code class="doc-prose__code">IFilterData</code>.
+    Each field entry has an <code class="doc-prose__code">items</code> array, so you can apply multiple conditions to the same field.
+    The <code class="doc-prose__code">operator</code> on each item (after the first) controls how conditions are combined server-side.
+    Inside the popover, after entering the first value the <code class="doc-prose__code">And / Or</code> radio and the second row appear via <code class="doc-prose__code">isShowOperators</code> / <code class="doc-prose__code">isShowSecondFilter</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.875rem;">
+        Add two conditions on <code class="doc-prose__code">Amount</code> using the <code class="doc-prose__code">And</code> operator - e.g. <code class="doc-prose__code">greaterThan 100</code> and <code class="doc-prose__code">lessThanOrEqualTo 500</code>.
+        The handler receives:
+      </p>
+      <rng-code-block [code]="multipleConditionsSnippet" language="typescript" variant="prose" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+        Use the basic demo above and add a second filter on <code class="doc-prose__code">Amount</code> with <code class="doc-prose__code">Or</code> to see the operator in the label (prefixed with <code class="doc-prose__code">Or</code> via <code class="doc-prose__code">_forHuman</code>).
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="operatorSnippet" language="typescript" title="operator per item" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom field template</h3>
+  <p class="doc-prose__p">
+    For fields that need a fully custom UI (e.g. a date range picker), mark the field with <code class="doc-prose__code">hasTemplate: true</code> and project an <code class="doc-prose__code">&lt;ng-template&gt;</code> with the <code class="doc-prose__code">rngFilterFieldTemplate</code> directive.
+    When the user selects a field with <code class="doc-prose__code">hasTemplate: true</code>, the add-filter popover renders your projected template instead of the default input UI.
+    Your template is responsible for collecting values and calling <code class="doc-prose__code">addFilter()</code> on the <code class="doc-prose__code">FilterComponent</code> instance via <code class="doc-prose__code">viewChild</code>.
+    Call <code class="doc-prose__code">closeAddFilterPopover()</code> on cancel to dismiss the popover without adding a filter.
+  </p>
+
+  <h4 class="doc-prose__h4">1. Mark the field</h4>
+  <rng-code-block [code]="customMarkSnippet" language="typescript" title="mark field with hasTemplate" variant="prose" />
+
+  <h4 class="doc-prose__h4">2. Import the directive and wire up public methods</h4>
+  <p class="doc-prose__p">
+    The directive is <code class="doc-prose__code">FilterFieldTemplateDirective</code> with selector <code class="doc-prose__code">[rngFilterFieldTemplate]</code> and input <code class="doc-prose__code">rngFilterFieldTemplate="fieldValue"</code>.
+    The component exposes <code class="doc-prose__code">addFilter(data: IFilterData)</code> and <code class="doc-prose__code">closeAddFilterPopover()</code> for template control.
+  </p>
+  <rng-code-block [code]="customImportSnippet" language="typescript" title="import directive" variant="prose" />
+  <rng-code-block [code]="customDirectiveSnippet" language="typescript" title="viewChild wiring" variant="prose" />
+
+  <h4 class="doc-prose__h4">3. Project the template</h4>
+  <rng-code-block [code]="customTemplateSnippet" language="html" title="project rngFilterFieldTemplate" variant="prose" />
+
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-filter
+        #customFilterEl
+        [filterableFields]="customFields()"
+        (changeEvent)="onCustomChange($event)">
+        <ng-template rngFilterFieldTemplate="startDate">
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 280px;">
+            <rng-date-picker-input
+              placeholder="From Date"
+              (valueChange)="onCustomFromDateChange($event)" />
+            <rng-date-picker-input
+              placeholder="To Date"
+              (valueChange)="onCustomToDateChange($event)" />
+            <div class="rng-filter__action" style="display: flex; gap: 0.5rem;">
+              <rng-button variant="dark" (clickEvent)="addCustomFilter()">Add Filter</rng-button>
+              <rng-button (clickEvent)="cancelCustomFilter()">Cancel</rng-button>
+            </div>
+            @if (customFromDate() || customToDate()) {
+              <p style="margin: 0; font-size: 0.75rem; color: var(--doc-text-muted);">
+                Selected: @if (customFromDate()) { <code class="doc-prose__code">from {{ customFromDate() }}</code> } @if (customFromDate() && customToDate()) { <span> and </span> } @if (customToDate()) { <code class="doc-prose__code">to {{ customToDate() }}</code> }
+              </p>
+            }
+          </div>
+        </ng-template>
+      </rng-filter>
+      <div style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+        @if (customLastFilters()) {
+          <span>Last <code class="doc-prose__code">changeEvent</code>:</span>
+          <pre style="margin: 0.5rem 0 0 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatFilters(customLastFilters()) }}</pre>
+        } @else {
+          <span>Select <code class="doc-prose__code">Start Date</code> in the popover to see the custom template. Choose dates and click <code class="doc-prose__code">Add Filter</code> - the chip will show <code class="doc-prose__code">Start Date &lt;em&gt;after or equal to&lt;/em&gt; '...'</code>.</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining basic fields, pre-populated value, global handling and a custom date range template.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-filter
+        #fullFilterEl
+        [filterableFields]="fullFields()"
+        [value]="fullFilters()"
+        (changeEvent)="onFullChange($event)"
+        (globalSearchRemoveEvent)="onFullGlobalRemove()">
+        <ng-template rngFilterFieldTemplate="startDate">
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 280px;">
+            <rng-date-picker-input
+              placeholder="From Date"
+              (valueChange)="onFullFromDateChange($event)" />
+            <rng-date-picker-input
+              placeholder="To Date"
+              (valueChange)="onFullToDateChange($event)" />
+            <div class="rng-filter__action" style="display: flex; gap: 0.5rem;">
+              <rng-button variant="dark" (clickEvent)="addFullCustomFilter()">Add Filter</rng-button>
+              <rng-button (clickEvent)="cancelFullFilter()">Cancel</rng-button>
+            </div>
+          </div>
+        </ng-template>
+      </rng-filter>
+      <div style="font-size: 0.8125rem; color: var(--doc-text-muted);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Pre-populated with <code class="doc-prose__code">Name contains 'Acme'</code>. Add more filters via <code class="doc-prose__code">+</code>.
+          @if (fullGlobalRemovedCount() > 0) {
+            <span> Global removed <code class="doc-prose__code">{{ fullGlobalRemovedCount() }}</code> time(s).</span>
+          }
+        </p>
+        @if (fullLastFilters()) {
+          <pre style="margin: 0.5rem 0 0 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatFilters(fullLastFilters()) }}</pre>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">Filtering with FilterEngine</h2>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">FilterEngine</code> is a framework-agnostic helper exported from <code class="doc-prose__code">@im4all/roolith-ng</code> that applies the same <code class="doc-prose__code">IFilterData</code> produced by <code class="doc-prose__code">rng-filter</code> to any in-memory array.
+    It evaluates every filter group with <code class="doc-prose__code">AND</code> between groups, and within a group combines items with their <code class="doc-prose__code">operator</code> (<code class="doc-prose__code">'and'</code> / <code class="doc-prose__code">'or'</code>).
+    A group with <code class="doc-prose__code">field: '*'</code> is treated as a global search - it matches when any value in the row satisfies any item in the group.
+    This mirrors the production pattern used for data tables where filter buttons, global search and per-column filters all feed a single <code class="doc-prose__code">filterData</code> signal - no direct reference to that app is needed.
+  </p>
+  <div class="doc-callout" style="margin-top: 0.75rem;">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Supported operators</p>
+    <p class="doc-prose__p">
+      The current engine implements <code class="doc-prose__code">equals</code> (strict <code class="doc-prose__code">===</code>) and <code class="doc-prose__code">contains</code> (case-insensitive substring via <code class="doc-prose__code">String(value).toLowerCase().includes()</code>).
+      Other types such as <code class="doc-prose__code">startsWith</code>, <code class="doc-prose__code">greaterThan</code>, <code class="doc-prose__code">before</code> etc. fall through to <code class="doc-prose__code">false</code> and will be extended as the filter spec grows.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Import</h3>
+  <rng-code-block [code]="filterEngineImportSnippet" language="typescript" title="import FilterEngine" variant="prose" />
+
+  <h3 class="doc-prose__h3">How it works</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">new FilterEngine&lt;T&gt;(filters).apply(collection)</code> keeps only rows where <code class="doc-prose__code">filters.every(group => evaluateGroup(row, group))</code>.
+    For a wildcard group it checks <code class="doc-prose__code">Object.values(row).some(v => items.some(item => evaluateCondition(v, item)))</code>.
+    For a normal group it reduces items: the first item sets the result, later items combine via <code class="doc-prose__code">operator === 'and' ? result && match : result || match</code>.
+  </p>
+
+  <h3 class="doc-prose__h3">Basic - contains and equals</h3>
+  <rng-code-block [code]="filterEngineBasicSnippet" language="typescript" title="FilterEngine - contains + equals" variant="prose" />
+
+  <h3 class="doc-prose__h3">Global search and same-field operators</h3>
+  <rng-code-block [code]="filterEngineWildcardSnippet" language="typescript" title="FilterEngine - wildcard and or/and" variant="prose" />
+
+  <h3 class="doc-prose__h3">Live demo - rng-filter + FilterEngine</h3>
+  <p class="doc-prose__p">
+    The filter bar collects <code class="doc-prose__code">IFilterData</code>; a <code class="doc-prose__code">computed</code> derives the visible rows via <code class="doc-prose__code">FilterEngine</code>.
+    Try adding <code class="doc-prose__code">Name contains al</code> or <code class="doc-prose__code">Status equals active</code> - the table below updates instantly. The same pattern is used for global search (<code class="doc-prose__code">field: '*'</code>) and for multi-select filter buttons that push <code class="doc-prose__code">&#123; filterType: 'equals', operator: 'or' &#125;</code> items per selected value.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+      <rng-filter
+        [filterableFields]="engineFields()"
+        (changeEvent)="onEngineFilterChange($event)"
+        (globalSearchRemoveEvent)="onEngineGlobalRemove()" />
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--doc-text-muted);">
+          Source rows: <code class="doc-prose__code">{{ engineItems().length }}</code> | Filtered: <code class="doc-prose__code">{{ engineFiltered().length }}</code>
+          @if (engineFilters().length > 0) {
+            <span> | Active groups: <code class="doc-prose__code">{{ engineFilters().length }}</code></span>
+          }
+        </p>
+        <div style="overflow-x: auto; border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem;">
+          <table class="doc-prose__table" style="margin: 0; display: table; width: 100%;">
+            <thead>
+              <tr class="doc-prose__tr"><th class="doc-prose__th">Name</th><th class="doc-prose__th">Status</th><th class="doc-prose__th">Category</th></tr>
+            </thead>
+            <tbody>
+              @for (row of engineFiltered(); track $index) {
+                <tr class="doc-prose__tr">
+                  <td class="doc-prose__td">{{ $any(row).name }}</td>
+                  <td class="doc-prose__td">{{ $any(row).status }}</td>
+                  <td class="doc-prose__td">{{ $any(row).category }}</td>
+                </tr>
+              } @empty {
+                <tr class="doc-prose__tr"><td class="doc-prose__td" colspan="3" style="text-align: center; color: var(--doc-text-muted);">No rows match the current filters.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if (engineFilters().length > 0) {
+          <pre style="margin: 0; padding: 0.75rem; background: var(--doc-code-bg, #f8fafc); border: 1px solid var(--doc-border, #e2e8f0); border-radius: 0.375rem; overflow: auto; font-size: 0.75rem; font-family: monospace;">{{ formatFilters(engineFilters()) }}</pre>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="filterEngineIntegrationSnippet" language="typescript" title="FilterEngine + rng-filter - component" variant="prose" />
+  <rng-code-block [code]="filterEngineTemplateSnippet" language="html" title="FilterEngine + rng-filter - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-filter</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">filterableFields</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterableField[]</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">-</td><td class="doc-prose__td">Fields the user can filter by - rendered in the field select inside <code class="doc-prose__code">rng-add-filter</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterData[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Pre-populate the filter bar. Each entry is merged via <code class="doc-prose__code">_addFilter</code> - empty arrays are skipped</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-filter</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterData[]</code></td><td class="doc-prose__td">Emits the full updated filter list on every add or remove - includes merged items per field</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">globalSearchRemoveEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emits when a filter with <code class="doc-prose__code">field === '*'</code> is removed</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-filter</code> Public methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">addFilter</code></td><td class="doc-prose__td"><code class="doc-prose__code">(data: IFilterData) =&gt; void</code></td><td class="doc-prose__td">Adds or merges a filter and closes the popover via <code class="doc-prose__code">closeAddFilterPopover()</code> - use from custom templates</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">closeAddFilterPopover</code></td><td class="doc-prose__td"><code class="doc-prose__code">() =&gt; void</code></td><td class="doc-prose__td">Resets the add-filter form and closes the popover without adding a filter</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">FilterFieldTemplateDirective</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Selector</th><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">[rngFilterFieldTemplate]</code></td><td class="doc-prose__td"><code class="doc-prose__code">rngFilterFieldTemplate</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Field key this template belongs to - must match an <code class="doc-prose__code">IFilterableField.value</code> with <code class="doc-prose__code">hasTemplate: true</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilter</code> (internal display)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">field</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Field key</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">filterType</code></td><td class="doc-prose__td"><code class="doc-prose__code">IFilterType</code></td><td class="doc-prose__td">Operator key</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | DateTime | null</code></td><td class="doc-prose__td">Comparison value</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">operator</code></td><td class="doc-prose__td"><code class="doc-prose__code">'and' | 'or' | undefined</code></td><td class="doc-prose__td">Combinator for multi-condition fields</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">_forHuman</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Human-readable label rendered via <code class="doc-prose__code">[innerHTML]</code> on <code class="doc-prose__code">rng-button-split</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IFilterType</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Type</th><th class="doc-prose__th">Values</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">IFilterType</code></td><td class="doc-prose__td"><code class="doc-prose__code">'contains' | 'doesNotContain' | 'startsWith' | 'endsWith' | 'equals' | 'notEqualTo' | 'isEmpty' | 'isNotEmpty' | 'greaterThan' | 'greaterThanOrEqualTo' | 'lessThan' | 'lessThanOrEqualTo' | 'before' | 'after' | 'beforeOrEqualTo' | 'afterOrEqualTo'</code></td><td class="doc-prose__td">Union of all supported filter operators plus an open <code class="doc-prose__code">string &amp; &#123;&#125;</code> for custom types</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

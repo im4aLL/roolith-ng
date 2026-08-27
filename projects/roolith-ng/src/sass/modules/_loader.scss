@@ -1,0 +1,68 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin loader {
+  .rng-loader {
+    --rng-loader-background-color: rgba(0, 0, 0, 0.5);
+    --rng-loader-backdrop-filter-blur: #{rem(2)};
+    --rng-loader-content-spacing: #{rem(10)};
+    --rng-loader-content-background-color: var(--rng-color-neutral-900);
+    --rng-loader-content-color: var(--rng-color-neutral);
+    --rng-loader-content-border-radius: var(--rng-border-radius);
+    --rng-loader-content-shadow: var(--rng-shadow);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--rng-loader-background-color);
+    z-index: 99999;
+    backdrop-filter: blur(var(--rng-loader-backdrop-filter-blur));
+  }
+
+  .rng-loader__content {
+    @extend .rng-animation, .rng-fadeInDown;
+    display: flex;
+    align-items: center;
+    gap: var(--rng-loader-content-spacing);
+    padding: var(--rng-loader-content-spacing);
+    background-color: var(--rng-loader-content-background-color);
+    color: var(--rng-loader-content-color);
+    border-radius: var(--rng-loader-content-border-radius);
+    box-shadow: var(--rng-loader-content-shadow);
+  }
+
+  .rng-loader__icon {
+    background-color: var(--rng-loader-content-color);
+    flex-shrink: 0;
+  }
+
+  .rng-loader__text {
+    font-size: rem(14);
+    color: var(--rng-loader-content-color);
+  }
+
+  .rng-loader--non-blocking {
+    background-color: transparent;
+    backdrop-filter: none;
+    width: auto;
+    height: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+
+    .rng-loader__content {
+      margin: rem(20);
+    }
+  }
+
+  .rng-inline-loader {
+    display: flex;
+    align-items: center;
+    gap: rem(5);
+  }
+}

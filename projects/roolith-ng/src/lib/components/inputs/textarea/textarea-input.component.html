@@ -1,0 +1,45 @@
+<div
+  class="rng-input"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--readonly]="readonly()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+
+  <textarea
+    [id]="id()"
+    class="rng-input__field rng-input__field--textarea"
+    [class.rng-input__field--textarea-autoresize]="autoResize()"
+    [placeholder]="placeholder() ?? ''"
+    [value]="value()"
+    [rows]="rows()"
+    [attr.maxlength]="maxLength()"
+    (input)="onInput($event)"
+    (blur)="touched.set(true)"
+    [disabled]="disabled()"
+    [readonly]="readonly()"
+    [attr.aria-invalid]="invalid()"
+    [attr.aria-required]="required()"
+    [attr.name]="name()"></textarea>
+
+  <div class="rng-input__textarea-footer">
+    @if (hintMessage()) {
+      <span class="rng-input__hint">{{ hintMessage() }}</span>
+    } @else {
+      <span></span>
+    }
+
+    @if (showCharCount() || maxLength() !== undefined) {
+      <span
+        class="rng-input__char-count"
+        [class.rng-input__char-count--limit]="isAtLimit()">
+        {{ charCount() }}{{ maxLength() !== undefined ? ' / ' + maxLength() : '' }}
+      </span>
+    }
+  </div>
+</div>

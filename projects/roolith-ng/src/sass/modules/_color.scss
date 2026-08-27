@@ -1,0 +1,13 @@
+@use '../settings' as s;
+
+@mixin color() {
+  @each $name, $value in s.$colors {
+    .rng-color-#{$name} {
+      color: var(--rng-color-#{$name});
+    }
+
+    .rng-bg-color-#{$name} {
+      background-color: var(--rng-color-#{$name});
+    }
+  }
+}

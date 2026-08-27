@@ -1,0 +1,14 @@
+<ul class="rng-list">
+  @for (item of items(); track item._trackBy) {
+    <li class="rng-list__item">
+      @if (item.title) {
+        <div class="rng-list__header">
+          {{ item.title }}
+        </div>
+      }
+      <div class="rng-list__content">
+        {{ item.content }}
+      </div>
+    </li>
+  }
+</ul>

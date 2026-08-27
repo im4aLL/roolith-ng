@@ -1,0 +1,285 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Drawer</h1>
+  <p class="doc-prose__p">
+    A panel that slides out from the edge of the screen.
+    Uses the native <code class="doc-prose__code">popover</code> API - wire any trigger element with
+    <code class="doc-prose__code">[rngDrawerTarget]</code> to the matching <code class="doc-prose__code">name</code> of <code class="doc-prose__code">rng-drawer</code>.
+    Supports an optional <code class="doc-prose__code">header</code> and <code class="doc-prose__code">subheader</code>, body content via the default slot,
+    and footer actions via <code class="doc-prose__code">[rngDrawerAction]</code>. The header X button and
+    <code class="doc-prose__code">Escape</code> key both close the drawer and emit <code class="doc-prose__code">closeEvent</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">IMPORT_DRAWER</code> includes both <code class="doc-prose__code">DrawerComponent</code> and <code class="doc-prose__code">DrawerTargetDirective</code>.
+    Or import individually:
+  </p>
+  <rng-code-block [code]="importIndividualSnippet" language="typescript" title="individual import" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic drawer</h3>
+  <p class="doc-prose__p">
+    Place <code class="doc-prose__code">rngDrawerTarget="drawer1"</code> on a trigger element and match it to the
+    <code class="doc-prose__code">name</code> of <code class="doc-prose__code">rng-drawer</code>.
+    The directive resolves the inner <code class="doc-prose__code">&lt;button&gt;</code> element and sets the native
+    <code class="doc-prose__code">popovertarget</code> attribute automatically.
+    Body content is projected into <code class="doc-prose__code">rng-drawer__body</code> and the footer slot
+    <code class="doc-prose__code">[rngDrawerAction]</code> renders inside <code class="doc-prose__code">rng-drawer__footer</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button rngDrawerTarget="drawerDemoBasic">Open Basic Drawer</rng-button>
+      @if (lastEvent) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last event: <code class="doc-prose__code">{{ lastEvent }}</code></span
+        >
+      }
+    </div>
+    <rng-drawer
+      name="drawerDemoBasic"
+      header="Drawer title"
+      subheader="Drawer subtitle"
+      (openEvent)="onDemoOpen()"
+      (closeEvent)="onDemoClose()"
+      #demoBasicDrawer>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, eaque. This is the drawer body - project any markup you need into the default slot.
+
+      <ng-container rngDrawerAction>
+        <rng-button variant="dark" [block]="true" (clickEvent)="demoBasicDrawer.close()">Action 1</rng-button>
+        <rng-button [block]="true" (clickEvent)="demoBasicDrawer.close()">Action 2</rng-button>
+      </ng-container>
+    </rng-drawer>
+  </div>
+  @if (lastEvent) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">{{ lastEvent }}</code>
+        @if (lastEvent === 'open') {
+          <span> - drawer opened (toggle newState: open).</span>
+        } @else {
+          <span> - drawer closed via X button, <code class="doc-prose__code">Escape</code> or <code class="doc-prose__code">.close()</code>.</span>
+        }
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicSnippet" language="html" title="basic drawer" variant="prose" />
+
+  <h3 class="doc-prose__h3">Header and subheader</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">header</code> for the title and <code class="doc-prose__code">subheader</code> for the subtitle.
+    The header area <code class="doc-prose__code">rng-drawer__header</code> renders <code class="doc-prose__code">rng-drawer__hl</code> and optionally
+    <code class="doc-prose__code">rng-drawer__subhl</code> when <code class="doc-prose__code">subheader()</code> is truthy.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button rngDrawerTarget="drawerHeaderDemo">Open With Header</rng-button>
+    </div>
+    <rng-drawer name="drawerHeaderDemo" header="Drawer title" subheader="Drawer subtitle" #drawerHeaderEl>
+      Drawer body content goes here. The header and subtitle are rendered in <code class="doc-prose__code">rng-drawer__header-text</code>.
+
+      <ng-container rngDrawerAction>
+        <rng-button variant="dark" [block]="true" (clickEvent)="drawerHeaderEl.close()">Got it</rng-button>
+      </ng-container>
+    </rng-drawer>
+  </div>
+  <rng-code-block [code]="headerSnippet" language="html" title="header and subheader" variant="prose" />
+
+  <h3 class="doc-prose__h3">Body content</h3>
+  <p class="doc-prose__p">
+    Anything without a selector is projected into <code class="doc-prose__code">rng-drawer__body</code> via
+    <code class="doc-prose__code">&lt;ng-content /&gt;</code>. No <code class="doc-prose__code">content</code> input is needed - just place markup inside the element.
+  </p>
+  <rng-code-block [code]="bodySnippet" language="html" title="body projection" variant="prose" />
+
+  <h3 class="doc-prose__h3">Footer actions</h3>
+  <p class="doc-prose__p">
+    Wrap footer buttons in <code class="doc-prose__code">&lt;ng-container rngDrawerAction&gt;</code>.
+    The content is rendered inside <code class="doc-prose__code">rng-drawer__footer</code>.
+    Use <code class="doc-prose__code">[block]="true"</code> on buttons for full-width footer actions and call
+    <code class="doc-prose__code">drawerEl.close()</code> to dismiss from an action.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button rngDrawerTarget="drawerFooterDemo">Open With Footer</rng-button>
+    </div>
+    <rng-drawer name="drawerFooterDemo" header="Actions demo" #drawerFooterEl>
+      Confirm or cancel this action from the footer.
+
+      <ng-container rngDrawerAction>
+        <rng-button variant="dark" [block]="true" (clickEvent)="drawerFooterEl.close()">Confirm</rng-button>
+        <rng-button [block]="true" (clickEvent)="drawerFooterEl.close()">Cancel</rng-button>
+      </ng-container>
+    </rng-drawer>
+  </div>
+  <rng-code-block [code]="footerSnippet" language="html" title="footer actions" variant="prose" />
+
+  <h3 class="doc-prose__h3">Trigger directive</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">[rngDrawerTarget]</code> can be placed on <code class="doc-prose__code">rng-button</code> or any element that contains a
+    <code class="doc-prose__code">&lt;button&gt;</code>. On init the directive finds the first clickable element and sets
+    <code class="doc-prose__code">popovertarget="&lt;name&gt;"</code> so the browser opens the matching popover with <code class="doc-prose__code">id="&lt;name&gt;"</code>.
+  </p>
+  <rng-code-block [code]="directiveSnippet" language="html" title="rngDrawerTarget" variant="prose" />
+
+  <h3 class="doc-prose__h3">Closing programmatically</h3>
+  <p class="doc-prose__p">
+    Use a template reference (<code class="doc-prose__code">#myDrawer</code>) and call <code class="doc-prose__code">.close()</code> or
+    <code class="doc-prose__code">.open()</code>. Both delegate to the native <code class="doc-prose__code">hidePopover()</code> /
+    <code class="doc-prose__code">showPopover()</code> on the drawer element. The close (X) button in the header also calls
+    <code class="doc-prose__code">close()</code> internally.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="progDrawer.open()">Open programmatically</rng-button>
+      <rng-button variant="secondary" (clickEvent)="progDrawer.open()">Open via .open()</rng-button>
+    </div>
+    <rng-drawer name="progDrawerDemo" header="Programmatic control" #progDrawer>
+      Use <code class="doc-prose__code">progDrawer.open()</code> and <code class="doc-prose__code">progDrawer.close()</code> from any button or component logic.
+
+      <ng-container rngDrawerAction>
+        <rng-button variant="dark" [block]="true" (clickEvent)="progDrawer.close()">Close</rng-button>
+        <rng-button [block]="true" (clickEvent)="progDrawer.close()">Cancel</rng-button>
+      </ng-container>
+    </rng-drawer>
+  </div>
+  <rng-code-block [code]="programmaticSnippet" language="html" title="programmatic - template" variant="prose" />
+  <p class="doc-prose__p">Or via <code class="doc-prose__code">viewChild</code> in the component class:</p>
+  <rng-code-block [code]="programmaticTsSnippet" language="typescript" title="programmatic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Reacting to open and close events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">openEvent</code> and <code class="doc-prose__code">closeEvent</code> are emitted from the native
+    <code class="doc-prose__code">toggle</code> event - <code class="doc-prose__code">closeEvent</code> fires whether the drawer was closed via
+    <code class="doc-prose__code">.close()</code>, the X button, or <code class="doc-prose__code">Escape</code>. Use them to sync external state or trigger side effects.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button rngDrawerTarget="drawerEventsDemo">Open events demo</rng-button>
+      @if (eventsDrawerLastEvent) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last event: <code class="doc-prose__code">{{ eventsDrawerLastEvent }}</code></span
+        >
+      }
+    </div>
+    <rng-drawer
+      name="drawerEventsDemo"
+      header="Events demo"
+      (openEvent)="onEventsOpen()"
+      (closeEvent)="onEventsClose()"
+      #eventsDrawer>
+      Body content. Close via X, <code class="doc-prose__code">Escape</code> or the footer button - all emit <code class="doc-prose__code">closeEvent</code>.
+
+      <ng-container rngDrawerAction>
+        <rng-button variant="dark" [block]="true" (clickEvent)="eventsDrawer.close()">Close</rng-button>
+      </ng-container>
+    </rng-drawer>
+  </div>
+  @if (eventsDrawerLastEvent) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event (events demo)</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">{{ eventsDrawerLastEvent }}</code>
+        @if (eventsDrawerLastEvent === 'open') {
+          <span> - emitted when the drawer opened.</span>
+        } @else {
+          <span> - emitted when the drawer closed (X / Escape / .close()).</span>
+        }
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="eventsSnippet" language="html" title="openEvent / closeEvent - template" variant="prose" />
+  <rng-code-block [code]="eventsHandlerSnippet" language="typescript" title="openEvent / closeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Trigger, header, subheader, body, footer and event handling together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button rngDrawerTarget="fullDrawerDemo">Open Full Drawer</rng-button>
+    </div>
+    <rng-drawer
+      name="fullDrawerDemo"
+      header="Drawer title"
+      subheader="Drawer subtitle"
+      (openEvent)="onDemoOpen()"
+      (closeEvent)="onDemoClose()"
+      #fullDrawerEl>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, eaque. This is the full drawer body.
+
+      <ng-container rngDrawerAction>
+        <rng-button variant="dark" [block]="true" (clickEvent)="fullDrawerEl.close()">Action 1</rng-button>
+        <rng-button [block]="true" (clickEvent)="fullDrawerEl.close()">Action 2</rng-button>
+      </ng-container>
+    </rng-drawer>
+  </div>
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-drawer</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'drawer'</code></td><td class="doc-prose__td">Unique name used to link the trigger. Rendered as <code class="doc-prose__code">id</code> on the popover element and matched by <code class="doc-prose__code">[rngDrawerTarget]</code> via <code class="doc-prose__code">popovertarget</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Title rendered in <code class="doc-prose__code">rng-drawer__hl</code> inside <code class="doc-prose__code">rng-drawer__header-text</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">subheader</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Subtitle below the header. Rendered in <code class="doc-prose__code">rng-drawer__subhl</code> only when truthy</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-drawer</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">openEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emitted when the drawer opens - native <code class="doc-prose__code">toggle</code> event with <code class="doc-prose__code">newState: 'open'</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">closeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emitted when the drawer closes - whether via <code class="doc-prose__code">.close()</code>, the X button, or <code class="doc-prose__code">Escape</code> (toggle <code class="doc-prose__code">newState: 'closed'</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-drawer</code> Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">open</code></td><td class="doc-prose__td"><code class="doc-prose__code">open(): void</code></td><td class="doc-prose__td">Opens the drawer by calling <code class="doc-prose__code">showPopover()</code> on the native element. No-op when the element ref is missing</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">close</code></td><td class="doc-prose__td"><code class="doc-prose__code">close(): void</code></td><td class="doc-prose__td">Closes the drawer by calling <code class="doc-prose__code">hidePopover()</code>. Called by the header X button and can be called from footer actions or component logic</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-drawer</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Selector</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>Body</em> (default)</td><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Main content of the drawer, rendered inside <code class="doc-prose__code">rng-drawer__body</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Action footer</td><td class="doc-prose__td"><code class="doc-prose__code">[rngDrawerAction]</code></td><td class="doc-prose__td">Buttons or actions rendered inside <code class="doc-prose__code">rng-drawer__footer</code> at the bottom of the drawer</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rngDrawerTarget</code> Directive</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rngDrawerTarget</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">The <code class="doc-prose__code">name</code> of the target <code class="doc-prose__code">rng-drawer</code>. On init the directive sets <code class="doc-prose__code">popovertarget</code> on the inner <code class="doc-prose__code">&lt;button&gt;</code> element</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMPORT_DRAWER</code></h3>
+  <p class="doc-prose__p">
+    Includes <code class="doc-prose__code">DrawerComponent</code> and <code class="doc-prose__code">DrawerTargetDirective</code>.
+    Use it to import all drawer pieces at once.
+  </p>
+  <rng-code-block [code]="importSnippet" language="typescript" title="IMPORT_DRAWER" variant="prose" />
+
+  <rng-doc-pager />
+</article>

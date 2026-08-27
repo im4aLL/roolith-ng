@@ -1,0 +1,324 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Time Picker</h1>
+  <p class="doc-prose__p">
+    A 12-hour time picker built as <code class="doc-prose__code">rng-time-picker-input</code>.
+    Uses Luxon <code class="doc-prose__code">DateTime</code> as the value type and exposes hour, minute and <code class="doc-prose__code">AM</code>/<code class="doc-prose__code">PM</code> selection via two
+    <code class="doc-prose__code">rng-select-plain</code> fields and a <code class="doc-prose__code">rng-button-group</code>.
+    Supports <code class="doc-prose__code">FormValueControl</code> integration for signals forms.
+    When hour or minute is empty the value is <code class="doc-prose__code">null</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code> and optionally <code class="doc-prose__code">hint</code>.
+    Bind the selected time with two-way <code class="doc-prose__code">[(value)]</code> - the model type is <code class="doc-prose__code">DateTime | null</code>.
+    The picker shows two selects for hours (01-12) and minutes (00-59) plus an <code class="doc-prose__code">AM</code>/<code class="doc-prose__code">PM</code> toggle.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Start time"
+        hint="12-hour format"
+        [(value)]="basicTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ basicTime()?.toFormat('hh:mm a') ?? 'null' }}</code>
+        @if (basicTime()) {
+          <span> ({{ basicTime()?.toFormat('HH:mm') }})</span>
+        }
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Placeholder</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">placeholder</code> to configure placeholder text for the field.
+    The value is stored via the <code class="doc-prose__code">placeholder</code> input and can be used for native semantics or future display handling.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        placeholder="e.g. 03:30 PM"
+        [(value)]="placeholderTime" />
+      <rng-time-picker-input
+        label="With label and placeholder"
+        placeholder="Select time"
+        [(value)]="placeholderTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ placeholderTime()?.toFormat('hh:mm a') ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="placeholderSnippet" language="html" title="placeholder" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field via <code class="doc-prose__code">rng-input__hint</code>.
+    The hint is visible when not overridden by an error message.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Start time"
+        hint="12-hour format with AM/PM"
+        [(value)]="hintTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ hintTime()?.toFormat('hh:mm a') ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Meeting time"
+        [error]="true"
+        errorMessage="Please select a valid time" />
+      <rng-time-picker-input
+        label="Start time"
+        hint="Choose a time"
+        [error]="true"
+        errorMessage="Time is required"
+        [(value)]="errorTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required, and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Disabled"
+        placeholder="Select time"
+        [disabled]="true" />
+      <rng-time-picker-input
+        label="Disabled with value"
+        [disabled]="true"
+        [(value)]="disabledTime" />
+      <rng-time-picker-input
+        label="Required"
+        [required]="true"
+        [(value)]="requiredTime" />
+      <rng-time-picker-input
+        label="With name"
+        name="startTime"
+        [(value)]="nameTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Disabled: <code class="doc-prose__code">{{ disabledTime()?.toFormat('hh:mm a') ?? 'null' }}</code> |
+        Required: <code class="doc-prose__code">{{ requiredTime()?.toFormat('hh:mm a') ?? 'null' }}</code> |
+        Name: <code class="doc-prose__code">{{ nameTime()?.toFormat('hh:mm a') ?? 'null' }}</code> (<code class="doc-prose__code">name="startTime"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+
+  <h3 class="doc-prose__h3">12-hour time selection</h3>
+  <p class="doc-prose__p">
+    The field renders two <code class="doc-prose__code">rng-select-plain</code> controls for hours (01-12 with an empty option <code class="doc-prose__code">value: -1</code>) and minutes (00-59 with empty) plus a
+    <code class="doc-prose__code">rng-button-group</code> for <code class="doc-prose__code">AM</code>/<code class="doc-prose__code">PM</code> via <code class="doc-prose__code">hourFormats()</code>.
+    An internal <code class="doc-prose__code">effect</code> merges <code class="doc-prose__code">selectedHour</code>, <code class="doc-prose__code">selectedMinute</code> and <code class="doc-prose__code">selectedHourFormat</code> into <code class="doc-prose__code">value</code> using 12-hour to 24-hour conversion
+    (<code class="doc-prose__code">PM && hour !== 12 -> hour + 12</code>, <code class="doc-prose__code">AM && hour === 12 -> 0</code>).
+    If hour, minute or format is missing the effect sets <code class="doc-prose__code">value</code> to <code class="doc-prose__code">null</code>.
+    The display value is stored as <code class="doc-prose__code">DateTime.fromObject({{ '{' }} hour, minute {{ '}' }})</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Start time with AM/PM"
+        hint="Pick hour, minute and AM/PM"
+        [(value)]="basicTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        12h: <code class="doc-prose__code">{{ basicTime()?.toFormat('hh:mm a') ?? 'null' }}</code> |
+        24h: <code class="doc-prose__code">{{ basicTime()?.toFormat('HH:mm') ?? 'null' }}</code> |
+        ISO: <code class="doc-prose__code">{{ basicTime()?.toISOTime() ?? 'null' }}</code>
+      </p>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Try <code class="doc-prose__code">12:00 AM</code> -> <code class="doc-prose__code">00:00</code>, <code class="doc-prose__code">12:00 PM</code> -> <code class="doc-prose__code">12:00</code>, <code class="doc-prose__code">03:00 PM</code> -> <code class="doc-prose__code">15:00</code>.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="timeControlsSnippet" language="html" title="time selection" variant="prose" />
+
+  <h3 class="doc-prose__h3">Pre-set value</h3>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">[value]</code> is bound externally, the pickers initialize in <code class="doc-prose__code">ngOnInit</code> via <code class="doc-prose__code">_setValueFromInitialDateTime()</code>.
+    The hour is converted to 12-hour format (<code class="doc-prose__code">hour % 12 === 0 ? 12 : hour % 12</code>), minutes are zero-padded and <code class="doc-prose__code">selectedHourFormat</code> is set to <code class="doc-prose__code">AM</code> or <code class="doc-prose__code">PM</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Morning standup (09:15 AM)"
+        [(value)]="presetTime" />
+      <rng-time-picker-input
+        label="Afternoon review (03:45 PM)"
+        [(value)]="presetAfternoon" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Morning: <code class="doc-prose__code">{{ presetTime()?.toFormat('hh:mm a') ?? 'null' }}</code> ({{ presetTime()?.toFormat('HH:mm') ?? '' }}) |
+        Afternoon: <code class="doc-prose__code">{{ presetAfternoon()?.toFormat('hh:mm a') ?? 'null' }}</code> ({{ presetAfternoon()?.toFormat('HH:mm') ?? '' }})
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="presetSnippet" language="html" title="pre-set value" variant="prose" />
+  <rng-code-block [code]="presetTsSnippet" language="typescript" title="pre-set - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and valueChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;DateTime | null&gt;</code> with an associated <code class="doc-prose__code">valueChange</code> output.
+    Changing hour, minute or <code class="doc-prose__code">AM</code>/<code class="doc-prose__code">PM</code> triggers the internal effect which updates <code class="doc-prose__code">value</code> - when a part is cleared the value becomes <code class="doc-prose__code">null</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input [(value)]="twoWayTime" label="Two-way binding" />
+      <rng-time-picker-input [value]="twoWayTime()" (valueChange)="onTimeChange($event)" label="With valueChange handler" />
+      <p class="doc-prose__p" style="margin: 0;">
+        Current value: <code class="doc-prose__code">{{ twoWayTime()?.toFormat('hh:mm a') ?? 'null' }}</code>
+        @if (twoWayTime()) {
+          <span> ({{ twoWayTime()?.toISOTime() }})</span>
+        }
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="valueChangeTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-time-picker-input</code> implements <code class="doc-prose__code">FormValueControl&lt;DateTime | null&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Resetting the value</h3>
+  <p class="doc-prose__p">
+    Reset the model to <code class="doc-prose__code">null</code> to clear the field.
+    Clearing hour or minute (empty option) also sets <code class="doc-prose__code">value</code> to <code class="doc-prose__code">null</code> via the effect.
+    The component marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> on <code class="doc-prose__code">blur</code>.
+  </p>
+  <rng-code-block [code]="clearSnippet" language="typescript" title="resetting" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, hint, pre-set value and live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 320px; width: 100%;">
+      <rng-time-picker-input
+        label="Meeting time"
+        hint="12-hour format"
+        [(value)]="fullTime" />
+      <rng-time-picker-input
+        label="Event time"
+        hint="Pick a time for the event"
+        [(value)]="eventTime" />
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+          Meeting: <code class="doc-prose__code">{{ fullTime()?.toFormat('hh:mm a') ?? 'null' }}</code> |
+          Event: <code class="doc-prose__code">{{ eventTime()?.toFormat('hh:mm a') ?? 'null' }}</code>
+        </p>
+        @if (fullTime() || eventTime()) {
+          <button type="button" (click)="clearFullTime()" style="font-size: 0.8125rem; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; color: var(--rng-primary, #2563eb);">Clear</button>
+        }
+      </div>
+      <rng-button size="small" (clickEvent)="clearFullTime()">Clear times</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-time-picker-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the input via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Placeholder text for the field</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the input via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required (ARIA)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-time-picker-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">DateTime | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">The selected time as a Luxon DateTime - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>; <code class="doc-prose__code">null</code> when hour or minute is empty</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;DateTime | null&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;DateTime | null&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.startTime"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeHour</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeHour(data: ISelectPlainOption | undefined): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">selectedHour</code> - triggers the merge effect to update <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeMinute</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeMinute(data: ISelectPlainOption | undefined): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">selectedMinute</code> - triggers the merge effect to update <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeHourFormat</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeHourFormat(format: string): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">selectedHourFormat</code> (<code class="doc-prose__code">AM</code> / <code class="doc-prose__code">PM</code>) - triggers the merge effect</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onBlur</code></td><td class="doc-prose__td"><code class="doc-prose__code">onBlur(): void</code></td><td class="doc-prose__td">Marks the control as <code class="doc-prose__code">touched</code> on blur via <code class="doc-prose__code">@HostListener('blur')</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Computed helpers</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hintMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">Resolves <code class="doc-prose__code">errorMessage</code> when <code class="doc-prose__code">error</code> is true, otherwise <code class="doc-prose__code">hint</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hours</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption[]</code></td><td class="doc-prose__td">Hour options 01-12 plus empty <code class="doc-prose__code">{{ '{' }} label: '', value: -1 {{ '}' }}</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">minutes</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption[]</code></td><td class="doc-prose__td">Minute options 00-59 plus empty <code class="doc-prose__code">{{ '{' }} label: '', value: -1 {{ '}' }}</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hourFormats</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITimePickerHourFormat[]</code></td><td class="doc-prose__td">Available hour formats <code class="doc-prose__code">['AM', 'PM']</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedHour</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption | undefined</code></td><td class="doc-prose__td">Currently selected hour option</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedMinute</code></td><td class="doc-prose__td"><code class="doc-prose__code">ISelectPlainOption | undefined</code></td><td class="doc-prose__td">Currently selected minute option</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedHourFormat</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITimePickerHourFormat | null</code></td><td class="doc-prose__td">Currently selected <code class="doc-prose__code">AM</code> / <code class="doc-prose__code">PM</code> - defaults to <code class="doc-prose__code">AM</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

@@ -1,0 +1,13 @@
+<div
+  class="rng-button-group"
+  [class]="buttonGroupSizeClass()">
+  @for (label of labels(); track label) {
+    <button
+      class="rng-button"
+      [class.rng-button--active]="label === activeLabel()"
+      [class]="buttonSizeClass()"
+      (click)="labelClickHandler($event, label)">
+      {{ label }}
+    </button>
+  }
+</div>

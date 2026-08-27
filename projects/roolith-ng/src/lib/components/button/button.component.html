@@ -1,0 +1,21 @@
+<ng-template #buttonIconTpl>
+  <i [class]="'rng-icon rng-icon--' + icon()"></i>
+</ng-template>
+
+<button
+  class="rng-button"
+  [attr.id]="key() ? key() : null"
+  [class]="classNames()"
+  (click)="onClickHandler($event)">
+  @if (showLoading()) {
+    <i class="rng-icon rng-icon--loader rng-animation rng-spinner"></i>
+  }
+
+  @if (hasIcon() && iconPosition() === 'left' && !showLoading()) {
+    <ng-container *ngTemplateOutlet="buttonIconTpl"></ng-container>
+  }
+  <ng-content></ng-content>
+  @if (hasIcon() && iconPosition() === 'right' && !showLoading()) {
+    <ng-container *ngTemplateOutlet="buttonIconTpl"></ng-container>
+  }
+</button>

@@ -1,0 +1,283 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Switch</h1>
+  <p class="doc-prose__p">
+    A toggle switch built as <code class="doc-prose__code">rng-switch-input</code>.
+    Supports <code class="doc-prose__code">label</code>, <code class="doc-prose__code">hint</code>, validation state via <code class="doc-prose__code">error</code> and <code class="doc-prose__code">errorMessage</code>,
+    plus <code class="doc-prose__code">FormValueControl&lt;boolean&gt;</code> integration for signals forms.
+    The switch state is exposed as <code class="doc-prose__code">boolean</code> via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(checkedChange)</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code> for the text beside the toggle.
+    Use two-way binding <code class="doc-prose__code">[(value)]</code> to sync the on/off state.
+    The model is <code class="doc-prose__code">boolean</code> with default <code class="doc-prose__code">false</code> (off).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-switch-input
+        label="Enable notifications"
+        [(value)]="basicValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ basicValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Label and hint</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">label</code> for the text rendered via <code class="doc-prose__code">rng-input-switch__text</code> and
+    <code class="doc-prose__code">hint</code> for helper text below the switch via <code class="doc-prose__code">rng-input__hint</code>.
+    When <code class="doc-prose__code">label</code> is <code class="doc-prose__code">null</code> no text is shown.
+    The hint is resolved via the computed <code class="doc-prose__code">hintMessage()</code> which also handles <code class="doc-prose__code">errorMessage</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-switch-input
+        label="Enable notifications"
+        [(value)]="labelValue" />
+      <rng-switch-input
+        label="Dark mode"
+        hint="Applies to the entire application"
+        [(value)]="hintValue" />
+      <rng-switch-input
+        label="Dark mode (on by default)"
+        hint="Applies to the entire application"
+        [(value)]="hintValue2" />
+      <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+        <span style="font-size: 0.8125rem; font-weight: 600;">Without label</span>
+        <rng-switch-input [(value)]="noLabelValue" />
+        <span style="font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">No <code class="doc-prose__code">label</code> - only the track and thumb are rendered.</span>
+      </div>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Label: <code class="doc-prose__code">{{ labelValue() }}</code> |
+        Hint (off): <code class="doc-prose__code">{{ hintValue() }}</code> |
+        Hint (on): <code class="doc-prose__code">{{ hintValue2() }}</code> |
+        No label: <code class="doc-prose__code">{{ noLabelValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="labelSnippet" language="html" title="label" variant="prose" />
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+  <rng-code-block [code]="noLabelSnippet" language="html" title="no label" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint vs error</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-switch-input
+        label="Enable notifications"
+        [error]="true"
+        errorMessage="This field is required"
+        [(value)]="errorValue" />
+      <rng-switch-input
+        label="Dark mode"
+        hint="Applies to the entire application"
+        [error]="true"
+        errorMessage="You must enable this option"
+        [(value)]="hintErrorValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Error only: <code class="doc-prose__code">{{ errorValue() }}</code> |
+        Hint + error: <code class="doc-prose__code">{{ hintErrorValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable interaction via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[readonly]="true"</code> to make it read-only,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-switch-input
+        label="Disabled (off)"
+        [disabled]="true"
+        [(value)]="disabledValue" />
+      <rng-switch-input
+        label="Disabled (on)"
+        [disabled]="true"
+        [(value)]="disabledCheckedValue" />
+      <rng-switch-input
+        label="Read-only (on)"
+        [readonly]="true"
+        [(value)]="readonlyValue" />
+      <rng-switch-input
+        label="Required"
+        [required]="true"
+        [(value)]="requiredValue" />
+      <rng-switch-input
+        label="With name"
+        name="notifications"
+        [(value)]="nameValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Disabled: <code class="doc-prose__code">{{ disabledValue() }}</code> |
+        Disabled checked: <code class="doc-prose__code">{{ disabledCheckedValue() }}</code> |
+        Read-only: <code class="doc-prose__code">{{ readonlyValue() }}</code> |
+        Required: <code class="doc-prose__code">{{ requiredValue() }}</code> |
+        Name: <code class="doc-prose__code">{{ nameValue() }}</code> (<code class="doc-prose__code">name="notifications"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="readonlySnippet" language="html" title="readonly" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and checkedChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(checkedChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;boolean&gt;</code> - toggling calls <code class="doc-prose__code">onChange</code> which sets <code class="doc-prose__code">value</code> and emits <code class="doc-prose__code">checkedChange</code>, blurring marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-switch-input label="Two-way binding" [(value)]="twoWayValue" />
+      <rng-switch-input label="With checkedChange handler" [value]="twoWayValue()" (checkedChange)="onTwoWayCheckedChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Current: <code class="doc-prose__code">{{ twoWayValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and checkedChange" variant="prose" />
+  <rng-code-block [code]="checkedChangeTsSnippet" language="typescript" title="checkedChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-switch-input</code> implements <code class="doc-prose__code">FormValueControl&lt;boolean&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, hint, error handling and multiple switches with live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 520px; width: 100%;">
+      <rng-switch-input
+        label="Enable notifications"
+        hint="Receive updates about your account"
+        [(value)]="fullNotifications" />
+      <rng-switch-input
+        label="Dark mode"
+        hint="Applies to the entire application"
+        [(value)]="fullDarkMode" />
+      <rng-switch-input
+        label="Marketing emails"
+        hint="Get notified about new features"
+        [error]="fullMarketingError()"
+        [errorMessage]="fullMarketingError() ? 'You must accept marketing to continue' : null"
+        [(value)]="fullMarketing" />
+      <rng-switch-input
+        label="Feature flag (on)"
+        [(value)]="fullFeatureFlag" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Notifications: <code class="doc-prose__code">{{ fullNotifications() }}</code>
+          | Dark mode: <code class="doc-prose__code">{{ fullDarkMode() }}</code>
+          | Marketing: <code class="doc-prose__code">{{ fullMarketing() }}</code>
+          | Feature: <code class="doc-prose__code">{{ fullFeatureFlag() }}</code>
+          @if (fullMarketingError()) {
+            <span style="color: var(--rng-danger, #dc2626);"> - error active</span>
+          }
+        </p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+          <rng-button size="small" (clickEvent)="toggleFullMarketingError()">
+            {{ fullMarketingError() ? 'Clear error' : 'Show error' }}
+          </rng-button>
+          @if (fullNotifications() || fullDarkMode() || fullMarketing() || fullFeatureFlag() || fullMarketingError()) {
+            <rng-button size="small" variant="ghost" (clickEvent)="clearFullValues()">Clear values</rng-button>
+          }
+        </div>
+        @if (!fullNotifications() && !fullDarkMode() && !fullMarketing() && !fullFeatureFlag() && !fullMarketingError()) {
+          <p class="doc-prose__p" style="margin: 0.5rem 0 0 0; color: var(--rng-text-muted, #64748b);">No toggles on - turn a switch on to see the model update.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-switch-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Label rendered beside the toggle via <code class="doc-prose__code">rng-input-switch__text</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the switch via <code class="doc-prose__code">hintMessage()</code> and <code class="doc-prose__code">rng-input__hint</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the switch via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">readonly</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the switch read-only via <code class="doc-prose__code">[readonly]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the switch as required via <code class="doc-prose__code">aria-required</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-switch-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Whether the switch is on - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-switch-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">checkedChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">Emits the new checked state on change - used alongside <code class="doc-prose__code">[(value)]</code>; emitted via <code class="doc-prose__code">onChange</code> after <code class="doc-prose__code">value.set(checked)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">Emits the new value on change - auto-generated by <code class="doc-prose__code">model&lt;boolean&gt; value</code> for <code class="doc-prose__code">[(value)]</code> binding</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;boolean&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;boolean&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.notifications"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChange(isChecked: boolean): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">change</code> - sets <code class="doc-prose__code">value</code> to <code class="doc-prose__code">isChecked</code> and emits <code class="doc-prose__code">checkedChange</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

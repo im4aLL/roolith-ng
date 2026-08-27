@@ -1,0 +1,32 @@
+<div
+  class="rng-input rng-input--time-picker"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+  <div class="rng-input__field-wrapper">
+    <rng-select-plain
+      [id]="id()"
+      [data]="hours()"
+      [value]="selectedHour()"
+      (valueChange)="onChangeHour($event)"></rng-select-plain>
+    <span>:</span>
+    <rng-select-plain
+      [data]="minutes()"
+      [value]="selectedMinute()"
+      (valueChange)="onChangeMinute($event)"></rng-select-plain>
+    <rng-button-group
+      [labels]="hourFormats()"
+      [activeLabel]="selectedHourFormat()"
+      (labelSelected)="onChangeHourFormat($event)"></rng-button-group>
+  </div>
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>

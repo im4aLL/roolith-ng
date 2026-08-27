@@ -1,0 +1,28 @@
+<div
+  class="rng-input rng-input--file"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+
+  <input
+    type="file"
+    [id]="id()"
+    class="rng-input__field"
+    [accept]="accept()"
+    [multiple]="multiple()"
+    [disabled]="disabled()"
+    [attr.name]="name()"
+    [attr.aria-required]="required()"
+    [attr.aria-invalid]="invalid() || error()"
+    (change)="onFileChange($event)" />
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>

@@ -1,0 +1,144 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin dropdown {
+  .rng-dropdown {
+    --rng-dropdown-anchor: --rng-dropdown;
+    --rng-dropdown-border-color: var(--rng-color-neutral-200);
+    --rng-dropdown-bg-color: var(--rng-color-neutral);
+    --rng-dropdown-width: #{rem(220)};
+    --rng-dropdown-text-color: var(--rng-surface-text-color);
+    --rng-dropdown-text-secondary-color: var(--rng-color-neutral-600);
+    --rng-dropdown-border-radius: var(--rng-border-radius);
+    --rng-dropdown-box-shadow: var(--rng-shadow-small);
+    --rng-dropdown-content-spacing: #{rem(4)};
+    --rng-dropdown-content-margin: #{rem(6)};
+    --rng-dropdown-item-hover-bg-color: var(--rng-color-neutral-200);
+    --rng-dropdown-item-padding-block: #{rem(6)};
+    --rng-dropdown-item-padding-inline: #{rem(10)};
+
+    position-anchor: var(--rng-dropdown-anchor);
+    position: absolute;
+    top: calc(anchor(bottom) + var(--rng-dropdown-content-spacing));
+    left: anchor(left);
+    color: var(--rng-dropdown-text-color);
+    padding: 0;
+    background-color: var(--rng-dropdown-bg-color);
+    border: rem(1) solid var(--rng-dropdown-border-color);
+    border-radius: var(--rng-dropdown-border-radius);
+    font-size: rem(14);
+    width: var(--rng-dropdown-width);
+    box-shadow: var(--rng-dropdown-box-shadow);
+    transform-origin: top left;
+
+    rng-icon {
+      display: flex;
+    }
+  }
+
+  .rng-dropdown--right {
+    left: auto;
+    right: anchor(right);
+    transform-origin: top right;
+  }
+
+  .rng-dropdown--top {
+    top: auto;
+    bottom: calc(anchor(top) + var(--rng-dropdown-content-spacing));
+    transform-origin: bottom left;
+  }
+
+  .rng-dropdown--top-right {
+    top: auto;
+    bottom: calc(anchor(top) + var(--rng-dropdown-content-spacing));
+    left: auto;
+    right: anchor(right);
+    transform-origin: bottom right;
+  }
+
+  .rng-dropdown__item-primary {
+    color: var(--rng-dropdown-text-color);
+  }
+
+  .rng-dropdown__item-secondary {
+    color: var(--rng-dropdown-text-secondary-color);
+    font-size: rem(11);
+    text-transform: uppercase;
+  }
+
+  .rng-dropdown__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--rng-dropdown-content-margin);
+    margin-inline: var(--rng-dropdown-content-spacing);
+    padding-block: var(--rng-dropdown-item-padding-block);
+    padding-inline: var(--rng-dropdown-item-padding-inline);
+    border-radius: var(--rng-dropdown-border-radius);
+    @include m.transition('background-color');
+
+    &:hover,
+    &:focus,
+    &:active,
+    &--active {
+      background-color: var(--rng-dropdown-item-hover-bg-color);
+      cursor: pointer;
+    }
+  }
+
+  .rng-dropdown__item-primary {
+    line-height: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: var(--rng-dropdown-content-margin);
+  }
+
+  .rng-dropdown__item--danger {
+    &:hover {
+      background-color: hsl(from var(--rng-color-danger) h s l / 0.1);
+    }
+
+    .rng-dropdown__item-primary {
+      color: var(--rng-color-danger);
+    }
+  }
+
+  .rng-dropdown__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rng-dropdown__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rng-dropdown-content-spacing);
+    padding-bottom: var(--rng-dropdown-content-spacing);
+    border-bottom: rem(1) solid var(--rng-dropdown-border-color);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .rng-dropdown__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rng-dropdown-content-spacing);
+    padding-top: var(--rng-dropdown-content-spacing);
+  }
+
+  .rng-dropdown__hl {
+    font-size: rem(12);
+    line-height: 1.2em;
+    color: var(--rng-dropdown-text-secondary-color);
+    font-weight: var(--rng-font-weight-regular);
+    padding-top: var(--rng-dropdown-item-padding-block);
+    padding-inline: calc(var(--rng-dropdown-item-padding-inline) + var(--rng-dropdown-content-spacing));
+  }
+
+  .rng-dropdown__item--disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,81 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-switch {
+  .rng-input-switch {
+    --rng-input-switch-track-width: #{rem(36)};
+    --rng-input-switch-track-height: #{rem(20)};
+    --rng-input-switch-thumb-size: #{rem(14)};
+    --rng-input-switch-track-color: var(--rng-input-border-color);
+    --rng-input-switch-track-active-color: var(--rng-color-accent);
+    --rng-input-switch-thumb-color: var(--rng-color-neutral);
+  }
+
+  .rng-input-switch__label {
+    display: inline-flex;
+    align-items: center;
+    gap: rem(8);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .rng-input-switch__field {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .rng-input-switch__track {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: var(--rng-input-switch-track-width);
+    height: var(--rng-input-switch-track-height);
+    background-color: var(--rng-input-switch-track-color);
+    border-radius: rem(100);
+    padding: rem(3);
+    @include m.transition('background-color');
+
+    .rng-input-switch__field:focus-visible ~ & {
+      box-shadow: var(--rng-input-focus-shadow);
+    }
+
+    .rng-input-switch__field:checked ~ & {
+      background-color: var(--rng-input-switch-track-active-color);
+    }
+  }
+
+  .rng-input-switch__thumb {
+    width: var(--rng-input-switch-thumb-size);
+    height: var(--rng-input-switch-thumb-size);
+    background-color: var(--rng-input-switch-thumb-color);
+    border-radius: 50%;
+    flex-shrink: 0;
+    @include m.transition('transform');
+
+    .rng-input-switch__field:checked ~ .rng-input-switch__track & {
+      transform: translateX(
+        calc(var(--rng-input-switch-track-width) - var(--rng-input-switch-thumb-size) - #{rem(6)})
+      );
+    }
+  }
+
+  .rng-input-switch__text {
+    font-size: rem(14);
+    color: var(--rng-input-label-color);
+
+    .rng-input--readonly & {
+      opacity: 0.5;
+    }
+  }
+
+  .rng-input--disabled {
+    .rng-input-switch__label {
+      pointer-events: none;
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+}

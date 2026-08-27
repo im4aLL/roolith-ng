@@ -1,0 +1,108 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-list {
+  .rng-input-list {
+    position: absolute;
+    width: 100%;
+    min-width: rem(150);
+    top: calc(100% + #{rem(4)});
+    left: 0;
+    z-index: 1000;
+    scroll-padding-top: rem(40);
+
+    border-radius: var(--rng-border-radius);
+    background-color: var(--rng-color-neutral);
+    border: rem(1) solid var(--rng-input-border-color);
+    font-size: rem(14);
+    padding: rem(4);
+    display: none;
+    flex-direction: column;
+    max-height: rem(200);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    /* clip-path: inset(0 round 10px); */
+    /* @include m.nice-scroll(rem(4)); */
+
+    .is--active & {
+      display: flex;
+    }
+
+    &__item {
+      padding: rem(4) rem(6);
+      line-height: rem(20);
+      border-radius: var(--rng-border-radius);
+      display: flex;
+      align-items: flex-start;
+      gap: rem(4);
+      outline: none;
+
+      .rng-icon {
+        flex-shrink: 0;
+        margin-top: rem(2);
+      }
+
+      @include m.transition('background-color');
+
+      &:hover,
+      &.is--focused {
+        background-color: hsl(from var(--rng-color-neutral-600) h s l / 0.1);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .rng-input-list__item-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &-hl {
+      font-weight: var(--rng-font-weight-semi-bold);
+      max-width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    &-body {
+      font-size: rem(12);
+      color: var(--rng-color-neutral-700);
+    }
+  }
+
+  .rng-input-list__icon {
+    margin-left: auto;
+  }
+
+  .rng-input-list--right {
+    left: auto;
+    right: 0;
+  }
+
+  .rng-input-list--top {
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: calc(100% + #{rem(4)});
+  }
+
+  .rng-input-list__item--select-all {
+    position: sticky;
+    top: 0;
+    background-color: var(--rng-color-neutral);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(10);
+    transform: translateY(rem(-4));
+    padding-top: rem(6);
+
+    &:hover {
+      background-color: var(--rng-color-neutral);
+      cursor: default;
+    }
+  }
+}

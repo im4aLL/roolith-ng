@@ -1,0 +1,77 @@
+<!-- calendar -->
+<div class="rng-calendar">
+  <!-- header -->
+  <div class="rng-calendar__header">
+    <div class="rng-calendar__nav">
+      <rng-button
+        icon="arrow-left"
+        variant="ghost"
+        size="xsmall"
+        (clickEvent)="renderPreviousMonth()" />
+    </div>
+
+    <div class="rng-calendar__title">
+      <div class="rng-calendar__select">
+        <select
+          name="month"
+          class="rng-calendar__select-input"
+          (change)="onMonthChange($event)">
+          @for (month of months(); track month.value) {
+            <option
+              value="{{ month.value }}"
+              [selected]="month.value === selectedMonth()">
+              {{ month.name }}
+            </option>
+          }
+        </select>
+        <div class="rng-calendar__select-icon"><i class="rng-icon rng-icon--small rng-icon--chevron-down"></i></div>
+      </div>
+
+      <div class="rng-calendar__select">
+        <select
+          name="year"
+          class="rng-calendar__select-input"
+          (change)="onYearChange($event)">
+          @for (year of years(); track year) {
+            <option
+              value="{{ year }}"
+              [selected]="year === selectedYear()">
+              {{ year }}
+            </option>
+          }
+        </select>
+        <div class="rng-calendar__select-icon"><i class="rng-icon rng-icon--small rng-icon--chevron-down"></i></div>
+      </div>
+    </div>
+
+    <div class="rng-calendar__nav">
+      <rng-button
+        icon="arrow-right"
+        variant="ghost"
+        size="xsmall"
+        (clickEvent)="renderNextMonth()" />
+    </div>
+  </div>
+  <!-- header -->
+
+  <!-- body -->
+  <div class="rng-calendar__body">
+    @for (weekName of weekHeaders(); track weekName) {
+      <div class="rng-calendar__day rng-calendar__day--header">{{ weekName }}</div>
+    }
+
+    @for (dayData of daysInMonth(); let i = $index; track i) {
+      <button
+        class="rng-calendar__day"
+        [class.rng-calendar__day--highlight]="dayData.isToday"
+        [class.rng-calendar__day--dimmed]="!dayData.isCurrentMonth"
+        [class.rng-calendar__day--active]="dayData.isSelected"
+        type="button"
+        (click)="onDayClickHandler(dayData)">
+        {{ dayData.day }}
+      </button>
+    }
+  </div>
+  <!-- body -->
+</div>
+<!-- calendar -->

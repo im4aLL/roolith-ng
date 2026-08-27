@@ -1,0 +1,66 @@
+<button
+  class="rng-button rng-button--filter"
+  [class.rng-button--disabled]="isDisabled()"
+  [rngPopoverTarget]="id()">
+  <rng-icon
+    [name]="hasSelectedItems() ? 'filter-solid' : 'filter'"
+    [styleClass]="hasSelectedItems() ? 'rng-color-secondary' : ''" />
+  <span class="rng-button__filter-text"><ng-content /></span>
+
+  @if (hasSelectedItems()) {
+    <span class="rng-button__filter-sep">|</span>
+    <span class="rng-button__filter-items">
+      @if (selectedCount() > maxSelectedItemsToShow()) {
+        <span class="rng-button__filter-item">{{ selectedCount() }} selected</span>
+      } @else {
+        @for (item of selectedItems(); track item.value) {
+          <span class="rng-button__filter-item">
+            <rng-badge type="default">{{ item.label }}</rng-badge>
+          </span>
+        }
+      }
+    </span>
+  }
+</button>
+
+<rng-popover
+  #popoverComponentEl
+  [name]="id()"
+  (changeEvent)="onPopoverChangeEvent($event)"
+  styleClass="rng-button-filter-content__container">
+  <div class="rng-button-filter-content">
+    <div class="rng-button-filter-content__header">
+      <rng-search-input
+        #searchInputComponentEl
+        (valueChange)="onSearchInputChange($event)"></rng-search-input>
+    </div>
+
+    <ul
+      class="rng-button-filter-list"
+      [class.has--items]="hasSelectedItems()">
+      @for (item of filteredItems(); track item.value) {
+        <li class="rng-button-filter-list__item">
+          <rng-checkbox-input
+            [checked]="item.selected ?? false"
+            (checkedChange)="onItemCheckedChange(item, $event)">
+            {{ item.label }}
+          </rng-checkbox-input>
+
+          @if (item.counter !== undefined) {
+            <span class="rng-button-filter-list__count">{{ item.counter }}</span>
+          }
+        </li>
+      }
+    </ul>
+
+    @if (hasSelectedItems()) {
+      <div class="rng-button-filter-content__footer">
+        <rng-button
+          [block]="true"
+          (clickEvent)="clearFilters()">
+          Clear filters
+        </rng-button>
+      </div>
+    }
+  </div>
+</rng-popover>

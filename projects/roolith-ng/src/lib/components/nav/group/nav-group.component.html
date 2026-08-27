@@ -1,0 +1,19 @@
+<div class="rng-nav__group-container">
+  @for (group of data(); track group.id) {
+    <div class="rng-nav__group">
+      @if (group.name) {
+        <div class="rng-nav__group-header">{{ group.name }}</div>
+      }
+
+      @if (group.items) {
+        <div class="rng-nav__group-content">
+          <rng-nav
+            [data]="group.items"
+            [type]="group.type ?? 'default'"
+            [variation]="group.variation ?? 'default'"
+            (clickEvent)="onNavClick($event, group.id)"></rng-nav>
+        </div>
+      }
+    </div>
+  }
+</div>

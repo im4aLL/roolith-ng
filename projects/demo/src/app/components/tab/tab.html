@@ -1,0 +1,284 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Tab</h1>
+  <p class="doc-prose__p">
+    A tabbed navigation component that uses a <code class="doc-prose__code">rng-toggle-group</code> for the tab bar and renders the active pane's content.
+    Provide parallel <code class="doc-prose__code">items</code> and <code class="doc-prose__code">contents</code> arrays matched by
+    <code class="doc-prose__code">value</code> / <code class="doc-prose__code">key</code>, and optionally override any pane with a
+    <code class="doc-prose__code">rngTabContentOf</code> template.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic (static content)</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">items</code> to drive the tab bar and <code class="doc-prose__code">contents</code> to supply the body of each pane.
+    Items are matched to content by <code class="doc-prose__code">value</code> / <code class="doc-prose__code">key</code>.
+    The first item is selected by default when <code class="doc-prose__code">value</code> is not set.
+    Listen to <code class="doc-prose__code">(changeEvent)</code> to react to tab changes.
+  </p>
+  <div class="doc-prose__example">
+    <rng-tab [items]="basicTabs()" [contents]="basicContents()" (changeEvent)="onTabChange($event)" />
+    @if (lastEvent) {
+      <div class="doc-callout" style="margin-top: 0.75rem;">
+        <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last changeEvent</p>
+        <p class="doc-prose__p">
+          <code class="doc-prose__code">label: "{{ lastEvent.label }}"</code> •
+          <code class="doc-prose__code">value: "{{ lastEvent.value }}"</code>
+        </p>
+      </div>
+    }
+  </div>
+  <rng-code-block [code]="basicDataSnippet" language="typescript" title="basic - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+  <rng-code-block [code]="changeHandlerSnippet" language="typescript" title="changeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">ITabItem</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">ITabItem</code> is an alias for <code class="doc-prose__code">IToggleGroupItem</code>.
+    Each entry drives one tab button in the bar.
+  </p>
+  <rng-code-block [code]="itemInterfaceSnippet" language="typescript" title="ITabItem" variant="prose" />
+
+  <h3 class="doc-prose__h3">ITabContent</h3>
+  <p class="doc-prose__p">
+    Each entry supplies the body for one pane.
+    <code class="doc-prose__code">key</code> must match the corresponding <code class="doc-prose__code">ITabItem.value</code>.
+    When <code class="doc-prose__code">header</code> is present it is rendered as <code class="doc-prose__code">rng-tab__hl</code> above the body.
+    Override per-pane rendering with <code class="doc-prose__code">rngTabContentOf</code>.
+  </p>
+  <rng-code-block [code]="contentInterfaceSnippet" language="typescript" title="ITabContent" variant="prose" />
+
+  <h3 class="doc-prose__h3">Default selected tab</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">value</code> to pre-select a tab by its <code class="doc-prose__code">value</code>.
+    When <code class="doc-prose__code">value</code> is <code class="doc-prose__code">null</code>, <code class="doc-prose__code">undefined</code> or does not match any item,
+    the component falls back to the first item.
+    You can use a static attribute <code class="doc-prose__code">value="tab-2"</code> or a signal binding
+    <code class="doc-prose__code">[value]="activeTab()"</code> - in both cases the value is read only in <code class="doc-prose__code">ngOnInit</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Static value</p>
+        <rng-tab [items]="withValueTabs()" [contents]="withValueContents()" value="tab-2" (changeEvent)="onTabChange($event)" />
+        <p class="doc-prose__p" style="margin: 0.5rem 0 0 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+          Pre-selected via <code class="doc-prose__code">value="tab-2"</code> - Tab 2 is active on load.
+        </p>
+      </div>
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Signal binding (initial only)</p>
+        <rng-tab [items]="withValueTabs()" [contents]="withValueContents()" [value]="activeTab()" (changeEvent)="onTabChange($event)" />
+        <p class="doc-prose__p" style="margin: 0.5rem 0 0 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+          Bound via <code class="doc-prose__code">[value]="activeTab()"</code> where <code class="doc-prose__code">activeTab = signal('tab-1')</code>.
+          Updates to the signal after init do not re-select - track <code class="doc-prose__code">(changeEvent)</code> instead.
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="valueSnippet" language="html" title='value - static' variant="prose" />
+  <rng-code-block [code]="valueSignalSnippet" language="html" title="value - signal binding" variant="prose" />
+  <rng-code-block [code]="valueSignalTsSnippet" language="typescript" title="value - signal" variant="prose" />
+  <rng-code-block [code]="valueInitNoteSnippet" language="typescript" title="value - note" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom pane template</h3>
+  <p class="doc-prose__p">
+    Use the <code class="doc-prose__code">rngTabContentOf</code> directive on an <code class="doc-prose__code">&lt;ng-template&gt;</code> inside
+    <code class="doc-prose__code">rng-tab</code> to override the rendered content for a specific tab key.
+    The template receives the matching <code class="doc-prose__code">ITabContent</code> object as <code class="doc-prose__code">$implicit</code> - access it with
+    <code class="doc-prose__code">let-item</code> or <code class="doc-prose__code">let-tab</code> (the local name is yours).
+    Any pane without a custom template falls back to the default <code class="doc-prose__code">header</code> + <code class="doc-prose__code">content</code> rendering.
+    The template can contain any markup or components - for example a <code class="doc-prose__code">rng-button</code>.
+  </p>
+  <div class="doc-prose__example">
+    <rng-tab [items]="customTabs()" [contents]="customContents()" (changeEvent)="onTabChange($event)">
+      <ng-template rngTabContentOf="tab-2" let-item>
+        <h6 class="rng-tab__hl">{{ item.header }}</h6>
+        <div class="rng-tab__text">{{ item.content }}. This text indicates that this is a custom template for tab 2</div>
+        <div style="margin-top: 0.75rem;">
+          <rng-button variant="primary">Button in custom tab content</rng-button>
+        </div>
+      </ng-template>
+    </rng-tab>
+    <p class="doc-prose__p" style="margin: 0.5rem 0 0 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+      Only <code class="doc-prose__code">tab-2</code> uses a custom template - other tabs render the default header / content.
+      The directive value <code class="doc-prose__code">rngTabContentOf="tab-2"</code> must match <code class="doc-prose__code">ITabContent.key</code>.
+    </p>
+  </div>
+  <rng-code-block [code]="customTemplateSnippet" language="html" title="custom template - rich" variant="prose" />
+  <rng-code-block [code]="directiveSnippet" language="typescript" title="directive - import" variant="prose" />
+  <p class="doc-prose__p">A minimal text-only override is also common:</p>
+  <rng-code-block [code]="customSimpleSnippet" language="html" title="custom template - simple" variant="prose" />
+
+  <h3 class="doc-prose__h3">Multiple custom templates</h3>
+  <p class="doc-prose__p">
+    Supply one <code class="doc-prose__code">&lt;ng-template rngTabContentOf="..."&gt;</code> per tab you want to customize.
+    The component collects all directives via <code class="doc-prose__code">contentChildren(TabContentOfDirective)</code> into
+    <code class="doc-prose__code">customTemplateData()</code>. Panes without a matching key use the built-in default template.
+  </p>
+  <rng-code-block [code]="multipleCustomSnippet" language="html" title="multiple custom templates" variant="prose" />
+
+  <h3 class="doc-prose__h3">Layout variants</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-tab</code> forwards layout inputs to the root and to the inner <code class="doc-prose__code">rng-toggle-group</code>.
+    <code class="doc-prose__code">vertical</code> stacks the tab bar vertically, <code class="doc-prose__code">block</code> makes the bar full-width, and
+    <code class="doc-prose__code">flip</code> flips the content position.
+    These map to <code class="doc-prose__code">rng-tab--vertical</code>, <code class="doc-prose__code">rng-tab--block</code> and <code class="doc-prose__code">rng-tab--flip</code>.
+    All five combinations below are used in practice.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Default (horizontal)</p>
+        <rng-tab [items]="layoutTabs()" [contents]="layoutContents()" [value]="activeTabLayout()" (changeEvent)="onLayoutChange($event)" />
+      </div>
+      <hr style="margin: 0; border: none; border-top: 1px solid var(--rng-border-color, #e2e8f0);" />
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Vertical</p>
+        <rng-tab [items]="layoutTabs()" [contents]="layoutContents()" [value]="activeTabLayout()" [vertical]="true" (changeEvent)="onLayoutChange($event)" />
+      </div>
+      <hr style="margin: 0; border: none; border-top: 1px solid var(--rng-border-color, #e2e8f0);" />
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Vertical + flip</p>
+        <rng-tab [items]="layoutTabs()" [contents]="layoutContents()" [value]="activeTabLayout()" [vertical]="true" [flip]="true" (changeEvent)="onLayoutChange($event)" />
+      </div>
+      <hr style="margin: 0; border: none; border-top: 1px solid var(--rng-border-color, #e2e8f0);" />
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Block (full-width)</p>
+        <rng-tab [items]="layoutTabs()" [contents]="layoutContents()" [value]="activeTabLayout()" [block]="true" (changeEvent)="onLayoutChange($event)" />
+      </div>
+      <hr style="margin: 0; border: none; border-top: 1px solid var(--rng-border-color, #e2e8f0);" />
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Block + flip</p>
+        <rng-tab [items]="layoutTabs()" [contents]="layoutContents()" [value]="activeTabLayout()" [block]="true" [flip]="true" (changeEvent)="onLayoutChange($event)" />
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="layoutSnippet" language="html" title="layout - all 5 variants" variant="prose" />
+
+  <h3 class="doc-prose__h3">Numeric keys</h3>
+  <p class="doc-prose__p">
+    Both <code class="doc-prose__code">ITabItem.value</code> and <code class="doc-prose__code">ITabContent.key</code> accept
+    <code class="doc-prose__code">string | number</code>. Use numbers when tab identity is numeric - matching is done with strict equality
+    (<code class="doc-prose__code">===</code>).
+  </p>
+  <rng-code-block [code]="numericSnippet" language="typescript" title="numeric keys" variant="prose" />
+
+  <h3 class="doc-prose__h3">Listening to change events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">changeEvent</code> emits the newly selected <code class="doc-prose__code">ITabItem</code> whenever the active tab changes.
+    The component updates <code class="doc-prose__code">selectedItem</code> internally before emitting, and the matching pane is shown via
+    <code class="doc-prose__code">rng-tab__pane--active</code>.
+    Parent items do not need to be updated - just listen and sync your own signal if you need the value outside the tab.
+  </p>
+  <div class="doc-prose__example">
+    <rng-tab [items]="basicTabs()" [contents]="basicContents()" (changeEvent)="onTabChange($event)" />
+    @if (lastEvent) {
+      <p class="doc-prose__p" style="margin: 0.5rem 0 0 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ lastEvent.label }}</code>
+        (<code class="doc-prose__code">{{ lastEvent.value }}</code>)
+      </p>
+    }
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="changeEvent - template" variant="prose" />
+  <rng-code-block [code]="changeHandlerSnippet" language="typescript" title="changeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Signal-bound <code class="doc-prose__code">value</code>, custom template with a button, and change handling together.</p>
+  <div class="doc-prose__example">
+    <rng-tab [items]="fullTabs()" [contents]="fullContents()" [value]="activeTab()" (changeEvent)="onFullChange($event)">
+      <ng-template rngTabContentOf="overview" let-tab>
+        <h5 style="margin: 0 0 0.5rem 0; font-size: 1rem; font-weight: 600;">{{ tab.header }}</h5>
+        <p style="margin: 0;">Custom <strong>overview</strong> with rich HTML.</p>
+        <p style="margin: 0.5rem 0 0.75rem 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+          Key <code class="doc-prose__code">{{ tab.key }}</code> - {{ tab.content }}
+        </p>
+        <rng-button variant="primary">Action</rng-button>
+      </ng-template>
+    </rng-tab>
+    @if (fullLastEvent) {
+      <div class="doc-callout" style="margin-top: 0.75rem;">
+        <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last changeEvent</p>
+        <p class="doc-prose__p">
+          <code class="doc-prose__code">label: "{{ fullLastEvent.label }}"</code> •
+          <code class="doc-prose__code">value: "{{ fullLastEvent.value }}"</code>
+        </p>
+      </div>
+    }
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-tab</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITabItem[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Tab bar items - each item maps to a pane via its <code class="doc-prose__code">value</code> / <code class="doc-prose__code">key</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">contents</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITabContent[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Content for each pane, matched to a tab item by <code class="doc-prose__code">key</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Initial active tab value - read only in <code class="doc-prose__code">ngOnInit</code> via <code class="doc-prose__code">_setInitialSelectedItem()</code>; falls back to the first item when unset or not matched</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">vertical</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Stacks the tab bar vertically - adds <code class="doc-prose__code">rng-tab--vertical</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">block</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the tab bar full-width - adds <code class="doc-prose__code">rng-tab--block</code> and forwards <code class="doc-prose__code">[block]</code> to <code class="doc-prose__code">rng-toggle-group</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">flip</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Flips content position - adds <code class="doc-prose__code">rng-tab--flip</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-tab</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">ITabItem</code></td><td class="doc-prose__td">Emitted when the active tab changes - payload is the newly selected item; also updates <code class="doc-prose__code">selectedItem</code> internally</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">[rngTabContentOf]</code> Directive</h3>
+  <p class="doc-prose__p">
+    Apply to an <code class="doc-prose__code">&lt;ng-template&gt;</code> inside <code class="doc-prose__code">rng-tab</code> to supply a custom template for a specific pane.
+    The directive exposes its input as <code class="doc-prose__code">rngTabContentOf</code> and collects templates via <code class="doc-prose__code">contentChildren(TabContentOfDirective)</code>.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rngTabContentOf</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Key of the tab pane this template replaces - must match <code class="doc-prose__code">ITabContent.key</code></td></tr>
+    </tbody>
+  </table>
+  <p class="doc-prose__p">
+    The template receives the matching <code class="doc-prose__code">ITabContent</code> object as <code class="doc-prose__code">$implicit</code>:
+  </p>
+  <rng-code-block [code]="customTemplateSnippet" language="html" title="rngTabContentOf - usage" variant="prose" />
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITabItem</code></h3>
+  <p class="doc-prose__p">Alias for <code class="doc-prose__code">IToggleGroupItem</code>.</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Display text for the tab</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Unique identifier - matched against <code class="doc-prose__code">ITabContent.key</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ITabContent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">key</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Must match the <code class="doc-prose__code">value</code> of a tab item - used to pair panes with tabs</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">content</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Default body text rendered inside <code class="doc-prose__code">rng-tab__text</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional heading rendered above body inside <code class="doc-prose__code">rng-tab__hl</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

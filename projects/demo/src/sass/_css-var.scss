@@ -1,0 +1,98 @@
+@use './settings' as s;
+@use './functions' as *;
+
+@mixin theme-dark {
+  --doc-bg: #1b1b1f;
+  --doc-surface: #161618;
+  --doc-surface-2: #202127;
+  --doc-text: #dfdfd6;
+  --doc-text-muted: #98989f;
+  --doc-text-faint: #6a6a71;
+  --doc-border: #2e2e32;
+  --doc-border-strong: #3c3f44;
+
+  --doc-primary: #a8b1ff;
+  --doc-primary-strong: #3e63dd;
+  --doc-primary-soft: rgba(100, 108, 255, 0.16);
+  --doc-secondary: #5c73e7;
+  --doc-accent: #5c73e7;
+  --doc-warning: #f0a732;
+  --doc-danger: #e0575b;
+  --doc-warning-soft: rgba(234, 179, 8, 0.15);
+  --doc-danger-soft: rgba(244, 63, 94, 0.15);
+  --doc-code-bg: #161618;
+  --doc-hero-gradient: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+
+  --doc-btn-brand-bg: #3e63dd;
+  --doc-btn-brand-bg-hover: #5c73e7;
+  --doc-btn-brand-bg-active: #a8b1ff;
+  --doc-btn-alt-bg: #32363f;
+  --doc-btn-alt-bg-hover: #414853;
+  --doc-btn-alt-bg-active: #515c67;
+  --doc-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.45);
+  --doc-shadow-small: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
+}
+
+@mixin css-variable() {
+  :root {
+    // Base
+    --doc-base-font-size: #{s.$base-font-size};
+    --doc-base-font-family: #{s.$base-font-family};
+
+    // Light theme tokens
+    --doc-bg: #ffffff;
+    --doc-surface: #f6f6f7;
+    --doc-surface-2: #ffffff;
+    --doc-text: #3c3c43;
+    --doc-text-muted: #67676c;
+    --doc-text-faint: #929295;
+    --doc-border: #e2e2e3;
+    --doc-border-strong: #c2c2c4;
+
+    --doc-primary: #{s.$primary-color};
+    --doc-primary-strong: #{s.$primary-color-strong};
+    --doc-primary-soft: rgba(100, 108, 255, 0.12);
+    --doc-secondary: #{s.$secondary-color};
+    --doc-accent: #{s.$accent-color};
+    --doc-success: #{s.$success-color};
+    --doc-warning: #{s.$warning-color};
+    --doc-danger: #{s.$danger-color};
+    --doc-warning-soft: rgba(234, 179, 8, 0.15);
+    --doc-danger-soft: rgba(244, 63, 94, 0.15);
+    --doc-code-bg: #f6f6f7;
+    --doc-hero-gradient: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+
+    // Buttons
+    --doc-btn-brand-bg: #{s.$primary-color-strong};
+    --doc-btn-brand-bg-hover: #{s.$secondary-color};
+    --doc-btn-brand-bg-active: #{s.$primary-color};
+    --doc-btn-alt-bg: #ebebef;
+    --doc-btn-alt-bg-hover: #e4e4e9;
+    --doc-btn-alt-bg-active: #dddde3;
+
+    // Layout
+    --doc-radius: #{s.$border-radius};
+    --doc-radius-sm: #{s.$border-radius-sm};
+    --doc-max-width: #{s.$container-width};
+    --doc-doc-width: 47rem;
+    --doc-home-width: 72rem;
+    --doc-sidebar-width: #{s.$sidebar-width};
+    --doc-outline-width: 14rem;
+    --doc-topbar-height: #{s.$topbar-height};
+    --doc-container-pad: #{s.$space-8};
+
+    // Font weights
+    --doc-font-weight-regular: #{font-weight('regular')};
+    --doc-font-weight-semi-bold: #{font-weight('semi-bold')};
+    --doc-font-weight-medium: #{font-weight('medium')};
+    --doc-font-weight-bold: #{font-weight('bold')};
+
+    // Animation
+    --doc-easing: #{s.$animation-easing};
+    --doc-duration: #{s.$animation-duration};
+  }
+
+  .theme-dark {
+    @include theme-dark();
+  }
+}

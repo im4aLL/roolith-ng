@@ -1,0 +1,174 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Message</h1>
+  <p class="doc-prose__p">
+    An inline feedback banner for contextual notices, form hints and alerts.
+    Supports <code class="doc-prose__code">default</code>, <code class="doc-prose__code">success</code>, <code class="doc-prose__code">danger</code>, <code class="doc-prose__code">warning</code>, <code class="doc-prose__code">info</code> and <code class="doc-prose__code">primary</code>
+    <code class="doc-prose__code">type</code> variants, an optional <code class="doc-prose__code">showClose</code> button and a custom
+    <code class="doc-prose__code">icon</code> override. Content is projected via <code class="doc-prose__code">&lt;ng-content&gt;</code> - pass any text or HTML as children.
+    When the close button is clicked the message hides with <code class="doc-prose__code">is--hidden</code> and emits <code class="doc-prose__code">closeEvent</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    The default message with neutral styling and an <code class="doc-prose__code">info</code> icon fallback.
+    Use it for generic contextual feedback.
+  </p>
+  <rng-message>
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus eaque doloremque sequi excepturi iste illo saepe
+    enim ducimus natus? Enim ipsam nisi unde, reprehenderit quas provident. Nisi tenetur possimus recusandae.
+  </rng-message>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">With close button</h3>
+  <p class="doc-prose__p">
+    Add a dismiss button with <code class="doc-prose__code">[showClose]="true"</code>.
+    The button renders as <code class="doc-prose__code">rng-button</code> with <code class="doc-prose__code">variant="dark"</code> and <code class="doc-prose__code">size="xsmall"</code> inside <code class="doc-prose__code">rng-message__close</code>.
+    Clicking it sets the internal <code class="doc-prose__code">isShow</code> signal to <code class="doc-prose__code">false</code>, adds <code class="doc-prose__code">is--hidden</code> and emits <code class="doc-prose__code">closeEvent</code>.
+  </p>
+  <rng-message [showClose]="true" type="info">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus eaque doloremque sequi excepturi iste illo saepe
+    enim ducimus natus? Enim ipsam nisi unde, reprehenderit quas provident. Nisi tenetur possimus recusandae.
+  </rng-message>
+  <rng-code-block [code]="closeSnippet" language="html" title="with close button" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">
+      The message does not remove itself from the DOM - it only hides with <code class="doc-prose__code">is--hidden</code>.
+      To fully remove it, conditionally render it with <code class="doc-prose__code">&#64;if</code> or re-create the instance after <code class="doc-prose__code">closeEvent</code>.
+      See the dismissible example below for a reset pattern.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Type variants</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">type</code> to change the visual variant and the default icon.
+    The mapping is <code class="doc-prose__code">success -> check</code>, <code class="doc-prose__code">danger -> alert</code> and
+    <code class="doc-prose__code">warning / info / primary / default -> info</code> when no <code class="doc-prose__code">icon</code> is provided.
+    The type also controls the host class <code class="doc-prose__code">rng-message--&#123;type&#125;</code> - <code class="doc-prose__code">default</code> renders no modifier class.
+  </p>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <rng-message type="success">Success - your changes were saved successfully.</rng-message>
+    <rng-message type="danger">Danger - there was a problem processing your request.</rng-message>
+    <rng-message type="warning">Warning - please review the information before continuing.</rng-message>
+    <rng-message type="info">Info - a new update is available for your workspace.</rng-message>
+    <rng-message type="primary">Primary - welcome to the new dashboard experience.</rng-message>
+    <rng-message>Default - this is a neutral contextual message.</rng-message>
+  </div>
+  <rng-code-block [code]="variantsSnippet" language="html" title="type variants" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom icon</h3>
+  <p class="doc-prose__p">
+    Override the default icon with <code class="doc-prose__code">icon</code>.
+    Any <code class="doc-prose__code">IconNameType</code> is accepted - the component renders <code class="doc-prose__code">rng-icon--&#123;icon&#125;</code> inside <code class="doc-prose__code">rng-message__icon</code>.
+    The icon is computed by <code class="doc-prose__code">iconClassName()</code> which prefers the explicit <code class="doc-prose__code">icon</code> input over the type mapping.
+  </p>
+  <rng-message type="warning" icon="clipboard">
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus eaque doloremque sequi excepturi iste illo saepe
+    enim ducimus natus? Enim ipsam nisi unde, reprehenderit quas provident. Nisi tenetur possimus recusandae.
+  </rng-message>
+  <rng-code-block [code]="customIconSnippet" language="html" title="custom icon" variant="prose" />
+
+  <h3 class="doc-prose__h3">Handling close event</h3>
+  <p class="doc-prose__p">
+    Listen to <code class="doc-prose__code">(closeEvent)</code> to react when the user dismisses the message.
+    The event payload is <code class="doc-prose__code">void</code>. The demo below increments a counter and shows a reset button -
+    resetting re-creates the <code class="doc-prose__code">rng-message</code> so its internal <code class="doc-prose__code">isShow</code> signal returns to <code class="doc-prose__code">true</code>.
+  </p>
+  <div class="doc-prose__example">
+    @if (showDismissible()) {
+      <rng-message [showClose]="true" type="info" (closeEvent)="onDismissibleClose()">
+        Your workspace subscription expires in 3 days - renew now to keep your workspace active.
+      </rng-message>
+    } @else {
+      <div class="doc-callout" style="margin: 0;">
+        <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Dismissed</p>
+        <p class="doc-prose__p" style="margin: 0;">
+          <code class="doc-prose__code">closeEvent</code> was emitted - the message was hidden with <code class="doc-prose__code">is--hidden</code> and removed via <code class="doc-prose__code">&#64;if</code>.
+        </p>
+      </div>
+    }
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+    <rng-button variant="secondary" size="small" (clickEvent)="resetDismissible()">Reset message</rng-button>
+    @if (closeCount() > 0) {
+      <span style="font-size: 0.875rem; color: var(--doc-text-muted);">Dismissed <code class="doc-prose__code">{{ closeCount() }}</code> time(s)</span>
+    } @else {
+      <span style="font-size: 0.875rem; color: var(--doc-text-muted);">Click <code class="doc-prose__code">Clear</code> to fire <code class="doc-prose__code">closeEvent</code></span>
+    }
+  </div>
+  <rng-code-block [code]="closeEventSnippet" language="html" title="closeEvent - template" variant="prose" />
+  <rng-code-block [code]="closeEventTsSnippet" language="typescript" title="closeEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">
+    Combining <code class="doc-prose__code">type</code>, <code class="doc-prose__code">icon</code>, <code class="doc-prose__code">showClose</code> and <code class="doc-prose__code">closeEvent</code>.
+    The message uses a success variant with an explicit <code class="doc-prose__code">check</code> icon and a dismiss button.
+  </p>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+    @if (showFullExample()) {
+      <rng-message type="success" icon="check" [showClose]="true" (closeEvent)="onFullClose()">
+        Your profile has been updated successfully.
+      </rng-message>
+    } @else {
+      <div class="doc-callout">
+        <p class="doc-callout__title"><i class="iconoir-check-circle" aria-hidden="true"></i> Message dismissed</p>
+        <p class="doc-prose__p">The full-example message was closed. Click reset to show it again.</p>
+      </div>
+    }
+    <div>
+      <rng-button variant="ghost" size="small" (clickEvent)="resetFullExample()">Reset full example</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-message</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'success' | 'danger' | 'warning' | 'info' | 'primary'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Visual variant - controls <code class="doc-prose__code">rng-message--&#123;type&#125;</code> via <code class="doc-prose__code">messageClassName()</code>. <code class="doc-prose__code">'default'</code> renders no modifier</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">showClose</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Whether to show the dismiss button in <code class="doc-prose__code">rng-message__close</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">icon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Override for the default icon. When provided, <code class="doc-prose__code">iconClassName()</code> returns <code class="doc-prose__code">rng-icon--&#123;icon&#125;</code>; otherwise it uses the type mapping</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-message</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">closeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emitted when the close button is clicked - <code class="doc-prose__code">close()</code> sets <code class="doc-prose__code">isShow</code> to <code class="doc-prose__code">false</code> and emits</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-message</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Text or HTML projected via <code class="doc-prose__code">&lt;ng-content /&gt;</code> after the icon</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Styling and behavior notes</h3>
+  <p class="doc-prose__p">
+    The host element renders <code class="doc-prose__code">rng-message</code> with an optional modifier <code class="doc-prose__code">rng-message--&#123;type&#125;</code> from <code class="doc-prose__code">messageClassName()</code>.
+    The icon is <code class="doc-prose__code">rng-icon rng-message__icon</code> plus <code class="doc-prose__code">iconClassName()</code>.
+    The close wrapper is <code class="doc-prose__code">rng-message__close</code> and contains a small dark <code class="doc-prose__code">rng-button</code>.
+    When <code class="doc-prose__code">isShow()</code> is <code class="doc-prose__code">false</code> the host adds <code class="doc-prose__code">is--hidden</code> - the element stays in the DOM.
+    Provide a custom <code class="doc-prose__code">icon</code> to override the type-based default.
+  </p>
+
+  <rng-doc-pager />
+</article>

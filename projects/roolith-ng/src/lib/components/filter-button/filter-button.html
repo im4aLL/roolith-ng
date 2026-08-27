@@ -1,0 +1,70 @@
+<div class="items">
+  <button
+    class="rng-button rng-button--filter"
+    rngPopoverTarget="filter-popover-1">
+    <rng-icon name="filter" />
+    <span class="rng-button__filter-text">Status</span>
+  </button>
+
+  <button class="rng-button rng-button--filter">
+    <rng-icon name="filter-solid" />
+    <span class="rng-button__filter-text">Status</span>
+    <span class="rng-button__filter-sep">|</span>
+    <span class="rng-button__filter-items">
+      <span class="rng-button__filter-item">
+        <rng-badge type="subtle">example Lorem ipsum dolor sit, amet consectetur adipisicing elit.</rng-badge>
+      </span>
+      <span class="rng-button__filter-item">
+        <rng-badge type="subtle">name</rng-badge>
+      </span>
+    </span>
+  </button>
+
+  <button class="rng-button rng-button--filter">
+    <rng-icon name="filter-solid" />
+    <span class="rng-button__filter-text">Project</span>
+    <span class="rng-button__filter-sep">|</span>
+    <span class="rng-button__filter-items">
+      <span class="rng-button__filter-item">3 selected</span>
+    </span>
+  </button>
+</div>
+
+<rng-popover
+  name="filter-popover-1"
+  styleClass="rng-button-filter-content__container">
+  <div class="rng-button-filter-content">
+    <div class="rng-button-filter-content__header">
+      <rng-search-input (valueChange)="onSearchInputChange($event)"></rng-search-input>
+    </div>
+
+    <ul class="rng-button-filter-list">
+      <li class="rng-button-filter-list__item">
+        <rng-checkbox-input>Alpha project</rng-checkbox-input>
+        <span class="rng-button-filter-list__count">3</span>
+      </li>
+      <li class="rng-button-filter-list__item">
+        <rng-checkbox-input>Beta project</rng-checkbox-input>
+        <span class="rng-button-filter-list__count">120</span>
+      </li>
+      <li class="rng-button-filter-list__item">
+        <rng-checkbox-input>Gamma project</rng-checkbox-input>
+        <span class="rng-button-filter-list__count">56</span>
+      </li>
+      <li class="rng-button-filter-list__item">
+        <rng-checkbox-input>
+          Delta project Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+        </rng-checkbox-input>
+        <span class="rng-button-filter-list__count">12</span>
+      </li>
+      <li class="rng-button-filter-list__item">
+        <rng-checkbox-input>Epsilon project</rng-checkbox-input>
+        <span class="rng-button-filter-list__count">34</span>
+      </li>
+    </ul>
+
+    <div class="rng-button-filter-content__footer">
+      <rng-button [block]="true">Clear filters</rng-button>
+    </div>
+  </div>
+</rng-popover>

@@ -1,0 +1,11 @@
+@use '../../../sass/functions' as *;
+
+.doc-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(16);
+  margin-top: rem(32);
+  padding-top: rem(24);
+  border-top: rem(1) solid var(--doc-border);
+}

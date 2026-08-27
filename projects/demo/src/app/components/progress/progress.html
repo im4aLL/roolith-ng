@@ -1,0 +1,216 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Progress</h1>
+  <p class="doc-prose__p">
+    An indicator for task completion.
+    <code class="doc-prose__code">rng-progress</code> renders a native <code class="doc-prose__code">&lt;progress&gt;</code> element with an optional header that shows a
+    <code class="doc-prose__code">label</code> and a computed percentage.
+    The percentage is derived from <code class="doc-prose__code">value</code> and <code class="doc-prose__code">max</code> as <code class="doc-prose__code">Math.round((value / max) * 100)</code> and clamped to
+    <code class="doc-prose__code">0-100</code>.
+    The header is omitted from the DOM when both <code class="doc-prose__code">label</code> is <code class="doc-prose__code">null</code> and <code class="doc-prose__code">showValue</code> is <code class="doc-prose__code">false</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    The default progress bar with a label.
+    With <code class="doc-prose__code">max</code> omitted the component uses <code class="doc-prose__code">100</code>, so <code class="doc-prose__code">[value]="70"</code> renders as <code class="doc-prose__code">70%</code>.
+    The header shows the label on the left and the percentage on the right inside <code class="doc-prose__code">rng-progress__header</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-progress label="File upload" [value]="70" />
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom max value</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[max]</code> to a custom maximum.
+    The percentage is computed against this value - <code class="doc-prose__code">[value]="3"</code> with <code class="doc-prose__code">[max]="10"</code> renders as <code class="doc-prose__code">30%</code>.
+    The native <code class="doc-prose__code">&lt;progress&gt;</code> receives the same <code class="doc-prose__code">max</code> and <code class="doc-prose__code">value</code> attributes, and
+    <code class="doc-prose__code">aria-valuemax</code> reflects <code class="doc-prose__code">max</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-progress label="Tasks completed" [value]="3" [max]="10" />
+    </div>
+  </div>
+  <rng-code-block [code]="customMaxSnippet" language="html" title="custom max" variant="prose" />
+
+  <h3 class="doc-prose__h3">Without label</h3>
+  <p class="doc-prose__p">
+    Omit <code class="doc-prose__code">label</code> to show only the percentage in the header.
+    The label element (<code class="doc-prose__code">rng-progress__label</code>) is not rendered, but <code class="doc-prose__code">rng-progress__value</code> with the computed percentage remains.
+    The <code class="doc-prose__code">&lt;label&gt;</code> is bound to the generated <code class="doc-prose__code">id</code> via <code class="doc-prose__code">[for]</code> when present.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-progress [value]="45" />
+    </div>
+  </div>
+  <rng-code-block [code]="withoutLabelSnippet" language="html" title="without label" variant="prose" />
+
+  <h3 class="doc-prose__h3">Without percentage value</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[showValue]="false"</code> to hide the percentage and show only the label.
+    The header still renders with just <code class="doc-prose__code">rng-progress__label</code>.
+    Use this when the label alone is descriptive enough or the numeric progress is shown elsewhere.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-progress label="Loading" [value]="60" [showValue]="false" />
+    </div>
+  </div>
+  <rng-code-block [code]="withoutShowValueSnippet" language="html" title="without percentage" variant="prose" />
+
+  <h3 class="doc-prose__h3">Bar only</h3>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">label</code> is <code class="doc-prose__code">null</code> and <code class="doc-prose__code">[showValue]="false"</code>, the header row
+    (<code class="doc-prose__code">rng-progress__header</code>) is not rendered at all via <code class="doc-prose__code">&#64;if (label() || showValue())</code>.
+    Only the native <code class="doc-prose__code">&lt;progress class="rng-progress__bar"&gt;</code> is shown.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px;">
+      <rng-progress [value]="55" [showValue]="false" />
+    </div>
+  </div>
+  <rng-code-block [code]="barOnlySnippet" language="html" title="bar only" variant="prose" />
+
+  <h3 class="doc-prose__h3">Clamping and edge cases</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">percentage</code> is computed as <code class="doc-prose__code">Math.min(100, Math.max(0, Math.round((value / max) * 100)))</code>.
+    Values below <code class="doc-prose__code">0</code> clamp to <code class="doc-prose__code">0%</code> and values above <code class="doc-prose__code">max</code> clamp to <code class="doc-prose__code">100%</code>.
+    When <code class="doc-prose__code">max</code> is <code class="doc-prose__code">0</code> the computed returns <code class="doc-prose__code">0</code> to avoid division by zero.
+    The native <code class="doc-prose__code">&lt;progress&gt;</code> still receives the raw <code class="doc-prose__code">value</code> and <code class="doc-prose__code">max</code> attributes.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 420px;">
+      <rng-progress label="Overfilled" [value]="150" [max]="100" />
+      <rng-progress label="Negative" [value]="-20" />
+      <rng-progress label="No capacity" [value]="50" [max]="0" />
+    </div>
+  </div>
+  <rng-code-block [code]="clampingSnippet" language="html" title="clamping" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Percentage display vs native value</p>
+    <p class="doc-prose__p">
+      The header percentage reflects the clamped and rounded result from <code class="doc-prose__code">percentage()</code>.
+      The <code class="doc-prose__code">&lt;progress&gt;</code> element and <code class="doc-prose__code">aria-valuenow</code> keep the raw <code class="doc-prose__code">value</code> so assistive technology announces the actual value, not the clamped display.
+      Fallback text inside <code class="doc-prose__code">&lt;progress&gt;</code> also shows <code class="doc-prose__code">{{ '{{' }} percentage() {{ '}}' }}%</code>.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Dynamic value (signal binding)</h3>
+  <p class="doc-prose__p">
+    Bind a signal to <code class="doc-prose__code">[value]</code> to update the bar reactively.
+    The component uses <code class="doc-prose__code">input()</code> and <code class="doc-prose__code">computed()</code>, so any signal change re-computes <code class="doc-prose__code">percentage()</code> and updates both the header and the native <code class="doc-prose__code">&lt;progress&gt;</code>.
+    The demo below increments a signal every 300ms to simulate an upload, and a second example uses manual controls.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 420px;">
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Simulated upload (auto-increment)</p>
+        <rng-progress label="Uploading..." [value]="uploadProgress()" />
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.75rem;">
+          <rng-button size="small" variant="primary" (clickEvent)="simulateUpload()">Simulate upload</rng-button>
+          <rng-button size="small" variant="ghost" (clickEvent)="resetUpload()">Reset</rng-button>
+          <span style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">Value: <code class="doc-prose__code">{{ uploadProgress() }}</code> • {{ uploadProgress() }}%</span>
+        </div>
+      </div>
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Manual controls</p>
+        <rng-progress label="Upload progress" [value]="interactiveProgress()" />
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.75rem;">
+          <rng-button size="small" variant="secondary" (clickEvent)="decrease()">-10</rng-button>
+          <rng-button size="small" variant="primary" (clickEvent)="increase()">+10</rng-button>
+          <rng-button size="small" variant="ghost" (clickEvent)="reset()">Reset to 0</rng-button>
+          <rng-button size="small" variant="ghost" (clickEvent)="resetToDefault()">60</rng-button>
+          <span style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">Value: <code class="doc-prose__code">{{ interactiveProgress() }}</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="dynamicTsSnippet" language="typescript" title="signal - component" variant="prose" />
+  <rng-code-block [code]="dynamicSnippet" language="html" title="signal - template" variant="prose" />
+  <rng-code-block [code]="interactiveSnippet" language="html" title="interactive controls - template" variant="prose" />
+  <rng-code-block [code]="interactiveTsSnippet" language="typescript" title="interactive controls - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">
+    All variants together - basic, custom <code class="doc-prose__code">max</code>, label-only and dynamic binding.
+    Copy the combination that matches your use case.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 420px;">
+      <rng-progress label="File upload" [value]="70" />
+      <rng-progress label="Tasks completed" [value]="3" [max]="10" />
+      <rng-progress [value]="45" />
+      <rng-progress label="Loading" [value]="60" [showValue]="false" />
+      <rng-progress label="Uploading..." [value]="uploadProgress()" />
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-progress</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">0</code></td><td class="doc-prose__td">Current progress value. Passed directly to <code class="doc-prose__code">&lt;progress [value]&gt;</code> and <code class="doc-prose__code">aria-valuenow</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">max</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">100</code></td><td class="doc-prose__td">Maximum value. Passed to <code class="doc-prose__code">&lt;progress [max]&gt;</code> and <code class="doc-prose__code">aria-valuemax</code>. Percentage is calculated against this</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Label displayed in <code class="doc-prose__code">rng-progress__label</code> above the bar. When <code class="doc-prose__code">null</code> the label element is not rendered. Linked to the progress via <code class="doc-prose__code">[for]="id()"</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">showValue</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">true</code></td><td class="doc-prose__td">Whether to show the computed percentage in <code class="doc-prose__code">rng-progress__value</code> next to the label. Has <code class="doc-prose__code">aria-live="polite"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Computed and internal signals</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Member</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">percentage</code></td><td class="doc-prose__td"><code class="doc-prose__code">Computed&lt;number&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">Math.min(100, Math.max(0, Math.round((value() / max()) * 100)))</code> with a <code class="doc-prose__code">max() === 0</code> guard returning <code class="doc-prose__code">0</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string&gt;</code></td><td class="doc-prose__td">Unique id from <code class="doc-prose__code">uniqueId()</code> for the <code class="doc-prose__code">&lt;progress [id]&gt;</code> and <code class="doc-prose__code">&lt;label [for]&gt;</code> association</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">DOM structure and styling</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Element</th><th class="doc-prose__th">Class</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Host wrapper</td><td class="doc-prose__td"><code class="doc-prose__code">rng-progress</code></td><td class="doc-prose__td">Outer container for header and bar</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Header</td><td class="doc-prose__td"><code class="doc-prose__code">rng-progress__header</code></td><td class="doc-prose__td">Flex row for label and percentage. Only rendered when <code class="doc-prose__code">label() || showValue()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Label</td><td class="doc-prose__td"><code class="doc-prose__code">rng-progress__label</code></td><td class="doc-prose__td"><code class="doc-prose__code">&lt;label [for]="id()"&gt;</code> with the <code class="doc-prose__code">label</code> text</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Value</td><td class="doc-prose__td"><code class="doc-prose__code">rng-progress__value</code></td><td class="doc-prose__td"><code class="doc-prose__code">&lt;span aria-live="polite"&gt;</code> with <code class="doc-prose__code">{{ '{{' }} percentage() {{ '}}' }}%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Bar</td><td class="doc-prose__td"><code class="doc-prose__code">rng-progress__bar</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">&lt;progress [id]="id()" [max]="max()" [value]="value()"&gt;</code> with <code class="doc-prose__code">aria-valuenow</code>, <code class="doc-prose__code">aria-valuemin="0"</code> and <code class="doc-prose__code">aria-valuemax</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Accessibility</h3>
+  <p class="doc-prose__p">
+    The native <code class="doc-prose__code">&lt;progress&gt;</code> includes <code class="doc-prose__code">aria-valuenow</code>, <code class="doc-prose__code">aria-valuemin="0"</code> and <code class="doc-prose__code">aria-valuemax</code> for screen readers.
+    The label is associated with the progress element via <code class="doc-prose__code">for</code> / <code class="doc-prose__code">id</code> using the generated <code class="doc-prose__code">id()</code>.
+    The percentage span has <code class="doc-prose__code">aria-live="polite"</code> so updates are announced.
+    Inside <code class="doc-prose__code">&lt;progress&gt;</code> the fallback text <code class="doc-prose__code">{{ '{{' }} percentage() {{ '}}' }}%</code> is shown for browsers that do not support the element.
+  </p>
+
+  <h3 class="doc-prose__h3">Styling notes</h3>
+  <p class="doc-prose__p">
+    The host renders <code class="doc-prose__code">rng-progress</code> with <code class="doc-prose__code">rng-progress__header</code> for the label row and <code class="doc-prose__code">rng-progress__bar</code> for the native progress.
+    The header is a flex layout with the label and percentage spaced apart.
+    The bar is a native <code class="doc-prose__code">&lt;progress&gt;</code> element - style it via <code class="doc-prose__code">rng-progress__bar</code> and browser-specific pseudo-elements like <code class="doc-prose__code">::-webkit-progress-bar</code> and <code class="doc-prose__code">::-webkit-progress-value</code> if needed.
+  </p>
+
+  <rng-doc-pager />
+</article>

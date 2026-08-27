@@ -1,0 +1,48 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-date-picker {
+  .rng-input--date-picker {
+    .rng-input__field-wrapper {
+      position: relative;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+
+      &:focus .rng-input__field {
+        box-shadow: var(--rng-input-focus-shadow);
+      }
+    }
+
+    .rng-input__field {
+      display: block;
+      padding-right: rem(32);
+      width: 100%;
+      text-align: left;
+    }
+
+    .rng-input__icon {
+      pointer-events: none;
+      position: absolute;
+      right: rem(10);
+      top: rem(8);
+    }
+
+    .rng-calendar {
+      --rng-calendar-border-color: var(--rng-border-color);
+    }
+  }
+
+  .rng-calendar-popover {
+    --rng-calendar-popover-anchor: --rng-calendar-popover;
+
+    position-anchor: var(--rng-calendar-popover-anchor);
+    position: absolute;
+    top: calc(anchor(bottom) + #{rem(4)});
+    left: anchor(left);
+    transform-origin: top left;
+    border-radius: var(--rng-border-radius);
+    box-shadow: var(--rng-shadow-small);
+  }
+}

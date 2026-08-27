@@ -1,0 +1,13 @@
+<ol class="rng-breadcrumb">
+  @for (item of data(); track item.label; let isLast = $last) {
+    <li
+      class="rng-breadcrumb__item"
+      [class.rng-breadcrumb__item--active]="isLast">
+      <a
+        [href]="item.link ?? '#'"
+        (click)="onClickHandler($event, item)">
+        {{ item.label }}
+      </a>
+    </li>
+  }
+</ol>

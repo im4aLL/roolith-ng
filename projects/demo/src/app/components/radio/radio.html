@@ -1,0 +1,338 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Radio</h1>
+  <p class="doc-prose__p">
+    A group of radio buttons built as <code class="doc-prose__code">rng-radio-input</code>.
+    Supports <code class="doc-prose__code">options</code> with <code class="doc-prose__code">IRadioOption</code>, inline layout via <code class="doc-prose__code">inline</code>,
+    <code class="doc-prose__code">label</code>, <code class="doc-prose__code">hint</code>, validation state via <code class="doc-prose__code">error</code> and <code class="doc-prose__code">errorMessage</code>,
+    plus <code class="doc-prose__code">FormValueControl&lt;string | number | null&gt;</code> integration for signals forms.
+    The selected value is exposed as <code class="doc-prose__code">string | number | null</code> via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">options</code> as an array of <code class="doc-prose__code">IRadioOption</code>.
+    Use <code class="doc-prose__code">label</code> for the group heading and <code class="doc-prose__code">hint</code> for helper text.
+    Bind <code class="doc-prose__code">[(value)]</code> to sync the selected option - the model is <code class="doc-prose__code">string | number | null</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Preferred contact"
+        hint="We will only use this to reach you"
+        [(value)]="basicValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ basicValue() === null ? 'null' : basicValue() }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ basicValue() === null ? 'empty' : typeof basicValue() }})</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">IRadioOption</h3>
+  <p class="doc-prose__p">
+    Each entry in <code class="doc-prose__code">options</code> follows the <code class="doc-prose__code">IRadioOption</code> interface.
+    <code class="doc-prose__code">value</code> can be a <code class="doc-prose__code">string</code> or <code class="doc-prose__code">number</code> - comparisons are done with <code class="doc-prose__code">value() === option.value</code>.
+  </p>
+  <rng-code-block [code]="interfaceSnippet" language="typescript" title="IRadioOption" variant="prose" />
+
+  <h3 class="doc-prose__h3">Inline layout</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[inline]="true"</code> to display options horizontally.
+    By default (<code class="doc-prose__code">inline</code> is <code class="doc-prose__code">false</code>) options are stacked vertically via <code class="doc-prose__code">rng-input__field-wrapper--alt</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 520px; width: 100%;">
+      <rng-radio-input
+        [options]="sizeOptions"
+        label="Size (inline)"
+        [inline]="true"
+        [(value)]="inlineValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected size: <code class="doc-prose__code">{{ inlineValue() === null ? 'null' : inlineValue() }}</code>
+      </p>
+      <rng-radio-input
+        [options]="sizeOptions"
+        label="Size (stacked - default)"
+        [(value)]="inlineValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">
+        Stacked uses <code class="doc-prose__code">rng-input__field-wrapper--alt</code> - inline removes it.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="inlineSnippet" language="html" title="inline" variant="prose" />
+  <rng-code-block [code]="inlineTsSnippet" language="typescript" title="inline - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Label and hint</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">label</code> for the group heading rendered via <code class="doc-prose__code">&lt;label [for]="id() + '-0'"&gt;</code> and
+    <code class="doc-prose__code">hint</code> for helper text below the group via <code class="doc-prose__code">rng-input__hint</code>.
+    When <code class="doc-prose__code">label</code> is <code class="doc-prose__code">null</code> no heading is rendered.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Preferred contact"
+        [(value)]="hintValue" />
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Preferred contact"
+        hint="We will only use this to reach you"
+        [(value)]="hintValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Hint value: <code class="doc-prose__code">{{ hintValue() === null ? 'null' : hintValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="labelSnippet" language="html" title="label" variant="prose" />
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Preferred contact"
+        [error]="true"
+        errorMessage="Please select a contact method" />
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Preferred contact"
+        hint="We will only use this to reach you"
+        [error]="true"
+        errorMessage="Please select a contact method"
+        [(value)]="errorValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">{{ errorValue() === null ? 'null' : errorValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable all radios via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    <code class="doc-prose__code">name</code> to set a shared <code class="doc-prose__code">name</code> attribute (defaults to <code class="doc-prose__code">id()</code> when empty),
+    and <code class="doc-prose__code">[inline]="true"</code> for horizontal layout.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Disabled"
+        [disabled]="true" />
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Disabled with value"
+        [disabled]="true"
+        [value]="disabledValue()" />
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Required"
+        [required]="true"
+        [(value)]="requiredValue" />
+      <rng-radio-input
+        [options]="contactOptions"
+        label="With name"
+        name="contactMethod"
+        [(value)]="nameValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Required: <code class="doc-prose__code">{{ requiredValue() === null ? 'null' : requiredValue() }}</code> |
+        Name: <code class="doc-prose__code">{{ nameValue() === null ? 'null' : nameValue() }}</code> (<code class="doc-prose__code">name="contactMethod"</code>) |
+        Disabled: <code class="doc-prose__code">{{ disabledValue() === null ? 'null' : disabledValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Numeric values</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">IRadioOption.value</code> accepts both <code class="doc-prose__code">string</code> and <code class="doc-prose__code">number</code>.
+    The template tracks options by <code class="doc-prose__code">option.value</code> and compares with <code class="doc-prose__code">value() === option.value</code>.
+    On change, the component resolves the raw string via <code class="doc-prose__code">String(opt.value) === rawValue</code> to restore the original type.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-radio-input
+        [options]="priorityOptions"
+        label="Priority"
+        [(value)]="numericValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Priority: <code class="doc-prose__code">{{ numericValue() === null ? 'null' : numericValue() }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ numericValue() === null ? 'empty' : typeof numericValue() }})</span>
+      </p>
+      <rng-radio-input
+        [options]="priorityOptions"
+        label="Priority (inline)"
+        [inline]="true"
+        [(value)]="numericValue" />
+    </div>
+  </div>
+  <rng-code-block [code]="numericSnippet" language="typescript" title="numeric - options" variant="prose" />
+  <rng-code-block [code]="numericTemplateSnippet" language="html" title="numeric - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and valueChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;string | number | null&gt;</code> - selecting a radio calls <code class="doc-prose__code">onChange</code> which matches
+    <code class="doc-prose__code">String(opt.value) === rawValue</code> and sets the typed value, blurring marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-radio-input [options]="contactOptions" label="Two-way binding" [(value)]="twoWayValue" />
+      <rng-radio-input [options]="contactOptions" label="With valueChange handler" [value]="twoWayValue()" (valueChange)="onTwoWayValueChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Current: <code class="doc-prose__code">{{ twoWayValue() === null ? 'null' : twoWayValue() }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ twoWayValue() === null ? 'null' : typeof twoWayValue() }})</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="valueChangeTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-radio-input</code> implements <code class="doc-prose__code">FormValueControl&lt;string | number | null&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, hint, inline layout, numeric values and live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 520px; width: 100%;">
+      <rng-radio-input
+        [options]="contactOptions"
+        label="Preferred contact"
+        hint="We will only use this to reach you"
+        [(value)]="fullContactValue" />
+      <rng-radio-input
+        [options]="sizeOptions"
+        label="Size"
+        [inline]="true"
+        [(value)]="fullSizeValue" />
+      <rng-radio-input
+        [options]="priorityOptions"
+        label="Priority (numeric)"
+        [(value)]="fullPriorityValue" />
+      <rng-radio-input
+        [options]="notificationOptions"
+        label="Notifications"
+        hint="How often should we notify you?"
+        [(value)]="fullNotificationValue" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Contact: <code class="doc-prose__code">{{ fullContactValue() === null ? 'null' : fullContactValue() }}</code>
+          | Size: <code class="doc-prose__code">{{ fullSizeValue() === null ? 'null' : fullSizeValue() }}</code>
+          | Priority: <code class="doc-prose__code">{{ fullPriorityValue() === null ? 'null' : fullPriorityValue() }}</code>
+          <span style="color: var(--rng-text-muted, #64748b);"> ({{ fullPriorityValue() === null ? 'empty' : typeof fullPriorityValue() }})</span>
+          | Notifications: <code class="doc-prose__code">{{ fullNotificationValue() === null ? 'null' : fullNotificationValue() }}</code>
+        </p>
+        @if (fullContactValue() !== null || fullSizeValue() !== null || fullPriorityValue() !== null || fullNotificationValue() !== null) {
+          <rng-button size="small" (clickEvent)="clearFullValues()">Clear values</rng-button>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No values yet - select an option to see the model update.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-radio-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">options</code></td><td class="doc-prose__td"><code class="doc-prose__code">IRadioOption[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of radio options - each with <code class="doc-prose__code">label</code> and <code class="doc-prose__code">value</code> (<code class="doc-prose__code">string | number</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Group label rendered above the radios via <code class="doc-prose__code">&lt;label [for]="id() + '-0'"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the group via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Shared <code class="doc-prose__code">name</code> attribute for the radio group - defaults to <code class="doc-prose__code">id()</code> when empty via <code class="doc-prose__code">[name]="name() || id()"</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">inline</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Displays options horizontally when <code class="doc-prose__code">true</code> - otherwise stacked vertically via <code class="doc-prose__code">rng-input__field-wrapper--alt</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">invalid()</code> for <code class="doc-prose__code">aria-invalid</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables all radio buttons via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the group as required via <code class="doc-prose__code">aria-required</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IRadioOption</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Visible text for the option</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Value emitted when the option is selected - compared via <code class="doc-prose__code">value() === option.value</code> and resolved via <code class="doc-prose__code">String(opt.value) === rawValue</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-radio-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">The currently selected option value - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>; <code class="doc-prose__code">null</code> when nothing is selected</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-radio-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td">Emits the selected value on change - used by <code class="doc-prose__code">[(value)]</code> two-way binding; emitted via <code class="doc-prose__code">model()</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;string | number | null&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;string | number | null&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.contact"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChange(event: Event): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">change</code> - finds the matching option via <code class="doc-prose__code">String(opt.value) === rawValue</code> and sets <code class="doc-prose__code">value</code> to the typed <code class="doc-prose__code">option.value</code> or <code class="doc-prose__code">null</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

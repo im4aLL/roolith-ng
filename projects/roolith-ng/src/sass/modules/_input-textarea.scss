@@ -1,0 +1,33 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-textarea {
+  .rng-input__field--textarea {
+    height: auto;
+    resize: vertical;
+    line-height: rem(22);
+  }
+
+  .rng-input__field--textarea-autoresize {
+    resize: none;
+    overflow: hidden;
+  }
+
+  .rng-input__textarea-footer {
+    display: flex;
+    gap: rem(8);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rng-input__char-count {
+    font-size: rem(12);
+    color: var(--rng-input-hint-color);
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &--limit {
+      color: var(--rng-color-danger);
+    }
+  }
+}

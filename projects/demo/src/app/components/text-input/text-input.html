@@ -1,0 +1,399 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Text Input</h1>
+  <p class="doc-prose__p">
+    A single-line text input built as <code class="doc-prose__code">rng-text-input</code>.
+    Supports input <code class="doc-prose__code">type</code> variants (<code class="doc-prose__code">text</code>, <code class="doc-prose__code">password</code>, <code class="doc-prose__code">email</code>, <code class="doc-prose__code">hidden</code>),
+    validation via <code class="doc-prose__code">minLength</code>, <code class="doc-prose__code">maxLength</code> and <code class="doc-prose__code">pattern</code>,
+    plus <code class="doc-prose__code">label</code>, <code class="doc-prose__code">hint</code>, <code class="doc-prose__code">placeholder</code> and
+    <code class="doc-prose__code">FormValueControl&lt;string&gt;</code> integration for signals forms.
+    The current value is exposed as <code class="doc-prose__code">string</code> via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code> (empty string when empty).
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code>, optionally <code class="doc-prose__code">placeholder</code> and <code class="doc-prose__code">hint</code>.
+    Use two-way binding <code class="doc-prose__code">[(value)]</code> to sync the string value.
+    When the field is empty the model is <code class="doc-prose__code">''</code> - otherwise the typed <code class="doc-prose__code">string</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Full name"
+        placeholder="e.g. John Doe"
+        hint="As it appears on your passport"
+        [(value)]="basicValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">"{{ basicValue() }}"</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ basicValue().length }} chars)</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Placeholder</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">placeholder</code> to show hint text when the value is <code class="doc-prose__code">''</code>.
+    It is forwarded to the native <code class="doc-prose__code">placeholder</code> attribute on <code class="doc-prose__code">&lt;input&gt;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Full name"
+        placeholder="e.g. John Doe"
+        [(value)]="placeholderNameValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Full name value: <code class="doc-prose__code">"{{ placeholderNameValue() }}"</code>
+      </p>
+      <rng-text-input
+        label="Email"
+        placeholder="you@example.com"
+        [(value)]="placeholderEmailValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Email value: <code class="doc-prose__code">"{{ placeholderEmailValue() }}"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="placeholderSnippet" language="html" title="placeholder" variant="prose" />
+
+  <h3 class="doc-prose__h3">Type variants</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[type]</code> to set the native <code class="doc-prose__code">type</code>.
+    Supported values are <code class="doc-prose__code">'text'</code> (default), <code class="doc-prose__code">'password'</code>, <code class="doc-prose__code">'email'</code> and <code class="doc-prose__code">'hidden'</code>.
+    The value is forwarded to <code class="doc-prose__code">[type]</code> on <code class="doc-prose__code">&lt;input&gt;</code> and <code class="doc-prose__code">hidden</code> hides the field visually while keeping the model.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Full name (text)"
+        type="text"
+        placeholder="John Doe"
+        [(value)]="typeTextValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Text: <code class="doc-prose__code">"{{ typeTextValue() }}"</code>
+      </p>
+      <rng-text-input
+        label="Password"
+        type="password"
+        placeholder="Enter your password"
+        [(value)]="typePasswordValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Password: <code class="doc-prose__code">{{ typePasswordValue().length > 0 ? '•'.repeat(typePasswordValue().length) + ' (' + typePasswordValue().length + ' chars)' : 'empty' }}</code>
+      </p>
+      <rng-text-input
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        [(value)]="typeEmailValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Email: <code class="doc-prose__code">"{{ typeEmailValue() }}"</code>
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 0.25rem; width: 100%;">
+        <span style="font-size: 0.75rem; font-weight: 600;">Hidden input (not visible)</span>
+        <rng-text-input
+          type="hidden"
+          [(value)]="typeHiddenValue" />
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">
+          Hidden value: <code class="doc-prose__code">"{{ typeHiddenValue() }}"</code> - rendered as <code class="doc-prose__code">&lt;input type="hidden"&gt;</code> with no label or hint.
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="typeSnippet" language="html" title="type variants" variant="prose" />
+  <rng-code-block [code]="typeTsSnippet" language="typescript" title="type - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field via <code class="doc-prose__code">rng-input__hint</code>.
+    The hint is visible when not overridden by an error message.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Full name"
+        hint="As it appears on your passport"
+        [(value)]="hintValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">"{{ hintValue() }}"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Email"
+        type="email"
+        [error]="true"
+        errorMessage="Please enter a valid email address" />
+      <rng-text-input
+        label="Full name"
+        hint="As it appears on your passport"
+        [error]="true"
+        errorMessage="Full name is required"
+        [(value)]="errorValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">"{{ errorValue() }}"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[readonly]="true"</code> to make it read-only via <code class="doc-prose__code">[readonly]</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> or <code class="doc-prose__code">error()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Disabled"
+        [disabled]="true" />
+      <rng-text-input
+        label="Disabled with value"
+        [disabled]="true"
+        [value]="disabledValue()" />
+      <rng-text-input
+        label="Read-only"
+        [readonly]="true"
+        [(value)]="readonlyValue" />
+      <rng-text-input
+        label="Required"
+        [required]="true"
+        [(value)]="requiredValue" />
+      <rng-text-input
+        label="With name"
+        name="fullName"
+        [(value)]="nameValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Read-only: <code class="doc-prose__code">"{{ readonlyValue() }}"</code> |
+        Required: <code class="doc-prose__code">"{{ requiredValue() }}"</code> |
+        Name: <code class="doc-prose__code">"{{ nameValue() }}"</code> (<code class="doc-prose__code">name="fullName"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="readonlySnippet" language="html" title="readonly" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Validation - minLength, maxLength and pattern</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[minLength]</code> and <code class="doc-prose__code">[maxLength]</code> to constrain character count and
+    <code class="doc-prose__code">[pattern]</code> with an array of <code class="doc-prose__code">RegExp</code> for regex validation.
+    These map to signals forms validation - <code class="doc-prose__code">pattern()</code> is a <code class="doc-prose__code">readonly RegExp[]</code> (default <code class="doc-prose__code">[]</code>).
+    Combine them with <code class="doc-prose__code">hint</code> to guide the user and with <code class="doc-prose__code">error</code> / <code class="doc-prose__code">errorMessage</code> for server or manual errors.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Username (min 3)"
+        hint="At least 3 characters"
+        [minLength]="3"
+        [(value)]="minLengthValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value: <code class="doc-prose__code">"{{ minLengthValue() }}"</code> ({{ minLengthValue().length }} chars) |
+        <span style="color: var(--rng-text-muted, #64748b);">needs 3+</span>
+      </p>
+      <rng-text-input
+        label="Bio (max 20)"
+        hint="Max 20 characters"
+        [maxLength]="20"
+        [pattern]="[alphanumPattern]"
+        [(value)]="maxLengthValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value: <code class="doc-prose__code">"{{ maxLengthValue() }}"</code> ({{ maxLengthValue().length }}/20)
+      </p>
+      <rng-text-input
+        label="City (letters only)"
+        hint="Letters and spaces only"
+        [pattern]="[cityPattern]"
+        [(value)]="patternValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Pattern: <code class="doc-prose__code">/^[a-zA-Z\s]+$/</code> |
+        Value: <code class="doc-prose__code">"{{ patternValue() }}"</code>
+        @if (patternValue() && !cityPattern.test(patternValue())) {
+          <span style="color: var(--rng-danger, #ef4444);"> - fails pattern</span>
+        }
+      </p>
+      <rng-text-input
+        label="Username (3-12, alphanumeric)"
+        hint="3-12 alphanumeric characters"
+        [minLength]="3"
+        [maxLength]="12"
+        [pattern]="[alphanumPattern]"
+        [(value)]="combinedValidationValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Combined: <code class="doc-prose__code">"{{ combinedValidationValue() }}"</code> ({{ combinedValidationValue().length }} chars) |
+        pattern <code class="doc-prose__code">/^[a-zA-Z0-9]+$/</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="validationSnippet" language="html" title="validation" variant="prose" />
+  <rng-code-block [code]="validationTsSnippet" language="typescript" title="validation - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and valueChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;string&gt;</code> with default <code class="doc-prose__code">''</code>.
+    Typing in the field sets <code class="doc-prose__code">value</code> via <code class="doc-prose__code">(input)="value.set($event.target.value)"</code> and blurring marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input [(value)]="twoWayValue" label="Two-way binding" />
+      <rng-text-input [value]="twoWayValue()" (valueChange)="onTwoWayValueChange($event)" label="With valueChange handler" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Current: <code class="doc-prose__code">"{{ twoWayValue() }}"</code>
+          <span> ({{ twoWayValue().length }} chars)</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="valueChangeTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-text-input</code> implements <code class="doc-prose__code">FormValueControl&lt;string&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, placeholder, hint, type variants and live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-text-input
+        label="Full name"
+        placeholder="e.g. John Doe"
+        hint="As it appears on your passport"
+        [(value)]="fullNameValue" />
+      <rng-text-input
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        hint="We will never share your email"
+        [(value)]="fullEmailValue" />
+      <rng-text-input
+        label="Password"
+        type="password"
+        placeholder="Enter password"
+        hint="At least 8 characters"
+        [minLength]="8"
+        [(value)]="fullPasswordValue" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Full name: <code class="doc-prose__code">"{{ fullNameValue() || 'empty' }}"</code>
+          | Email: <code class="doc-prose__code">"{{ fullEmailValue() || 'empty' }}"</code>
+          | Password: <code class="doc-prose__code">{{ fullPasswordValue().length > 0 ? '•'.repeat(fullPasswordValue().length) : 'empty' }}</code>
+        </p>
+        @if (fullNameValue() || fullEmailValue() || fullPasswordValue()) {
+          <rng-button size="small" (clickEvent)="clearFullValues()">Clear values</rng-button>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No values yet - try typing in the fields above.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-text-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the input via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Placeholder text forwarded to <code class="doc-prose__code">[placeholder]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the input via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'text' | 'password' | 'email' | 'hidden'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'text'</code></td><td class="doc-prose__td">Native input type forwarded to <code class="doc-prose__code">[type]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">invalid()</code> for <code class="doc-prose__code">aria-invalid</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">readonly</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the input read-only via <code class="doc-prose__code">[readonly]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required via <code class="doc-prose__code">aria-required</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">minLength</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Minimum character length for signals forms validation</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxLength</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Maximum character length for signals forms validation</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">pattern</code></td><td class="doc-prose__td"><code class="doc-prose__code">readonly RegExp[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">Regex patterns for signals forms validation</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-text-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">The current value - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>; empty input syncs as <code class="doc-prose__code">''</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-text-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Emits the string value on change - used by <code class="doc-prose__code">[(value)]</code> two-way binding</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;string&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;string&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.name"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Signals and computed</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string&gt;</code></td><td class="doc-prose__td">Unique id for the input and its <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code> association via <code class="doc-prose__code">uniqueId()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hintMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string | null&gt;</code></td><td class="doc-prose__td">Computed hint - returns <code class="doc-prose__code">errorMessage()</code> when <code class="doc-prose__code">error() &amp;&amp; errorMessage()</code> otherwise <code class="doc-prose__code">hint()</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Behavior notes</h3>
+  <ul class="doc-prose__ul">
+    <li class="doc-prose__li">Typing updates <code class="doc-prose__code">value</code> immediately via <code class="doc-prose__code">(input)="value.set($event.target.value)"</code> - the native <code class="doc-prose__code">&lt;input&gt;</code> value is bound with <code class="doc-prose__code">[value]="value()"</code>.</li>
+    <li class="doc-prose__li">Blurring the field marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> via <code class="doc-prose__code">(blur)="touched.set(true)"</code>.</li>
+    <li class="doc-prose__li">The outer wrapper uses <code class="doc-prose__code">rng-input</code> with <code class="doc-prose__code">rng-input--disabled</code> and <code class="doc-prose__code">rng-input--error</code> modifiers.</li>
+    <li class="doc-prose__li">Validation inputs <code class="doc-prose__code">minLength</code>, <code class="doc-prose__code">maxLength</code> and <code class="doc-prose__code">pattern</code> are consumed by signals forms - they do not add native HTML validation attributes.</li>
+  </ul>
+
+  <rng-doc-pager />
+</article>

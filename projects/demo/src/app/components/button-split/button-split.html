@@ -1,0 +1,170 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Button Split</h1>
+  <p class="doc-prose__p">
+    A split button combining a content area (text / icon) with a separate action icon button that emits the click event.
+    The text area is fully projected via <code class="doc-prose__code">&lt;ng-content /&gt;</code> so any combination of plain text,
+    <code class="doc-prose__code">&lt;rng-icon&gt;</code> and <code class="doc-prose__code">&lt;em&gt;</code> can be rendered.
+    Use <code class="doc-prose__code">actionIcon</code> to control the right-side button icon, <code class="doc-prose__code">size</code> to scale the component and
+    <code class="doc-prose__code">clickEvent</code> to handle the action click.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    The simplest split button with projected text.
+    Clicking the icon button on the right emits <code class="doc-prose__code">clickEvent</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button-split (clickEvent)="onAction()">Split Button</rng-button-split>
+    </div>
+  </div>
+  @if (clickCount > 0) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Action clicked</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">clickEvent</code> fired <code class="doc-prose__code">{{ clickCount }}</code> time(s).
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">With a leading icon in the text slot</h3>
+  <p class="doc-prose__p">
+    The left content area uses <code class="doc-prose__code">&lt;ng-content /&gt;</code>.
+    Project any combination of <code class="doc-prose__code">&lt;rng-icon&gt;</code>, plain text and <code class="doc-prose__code">&lt;em&gt;</code> as children.
+    This example shows an icon followed by text with an emphasized operator and a quoted value.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button-split (clickEvent)="onRichAction()">
+        <rng-icon name="filter" />
+        Status
+        <em>is</em>
+        'active'
+      </rng-button-split>
+    </div>
+  </div>
+  @if (richClickCount > 0) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Rich content action</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">clickEvent</code> fired <code class="doc-prose__code">{{ richClickCount }}</code> time(s) from the rich content split button.
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="withIconSnippet" language="html" title="with leading icon" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom action icon</h3>
+  <p class="doc-prose__p">
+    Override the default <code class="doc-prose__code">'chevron-down'</code> icon with <code class="doc-prose__code">actionIcon</code>.
+    Accepts any value from the <code class="doc-prose__code">IconNameType</code> set.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button-split actionIcon="delete" (clickEvent)="onCustomAction()">Delete Item</rng-button-split>
+      <rng-button-split actionIcon="chevron-down" (clickEvent)="onCustomAction()">Default Icon</rng-button-split>
+      <rng-button-split actionIcon="plus" (clickEvent)="onCustomAction()">Add Item</rng-button-split>
+    </div>
+  </div>
+  @if (customClickCount > 0) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Custom icon action</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">clickEvent</code> fired <code class="doc-prose__code">{{ customClickCount }}</code> time(s).
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="customActionIconSnippet" language="html" title="custom action icon" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sizes</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">size</code> to scale the component.
+    <code class="doc-prose__code">'xsmall'</code> maps to <code class="doc-prose__code">rng-button-split--xsmall</code>,
+    <code class="doc-prose__code">'small'</code> to <code class="doc-prose__code">rng-button-split--small</code> and
+    <code class="doc-prose__code">'large'</code> to <code class="doc-prose__code">rng-button-split--large</code>.
+    The default value omits the modifier class.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button-split size="xsmall" (clickEvent)="onAction()">Extra Small</rng-button-split>
+      <rng-button-split size="small" (clickEvent)="onAction()">Small</rng-button-split>
+      <rng-button-split (clickEvent)="onAction()">Default</rng-button-split>
+      <rng-button-split size="large" (clickEvent)="onAction()">Large</rng-button-split>
+    </div>
+  </div>
+  <rng-code-block [code]="sizesSnippet" language="html" title="sizes" variant="prose" />
+
+  <h3 class="doc-prose__h3">Listening to click events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">clickEvent</code> is emitted with a <code class="doc-prose__code">void</code> payload when the action icon button is clicked.
+    The text area itself is non-interactive - only the right icon button triggers the output.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button-split (clickEvent)="onAction()">Split Button ({{ clickCount }})</rng-button-split>
+    </div>
+  </div>
+  <rng-code-block [code]="clickEventSnippet" language="html" title="clickEvent - template" variant="prose" />
+  <rng-code-block [code]="clickHandlerSnippet" language="typescript" title="clickEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining basic usage, custom icon, sizes and rich content projection.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-button-split (clickEvent)="onAction()">Split Button</rng-button-split>
+      <rng-button-split actionIcon="delete" (clickEvent)="onCustomAction()">Delete Item</rng-button-split>
+      <rng-button-split size="small" (clickEvent)="onRichAction()">
+        <rng-icon name="filter" />
+        Status
+        <em>is</em>
+        'active'
+      </rng-button-split>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-button-split size="xsmall" (clickEvent)="onAction()">Extra Small</rng-button-split>
+        <rng-button-split size="large" (clickEvent)="onAction()">Large</rng-button-split>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button-split</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">actionIcon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'chevron-down'</code></td><td class="doc-prose__td">Icon displayed inside the action (right) button</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">size</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'small' | 'xsmall' | 'large'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Controls the height and padding of the component</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button-split</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clickEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">void</code></td><td class="doc-prose__td">Emitted when the action icon button is clicked</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button-split</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Fully projected via <code class="doc-prose__code">&lt;ng-content /&gt;</code> inside <code class="doc-prose__code">rng-button-split__text</code>. Pass any combination of plain text, <code class="doc-prose__code">&lt;rng-icon&gt;</code> and <code class="doc-prose__code">&lt;em&gt;</code> tags</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

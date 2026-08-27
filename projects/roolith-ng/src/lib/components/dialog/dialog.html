@@ -1,0 +1,46 @@
+<div class="rng-dialog">
+  <div class="rng-dialog__content">
+    <!-- header -->
+    <div class="rng-dialog__header">
+      <h3 class="rng-dialog__title">Dialog title</h3>
+      <div class="rng-dialog__subtitle">
+        Expedita nulla beatae non sequi, modi neque. Suscipit necessitatibus magnam unde? Laboriosam.
+      </div>
+    </div>
+    <!-- header -->
+
+    <!-- body -->
+    <div class="rng-dialog__body">
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt inventore repellat adipisci saepe illum eos
+      doloremque, temporibus laboriosam nam quod unde aspernatur quis, asperiores corporis, necessitatibus facere
+      voluptate dicta reiciendis.
+    </div>
+    <!-- body -->
+
+    <!-- footer -->
+    <div class="rng-dialog__footer">
+      <div class="rng-dialog__action">
+        <div class="rng-dialog__action-item">
+          <rng-button (clickEvent)="closeDialog()">Cancel</rng-button>
+        </div>
+        <div class="rng-dialog__action-item">
+          <rng-button
+            variant="primary"
+            (clickEvent)="closeDialog()">
+            Save Changes
+          </rng-button>
+        </div>
+      </div>
+    </div>
+    <!-- footer -->
+
+    <!-- close -->
+    <div class="rng-dialog__close">
+      <rng-button
+        icon="delete"
+        variant="ghost"
+        (clickEvent)="closeDialog()"></rng-button>
+    </div>
+    <!-- close -->
+  </div>
+</div>

@@ -1,0 +1,30 @@
+@if (hasItem()) {
+  <div class="rng-toast">
+    @for (item of items(); let i = $index; track i) {
+      <div
+        class="rng-toast__item"
+        [class.is--closing]="item._isClosing"
+        [class.rng-toast__item--success]="item.type === 'success'"
+        [class.rng-toast__item--error]="item.type === 'error'"
+        [class.rng-toast__item--info]="item.type === 'info'">
+        <i
+          class="rng-icon rng-toast__icon"
+          [class.rng-icon--check]="item.type === 'success'"
+          [class.rng-icon--alert]="item.type === 'error'"
+          [class.rng-icon--info]="item.type === 'info'"></i>
+        <div class="rng-toast__content">
+          <div class="rng-toast__content-hl">{{ item.title }}</div>
+          {{ item.message }}
+        </div>
+        <div class="rng-toast__close">
+          <rng-button
+            size="xsmall"
+            variant="secondary"
+            (clickEvent)="onClear()">
+            Clear
+          </rng-button>
+        </div>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,29 @@
+<div class="rng-filters">
+  @for (filter of filters(); track $index) {
+    <div class="rng-filter">
+      <rng-button-split
+        actionIcon="delete"
+        (clickEvent)="onRemoveFilter(filter)">
+        <span [innerHTML]="filter._forHuman"></span>
+      </rng-button-split>
+    </div>
+  }
+
+  <div class="rng-filter">
+    <rng-button
+      [rngPopoverTarget]="'rng-filter-' + id()"
+      icon="plus" />
+
+    <rng-popover
+      [name]="'rng-filter-' + id()"
+      styleClass="rng-filter__popover"
+      #popoverComponentEl>
+      <rng-add-filter
+        #addFilterComponentEl
+        [filterableFields]="filterableFields()"
+        [customTemplateData]="customTemplateData()"
+        (addFilterEvent)="onAddFilter($event)"
+        (cancelFilterEvent)="onCancelFilter()" />
+    </rng-popover>
+  </div>
+</div>

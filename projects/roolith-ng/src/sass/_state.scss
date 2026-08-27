@@ -1,0 +1,34 @@
+@mixin state {
+  .is--full-width {
+    width: 100% !important;
+  }
+
+  .is--text-center {
+    text-align: center !important;
+  }
+
+  .is--text-right {
+    text-align: right !important;
+  }
+
+  .is--text-left {
+    text-align: left !important;
+  }
+
+  .is--float-left {
+    float: left !important;
+  }
+
+  .is--float-right {
+    float: right !important;
+  }
+
+  .is--disabled {
+    opacity: 0.6 !important;
+    pointer-events: none !important;
+  }
+
+  .is--hidden {
+    display: none !important;
+  }
+}

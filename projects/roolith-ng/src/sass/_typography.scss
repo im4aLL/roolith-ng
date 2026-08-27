@@ -1,0 +1,229 @@
+@use './functions' as *;
+@use './mixins' as m;
+
+@mixin typography() {
+  ::selection {
+    background-color: hsl(from var(--rng-color-primary) h s l / 0.18) !important;
+    color: var(--rng-color-primary);
+  }
+
+  .theme-dark ::selection {
+    background-color: hsl(from var(--rng-color-primary) h s l / 0.32) !important;
+    color: #ffffff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    font-weight: var(--rng-font-weight-bold);
+  }
+
+  h1,
+  .h1 {
+    font-size: rem(64);
+    line-height: rem(64);
+    letter-spacing: -0.04em;
+
+    @include m.breakpoint(large-up) {
+      font-size: rem(64);
+      line-height: rem(64);
+    }
+  }
+
+  h2,
+  .h2 {
+    font-size: rem(48);
+    line-height: rem(52);
+    letter-spacing: -0.04em;
+
+    @include m.breakpoint(large-up) {
+      font-size: rem(48);
+      line-height: rem(52);
+    }
+  }
+
+  h3,
+  .h3 {
+    font-size: rem(40);
+    line-height: rem(48);
+    letter-spacing: -0.04em;
+
+    @include m.breakpoint(large-up) {
+      font-size: rem(40);
+      line-height: rem(48);
+    }
+  }
+
+  h4,
+  .h4 {
+    font-size: rem(32);
+    line-height: rem(38);
+    letter-spacing: -0.04em;
+
+    @include m.breakpoint(large-up) {
+      font-size: rem(32);
+      line-height: rem(38);
+    }
+  }
+
+  h5,
+  .h5 {
+    font-size: rem(20);
+    line-height: rem(24);
+    letter-spacing: -0.02em;
+
+    @include m.breakpoint(large-up) {
+      font-size: rem(20);
+      line-height: rem(24);
+    }
+  }
+
+  h6,
+  .h6 {
+    font-size: rem(16);
+    line-height: rem(22);
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    font-size: rem(14);
+    line-height: rem(22);
+  }
+
+  strong {
+    font-weight: var(--rng-font-weight-bold);
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  a {
+    color: var(--rng-color-secondary);
+
+    &:hover {
+      color: var(--rng-color-secondary-light);
+    }
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  small,
+  .small {
+    font-size: 80%;
+    line-height: 1.3em;
+  }
+
+  code {
+    font-family: Consolas, monaco, monospace;
+    padding: rem(2) rem(5);
+    margin: 0 rem(2);
+    font-size: 90%;
+    white-space: nowrap;
+    background: var(--rng-color-neutral-300);
+    border: rem(1) solid var(--rng-color-neutral-400);
+    border-radius: var(--rng-border-radius);
+    overflow: auto;
+    @include m.nice-scroll();
+  }
+
+  pre {
+    code {
+      padding: rem(15);
+      display: block;
+      white-space: pre;
+      font-size: rem(14);
+      background: var(--rng-color-neutral-300);
+      border: none;
+      line-height: rem(22);
+      margin-bottom: rem(20);
+      color: var(--rng-color-neutral-900);
+    }
+  }
+
+  hr {
+    border: 0;
+    height: 0;
+    border-top: rem(1) solid var(--rng-color-neutral-200);
+    border-bottom: rem(1) solid var(--rng-color-neutral-300);
+    margin: rem(15) 0;
+  }
+
+  dl {
+    font-size: rem(14);
+    line-height: rem(22);
+  }
+
+  dt {
+    font-weight: var(--rng-font-weight-bold);
+    padding: 0 0 rem(5);
+  }
+
+  dd {
+    padding: 0 0 rem(15);
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    .indented-list & {
+      padding-left: rem(30);
+    }
+  }
+
+  blockquote {
+    font-size: rem(14);
+    line-height: rem(22);
+    color: color('gray');
+    border-left: rem(3) solid var(--rng-color-neutral-400);
+    padding-left: rem(20);
+
+    cite {
+      &:before {
+        content: ' — ';
+      }
+
+      font-size: 80%;
+      display: block;
+      padding-top: rem(10);
+    }
+  }
+
+  abbr {
+    border-bottom: rem(1) dotted var(--rng-color-neutral-400);
+    cursor: help;
+    text-decoration: none;
+  }
+
+  kbd {
+    @extend code;
+    background: var(--rng-color-neutral-200);
+    border: rem(1) solid var(--rng-color-neutral-400);
+  }
+
+  .text-primary {
+    font-size: rem(16);
+    line-height: rem(22);
+  }
+
+  .text-secondary {
+    font-size: rem(18);
+    line-height: rem(32);
+  }
+
+  .text-small {
+    font-size: rem(12);
+    line-height: rem(18);
+  }
+}

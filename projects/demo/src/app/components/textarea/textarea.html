@@ -1,0 +1,446 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Textarea</h1>
+  <p class="doc-prose__p">
+    A multi-line text input built as <code class="doc-prose__code">rng-textarea-input</code>.
+    Supports <code class="doc-prose__code">autoResize</code> to grow with content, character count via <code class="doc-prose__code">showCharCount</code> and <code class="doc-prose__code">maxLength</code> enforcement,
+    plus <code class="doc-prose__code">label</code>, <code class="doc-prose__code">hint</code>, <code class="doc-prose__code">placeholder</code>, <code class="doc-prose__code">rows</code> and
+    <code class="doc-prose__code">FormValueControl&lt;string&gt;</code> integration for signals forms.
+    The current value is exposed as <code class="doc-prose__code">string</code> via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code> (empty string when empty).
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code>, optionally <code class="doc-prose__code">placeholder</code> and <code class="doc-prose__code">hint</code>.
+    Use two-way binding <code class="doc-prose__code">[(value)]</code> to sync the string value.
+    When the field is empty the model is <code class="doc-prose__code">''</code> - otherwise the typed <code class="doc-prose__code">string</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Description"
+        placeholder="Enter a description..."
+        hint="Keep it concise"
+        [(value)]="basicValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">"{{ basicValue() }}"</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ basicValue().length }} chars)</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Placeholder</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">placeholder</code> to show hint text when the value is <code class="doc-prose__code">''</code>.
+    It is forwarded to the native <code class="doc-prose__code">placeholder</code> attribute on <code class="doc-prose__code">&lt;textarea&gt;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Description"
+        placeholder="Enter a description..."
+        [(value)]="basicValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Description: <code class="doc-prose__code">"{{ basicValue() }}"</code>
+      </p>
+      <rng-textarea-input style="width: 100%;"
+        label="Feedback"
+        placeholder="Share your feedback..."
+        [(value)]="placeholderFeedbackValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Feedback: <code class="doc-prose__code">"{{ placeholderFeedbackValue() }}"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="placeholderSnippet" language="html" title="placeholder" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field via <code class="doc-prose__code">rng-input__hint</code>.
+    The hint is visible when not overridden by an error message and lives inside the <code class="doc-prose__code">rng-input__textarea-footer</code> alongside the character counter.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Description"
+        hint="Keep it concise"
+        [(value)]="hintValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">"{{ hintValue() }}"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Description"
+        [error]="true"
+        errorMessage="Description is required" />
+      <rng-textarea-input style="width: 100%;"
+        label="Feedback"
+        hint="Keep it concise"
+        [error]="true"
+        errorMessage="Feedback is required"
+        [(value)]="errorValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">"{{ errorValue() }}"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code>,
+    <code class="doc-prose__code">[readonly]="true"</code> to make it read-only via <code class="doc-prose__code">[readonly]</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Disabled"
+        [disabled]="true" />
+      <rng-textarea-input style="width: 100%;"
+        label="Disabled with value"
+        [disabled]="true"
+        [value]="disabledValue()" />
+      <rng-textarea-input style="width: 100%;"
+        label="Read-only"
+        [readonly]="true"
+        [(value)]="readonlyValue" />
+      <rng-textarea-input style="width: 100%;"
+        label="Required"
+        [required]="true"
+        [(value)]="requiredValue" />
+      <rng-textarea-input style="width: 100%;"
+        label="With name"
+        name="description"
+        [(value)]="nameValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Read-only: <code class="doc-prose__code">"{{ readonlyValue() }}"</code> |
+        Required: <code class="doc-prose__code">"{{ requiredValue() }}"</code> |
+        Name: <code class="doc-prose__code">"{{ nameValue() }}"</code> (<code class="doc-prose__code">name="description"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="readonlySnippet" language="html" title="readonly" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Rows</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[rows]</code> to set the initial number of visible rows.
+    Default is <code class="doc-prose__code">4</code>. It maps directly to the native <code class="doc-prose__code">[rows]</code> attribute on <code class="doc-prose__code">&lt;textarea&gt;</code>.
+    When <code class="doc-prose__code">[autoResize]="true"</code> the manual resize handle is hidden via <code class="doc-prose__code">rng-input__field--textarea-autoresize</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Bio (8 rows)"
+        [rows]="8"
+        placeholder="Tell us about yourself..."
+        [(value)]="rowsDefaultValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value: <code class="doc-prose__code">"{{ rowsDefaultValue() || 'empty' }}"</code> ({{ rowsDefaultValue().length }} chars) | <code class="doc-prose__code">[rows]="8"</code>
+      </p>
+      <rng-textarea-input style="width: 100%;"
+        label="Comment (2 rows - compact)"
+        [rows]="2"
+        placeholder="Short comment..."
+        [(value)]="rowsCompactValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value: <code class="doc-prose__code">"{{ rowsCompactValue() || 'empty' }}"</code> | <code class="doc-prose__code">[rows]="2"</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="rowsSnippet" language="html" title="rows" variant="prose" />
+
+  <h3 class="doc-prose__h3">Character count</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[showCharCount]="true"</code> to display a live counter in the footer via <code class="doc-prose__code">rng-input__char-count</code>.
+    The counter reads from the computed <code class="doc-prose__code">charCount()</code> which is <code class="doc-prose__code">value().length</code>.
+    It is also shown automatically when <code class="doc-prose__code">[maxLength]</code> is set.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Notes (counter only)"
+        hint="No limit - just a counter"
+        [showCharCount]="true"
+        [(value)]="showCharCountValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value: <code class="doc-prose__code">"{{ showCharCountValue() }}"</code> | Counter shows <code class="doc-prose__code">{{ showCharCountValue().length }}</code> via <code class="doc-prose__code">charCount()</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="showCharCountSnippet" language="html" title="character count - showCharCount" variant="prose" />
+
+  <h3 class="doc-prose__h3">Max length</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[maxLength]</code> to enforce a hard character limit and display an <code class="doc-prose__code">x / max</code> counter.
+    Input is capped at this length in <code class="doc-prose__code">onInput</code> via <code class="doc-prose__code">textarea.value.slice(0, max)</code> and also via native <code class="doc-prose__code">[attr.maxlength]</code>.
+    The counter turns red via <code class="doc-prose__code">rng-input__char-count--limit</code> when <code class="doc-prose__code">isAtLimit()</code> is true (<code class="doc-prose__code">charCount() >= maxLength()</code>).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Bio (max 500)"
+        hint="Max 500 characters"
+        [maxLength]="500"
+        [(value)]="maxLengthValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Bio: <code class="doc-prose__code">"{{ maxLengthValue() || 'empty' }}"</code> ({{ maxLengthValue().length }} / 500)
+      </p>
+      <rng-textarea-input style="width: 100%;"
+        label="Summary (max 100)"
+        [maxLength]="100"
+        [(value)]="maxLengthSummaryValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Summary: <code class="doc-prose__code">"{{ maxLengthSummaryValue() }}"</code> ({{ maxLengthSummaryValue().length }} / 100)
+        @if (maxLengthSummaryValue().length >= 100) {
+          <span style="color: var(--rng-danger, #ef4444);"> - at limit</span>
+        }
+      </p>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">
+        Try typing past the limit - additional characters are discarded. The footer shows <code class="doc-prose__code">rng-input__char-count</code> with <code class="doc-prose__code">rng-input__char-count--limit</code> when at limit.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="maxLengthSnippet" language="html" title="maxLength" variant="prose" />
+  <rng-code-block [code]="charCountVsMaxLengthSnippet" language="html" title="showCharCount vs maxLength" variant="prose" />
+
+  <h3 class="doc-prose__h3">Auto resize</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[autoResize]="true"</code> to make the textarea grow vertically to fit its content.
+    Manual resize is disabled via <code class="doc-prose__code">rng-input__field--textarea-autoresize</code>.
+    In <code class="doc-prose__code">onInput</code> the handler sets <code class="doc-prose__code">textarea.style.height = 'auto'</code> then <code class="doc-prose__code">textarea.style.height = textarea.scrollHeight + 'px'</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Notes (auto-resize)"
+        hint="Grows as you type - no manual resize handle"
+        [autoResize]="true"
+        [(value)]="autoResizeValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value: <code class="doc-prose__code">"{{ autoResizeValue() || 'empty' }}"</code> ({{ autoResizeValue().length }} chars)
+      </p>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem; color: var(--rng-text-muted, #64748b);">
+        Type multiple lines to see the field expand. Compare with a fixed <code class="doc-prose__code">[rows]="4"</code> field without <code class="doc-prose__code">autoResize</code>.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="autoResizeSnippet" language="html" title="autoResize" variant="prose" />
+
+  <h3 class="doc-prose__h3">Auto resize + Max length</h3>
+  <p class="doc-prose__p">
+    Combine <code class="doc-prose__code">[autoResize]="true"</code> with <code class="doc-prose__code">[maxLength]</code> to get a growing field that still enforces a limit.
+    The character counter and the <code class="doc-prose__code">isAtLimit()</code> styling continue to work - the limit is enforced in <code class="doc-prose__code">onInput</code> before resizing.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Summary (auto-resize + max 300)"
+        hint="Grows but capped at 300 characters"
+        [autoResize]="true"
+        [maxLength]="300"
+        [(value)]="autoResizeMaxLengthValue" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.75rem;">
+        Value length: <code class="doc-prose__code">{{ autoResizeMaxLengthValue().length }} / 300</code>
+        @if (autoResizeMaxLengthValue().length >= 300) {
+          <span style="color: var(--rng-danger, #ef4444);"> - at limit</span>
+        }
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="autoResizeMaxLengthSnippet" language="html" title="autoResize + maxLength" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and valueChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;string&gt;</code> with default <code class="doc-prose__code">''</code>.
+    Typing in the field sets <code class="doc-prose__code">value</code> via <code class="doc-prose__code">onInput</code> and blurring marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;" [(value)]="twoWayValue" label="Two-way binding" />
+      <rng-textarea-input style="width: 100%;" [value]="twoWayValue()" (valueChange)="onTwoWayValueChange($event)" label="With valueChange handler" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Current: <code class="doc-prose__code">"{{ twoWayValue() }}"</code>
+          <span> ({{ twoWayValue().length }} chars)</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="valueChangeTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-textarea-input</code> implements <code class="doc-prose__code">FormValueControl&lt;string&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, placeholder, hint, rows, autoResize, maxLength and live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: 100%;">
+      <rng-textarea-input style="width: 100%;"
+        label="Description"
+        placeholder="Enter a description..."
+        hint="Keep it concise"
+        [(value)]="fullDescriptionValue" />
+      <rng-textarea-input style="width: 100%;"
+        label="Feedback (auto-resize)"
+        placeholder="Share your feedback..."
+        hint="Grows as you type"
+        [autoResize]="true"
+        [(value)]="fullFeedbackValue" />
+      <rng-textarea-input style="width: 100%;"
+        label="Bio (max 500)"
+        placeholder="Tell us about yourself..."
+        hint="Max 500 characters"
+        [maxLength]="500"
+        [(value)]="fullBioValue" />
+      <rng-textarea-input style="width: 100%;"
+        label="Notes (6 rows + counter)"
+        hint="Custom rows and live count"
+        [rows]="6"
+        [showCharCount]="true"
+        [(value)]="fullNotesValue" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Description: <code class="doc-prose__code">"{{ fullDescriptionValue() || 'empty' }}"</code>
+          | Feedback: <code class="doc-prose__code">"{{ fullFeedbackValue() || 'empty' }}"</code>
+        </p>
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Bio: <code class="doc-prose__code">"{{ fullBioValue() || 'empty' }}"</code> ({{ fullBioValue().length }} / 500)
+          | Notes: <code class="doc-prose__code">"{{ fullNotesValue() || 'empty' }}"</code> ({{ fullNotesValue().length }} chars)
+        </p>
+        @if (fullDescriptionValue() || fullFeedbackValue() || fullBioValue() || fullNotesValue()) {
+          <rng-button size="small" (clickEvent)="clearFullValues()">Clear values</rng-button>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No values yet - try typing in the fields above.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-textarea-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the textarea via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Placeholder text forwarded to <code class="doc-prose__code">[placeholder]</code> on <code class="doc-prose__code">&lt;textarea&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the textarea via <code class="doc-prose__code">hintMessage()</code> inside <code class="doc-prose__code">rng-input__textarea-footer</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rows</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">4</code></td><td class="doc-prose__td">Initial number of visible rows via <code class="doc-prose__code">[rows]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">autoResize</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">When <code class="doc-prose__code">true</code> the textarea grows to fit content via <code class="doc-prose__code">onInput</code> and hides manual resize via <code class="doc-prose__code">rng-input__field--textarea-autoresize</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxLength</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Hard character limit - capped in <code class="doc-prose__code">onInput</code> and via <code class="doc-prose__code">[attr.maxlength]</code>. Also shows <code class="doc-prose__code">x / max</code> counter</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">showCharCount</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Shows a live character counter even when no <code class="doc-prose__code">maxLength</code> is set - rendered in <code class="doc-prose__code">rng-input__char-count</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">invalid()</code> for <code class="doc-prose__code">aria-invalid</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">readonly</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the textarea read-only via <code class="doc-prose__code">[readonly]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required via <code class="doc-prose__code">aria-required</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-textarea-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">The current text value - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>; empty input syncs as <code class="doc-prose__code">''</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-textarea-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Emits the string value on change - used by <code class="doc-prose__code">[(value)]</code> two-way binding</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;string&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;string&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.description"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Signals and computed</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string&gt;</code></td><td class="doc-prose__td">Unique id for the textarea and its <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code> association via <code class="doc-prose__code">uniqueId()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hintMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string | null&gt;</code></td><td class="doc-prose__td">Computed hint - returns <code class="doc-prose__code">errorMessage()</code> when <code class="doc-prose__code">error() &amp;&amp; errorMessage()</code> otherwise <code class="doc-prose__code">hint()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">charCount</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;number&gt;</code></td><td class="doc-prose__td">Computed character count - <code class="doc-prose__code">value().length</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isAtLimit</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;boolean&gt;</code></td><td class="doc-prose__td">Computed limit flag - <code class="doc-prose__code">maxLength() !== undefined &amp;&amp; charCount() >= maxLength()</code>; drives <code class="doc-prose__code">rng-input__char-count--limit</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onInput</code></td><td class="doc-prose__td"><code class="doc-prose__code">onInput(event: Event): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">input</code> - caps <code class="doc-prose__code">textarea.value</code> to <code class="doc-prose__code">maxLength()</code> when exceeded, sets <code class="doc-prose__code">value</code>, and when <code class="doc-prose__code">autoResize()</code> is true resizes via <code class="doc-prose__code">height = 'auto'</code> then <code class="doc-prose__code">scrollHeight</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Behavior notes</h3>
+  <ul class="doc-prose__ul">
+    <li class="doc-prose__li">Typing updates <code class="doc-prose__code">value</code> immediately via <code class="doc-prose__code">onInput</code> - the native <code class="doc-prose__code">&lt;textarea&gt;</code> value is bound with <code class="doc-prose__code">[value]="value()"</code> and <code class="doc-prose__code">(input)="onInput($event)"</code>.</li>
+    <li class="doc-prose__li">Blurring the field marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> via <code class="doc-prose__code">(blur)="touched.set(true)"</code>.</li>
+    <li class="doc-prose__li">The outer wrapper uses <code class="doc-prose__code">rng-input</code> with <code class="doc-prose__code">rng-input--disabled</code> and <code class="doc-prose__code">rng-input--error</code> modifiers.</li>
+    <li class="doc-prose__li">The footer <code class="doc-prose__code">rng-input__textarea-footer</code> holds the hint and the character counter; when neither <code class="doc-prose__code">hintMessage()</code> nor counter is present the counter area is still rendered as an empty <code class="doc-prose__code">&lt;span&gt;</code> for layout.</li>
+    <li class="doc-prose__li">Character counting uses <code class="doc-prose__code">charCount()</code> and the limit styling uses <code class="doc-prose__code">isAtLimit()</code> - when <code class="doc-prose__code">maxLength()</code> is <code class="doc-prose__code">undefined</code> the counter is only shown if <code class="doc-prose__code">showCharCount()</code> is <code class="doc-prose__code">true</code>.</li>
+    <li class="doc-prose__li">Auto-resize sets <code class="doc-prose__code">rng-input__field--textarea-autoresize</code> on the <code class="doc-prose__code">&lt;textarea&gt;</code> to hide the manual resize handle; height is recalculated on every <code class="doc-prose__code">input</code> event.</li>
+    <li class="doc-prose__li">Validation via <code class="doc-prose__code">maxLength</code> is a hard cap enforced in the component - it does not rely on native form validation.</li>
+  </ul>
+
+  <rng-doc-pager />
+</article>

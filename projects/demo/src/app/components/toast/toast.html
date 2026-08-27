@@ -1,0 +1,224 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Toast</h1>
+  <p class="doc-prose__p">
+    A succinct message that is displayed temporarily.
+    Use <code class="doc-prose__code">ToastService</code> with <code class="doc-prose__code">rng-toast</code> for lightweight, non-blocking feedback.
+    Supports <code class="doc-prose__code">success</code>, <code class="doc-prose__code">error</code> and <code class="doc-prose__code">info</code> variants,
+    an optional custom <code class="doc-prose__code">title</code> and a fully custom <code class="doc-prose__code">IToast</code> via <code class="doc-prose__code">show()</code>.
+    Toasts auto-dismiss after 5 seconds with a 300ms closing animation, a maximum of 3 toasts are visible at once and older ones are dropped when the limit is reached.
+    Place <code class="doc-prose__code">&lt;rng-toast /&gt;</code> once in your root layout and trigger toasts from any component or service.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Setup</h2>
+
+  <h3 class="doc-prose__h3">Host</h3>
+  <p class="doc-prose__p">
+    Place <code class="doc-prose__code">&lt;rng-toast /&gt;</code> once in your root layout template.
+    The host reads <code class="doc-prose__code">ToastService.items()</code> and renders the stack in <code class="doc-prose__code">rng-toast</code> at the bottom-right.
+    Without the host, calls to <code class="doc-prose__code">ToastService.success()</code> / <code class="doc-prose__code">error()</code> / <code class="doc-prose__code">info()</code> will update the signal but nothing will appear.
+    The host also provides a <code class="doc-prose__code">Clear</code> button in <code class="doc-prose__code">rng-toast__close</code> that calls <code class="doc-prose__code">ToastService.clear()</code>.
+  </p>
+  <rng-code-block [code]="hostSnippet" language="html" title="app.component.html" variant="prose" />
+
+  <h3 class="doc-prose__h3">Injecting the service</h3>
+  <p class="doc-prose__p">
+    Inject <code class="doc-prose__code">ToastService</code> in any component or service to trigger toasts imperatively.
+    The service is <code class="doc-prose__code">providedIn: 'root'</code> so no extra provider is needed.
+  </p>
+  <rng-code-block [code]="injectSnippet" language="typescript" title="injecting ToastService" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Success toast</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">toastService.success(message, title?)</code> to show a success toast.
+    When no <code class="doc-prose__code">title</code> is provided it defaults to <code class="doc-prose__code">'Success'</code>.
+    The item renders with <code class="doc-prose__code">rng-icon--check</code> in <code class="doc-prose__code">rng-toast__icon</code> and the title in <code class="doc-prose__code">rng-toast__content-hl</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showSuccess()">Show success</rng-button>
+      <rng-button variant="secondary" (clickEvent)="showSuccessWithTitle()">Success with title</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="successSnippet" language="typescript" title="success toast" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error toast</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">toastService.error(message, title?)</code> to show an error toast.
+    Defaults to <code class="doc-prose__code">'Error'</code> when no title is provided and renders <code class="doc-prose__code">rng-icon--alert</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="danger" (clickEvent)="showError()">Show error</rng-button>
+      <rng-button variant="secondary" (clickEvent)="showErrorWithTitle()">Error with title</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="typescript" title="error toast" variant="prose" />
+
+  <h3 class="doc-prose__h3">Info toast</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">toastService.info(message, title?)</code> to show an info toast.
+    Defaults to <code class="doc-prose__code">'Info'</code> and renders <code class="doc-prose__code">rng-icon--info</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button (clickEvent)="showInfo()">Show info</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="infoSnippet" language="typescript" title="info toast" variant="prose" />
+
+  <h3 class="doc-prose__h3">With custom title</h3>
+  <p class="doc-prose__p">
+    Pass a second argument to override the default title.
+    The title is rendered in <code class="doc-prose__code">rng-toast__content-hl</code> and the message below it.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showSuccessWithTitle()">Import Complete</rng-button>
+      <rng-button variant="danger" (clickEvent)="showErrorWithTitle()">Network Error</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="customTitleSnippet" language="typescript" title="custom title" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom toast via <code class="doc-prose__code">show()</code></h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">toastService.show(toast: IToast)</code> to show a fully custom toast object.
+    Provide <code class="doc-prose__code">type</code>, <code class="doc-prose__code">title</code> and <code class="doc-prose__code">message</code>.
+    Internally <code class="doc-prose__code">show()</code> assigns <code class="doc-prose__code">_id</code> via <code class="doc-prose__code">uniqueId()</code>, prepends the item and slices to <code class="doc-prose__code">_maxItems (3)</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showCustom()">Show custom info</rng-button>
+      <rng-button variant="secondary" (clickEvent)="showCustomSuccess()">Show custom success</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="showSnippet" language="typescript" title="show(IToast)" variant="prose" />
+
+  <h3 class="doc-prose__h3">Usage after an async operation</h3>
+  <p class="doc-prose__p">
+    A common pattern is to show a success or error toast after an async save.
+    The demo button below simulates a network call with a 600ms delay and randomly succeeds or fails.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="saveRecord()">Save record (async)</rng-button>
+      <span style="font-size: 0.875rem; color: var(--doc-text-muted);">Randomly shows <code class="doc-prose__code">Success</code> or <code class="doc-prose__code">Error</code></span>
+    </div>
+  </div>
+  <rng-code-block [code]="asyncSnippet" language="typescript" title="async save" variant="prose" />
+
+  <h3 class="doc-prose__h3">Dismiss all toasts</h3>
+  <p class="doc-prose__p">
+    Call <code class="doc-prose__code">toastService.clear()</code> to dismiss all active toasts immediately.
+    It clears the <code class="doc-prose__code">items</code> signal and cancels any pending auto-remove timeouts.
+    Each toast also has a <code class="doc-prose__code">Clear</code> button in <code class="doc-prose__code">rng-toast__close</code> that calls the same method.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="secondary" (clickEvent)="showSuccess()">Add toast</rng-button>
+      <rng-button variant="ghost" (clickEvent)="clearAll()">Clear all</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="clearSnippet" language="typescript" title="clear()" variant="prose" />
+
+  <h3 class="doc-prose__h3">Auto-dismiss and stacking limit</h3>
+  <p class="doc-prose__p">
+    Each toast auto-dismisses after 5 seconds (<code class="doc-prose__code">_timeoutDuration = 5000</code>).
+    On timeout the service first sets <code class="doc-prose__code">_isClosing = true</code> which adds <code class="doc-prose__code">is--closing</code> for the exit animation,
+    then removes the item after 300ms (<code class="doc-prose__code">_closingAnimationDuration</code>).
+    A maximum of 3 toasts are shown at once - <code class="doc-prose__code">show()</code> prepends and slices to <code class="doc-prose__code">_maxItems</code> so older toasts are dropped.
+    The stacking is styled via <code class="doc-prose__code">rng-toast__item:nth-child(1..3)</code> positions.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showBurst()">Show 5 toasts (only 3 visible)</rng-button>
+      <rng-button variant="ghost" (clickEvent)="clearAll()">Clear</rng-button>
+    </div>
+  </div>
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Heads up</p>
+    <p class="doc-prose__p">
+      Trigger the burst button above to see the limit in action - 5 toasts are fired but only the 3 newest remain in <code class="doc-prose__code">items()</code>.
+      Each toast will auto-close after 5 seconds or click <code class="doc-prose__code">Clear</code> to dismiss immediately.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Service setup, host placement and all toast types together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showSuccess()">Success</rng-button>
+      <rng-button variant="danger" (clickEvent)="showError()">Error</rng-button>
+      <rng-button (clickEvent)="showInfo()">Info</rng-button>
+      <rng-button variant="secondary" (clickEvent)="showCustom()">Custom</rng-button>
+      <rng-button variant="ghost" (clickEvent)="clearAll()">Clear all</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">ToastService</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Member</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">success</code></td><td class="doc-prose__td"><code class="doc-prose__code">success(message: string, title?: string): void</code></td><td class="doc-prose__td">Shows a success toast. Default title <code class="doc-prose__code">'Success'</code>. Delegates to <code class="doc-prose__code">show()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">error(message: string, title?: string): void</code></td><td class="doc-prose__td">Shows an error toast. Default title <code class="doc-prose__code">'Error'</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">info</code></td><td class="doc-prose__td"><code class="doc-prose__code">info(message: string, title?: string): void</code></td><td class="doc-prose__td">Shows an info toast. Default title <code class="doc-prose__code">'Info'</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">show</code></td><td class="doc-prose__td"><code class="doc-prose__code">show(toast: IToast): void</code></td><td class="doc-prose__td">Shows a fully custom toast. Assigns <code class="doc-prose__code">_id</code> via <code class="doc-prose__code">uniqueId()</code>, prepends to <code class="doc-prose__code">items</code> and slices to 3. Starts auto-remove timer (5s + 300ms close)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clear</code></td><td class="doc-prose__td"><code class="doc-prose__code">clear(): void</code></td><td class="doc-prose__td">Dismisses all toasts. Clears <code class="doc-prose__code">items</code> and cancels pending timeouts stored in <code class="doc-prose__code">_timeoutIds</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;IToast[]&gt; (readonly)</code></td><td class="doc-prose__td">Array of currently visible toast items. Read by <code class="doc-prose__code">rng-toast</code> via a computed signal</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IToast</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'success' | 'error' | 'info'</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Visual variant - controls the icon: <code class="doc-prose__code">success -> check</code>, <code class="doc-prose__code">error -> alert</code>, <code class="doc-prose__code">info -> info</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">message</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Body text of the toast rendered in <code class="doc-prose__code">rng-toast__content</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">title</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Heading of the toast rendered in <code class="doc-prose__code">rng-toast__content-hl</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">_id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Internal id assigned by <code class="doc-prose__code">show()</code> via <code class="doc-prose__code">uniqueId()</code>. Used for auto-remove tracking</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">_isClosing</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean | undefined</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Set to <code class="doc-prose__code">true</code> 300ms before removal to trigger <code class="doc-prose__code">is--closing</code> animation</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-toast</code> (Host Component)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Feature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selector</code></td><td class="doc-prose__td"><code class="doc-prose__code">rng-toast</code> - place once in the root layout. Renders nothing when <code class="doc-prose__code">hasItem()</code> is false</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td">Computed signal from <code class="doc-prose__code">ToastService.items()</code>. Iterated with <code class="doc-prose__code">&#64;for ... track $index</code> inside <code class="doc-prose__code">rng-toast</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hasItem</code></td><td class="doc-prose__td">Computed boolean - <code class="doc-prose__code">items().length &gt; 0</code>. Guards rendering with <code class="doc-prose__code">&#64;if (hasItem())</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onClear()</code></td><td class="doc-prose__td">Calls <code class="doc-prose__code">ToastService.clear()</code>. Bound to the <code class="doc-prose__code">Clear</code> button in <code class="doc-prose__code">rng-toast__close</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">Structure</code></td><td class="doc-prose__td"><code class="doc-prose__code">rng-toast</code> -> <code class="doc-prose__code">rng-toast__item</code> (with <code class="doc-prose__code">is--closing</code> when closing) -> <code class="doc-prose__code">rng-icon rng-toast__icon</code> + <code class="doc-prose__code">rng-toast__content</code> + <code class="doc-prose__code">rng-toast__close</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Styling and behavior notes</h3>
+  <p class="doc-prose__p">
+    The host renders <code class="doc-prose__code">rng-toast</code> fixed at <code class="doc-prose__code">bottom: var(--rng-toast-padding)</code> and <code class="doc-prose__code">right: var(--rng-toast-padding)</code> with <code class="doc-prose__code">width: var(--rng-toast-width) (22.5rem)</code>.
+    Each item is <code class="doc-prose__code">rng-toast__item</code> with a border, shadow and <code class="doc-prose__code">background: var(--rng-toast-background-color)</code>.
+    The icon mapping is <code class="doc-prose__code">success -> rng-icon--check</code>, <code class="doc-prose__code">error -> rng-icon--alert</code>, <code class="doc-prose__code">info -> rng-icon--info</code> in <code class="doc-prose__code">rng-toast__icon</code>.
+    The title is <code class="doc-prose__code">rng-toast__content-hl</code> with <code class="doc-prose__code">color: var(--rng-toast-content-header-color)</code> and body is <code class="doc-prose__code">rng-toast__content</code>.
+    Stacking uses <code class="doc-prose__code">:nth-child(1..3)</code> offsets and <code class="doc-prose__code">:nth-child(n+4) &#123; display: none &#125;</code> hides overflow.
+    The closing animation toggles <code class="doc-prose__code">is--closing</code> which triggers a fade/slide defined in <code class="doc-prose__code">_toast.scss</code>.
+    Customize appearance via CSS variables: <code class="doc-prose__code">--rng-toast-padding</code>, <code class="doc-prose__code">--rng-toast-width</code>, <code class="doc-prose__code">--rng-toast-border-color</code>, <code class="doc-prose__code">--rng-toast-background-color</code> and <code class="doc-prose__code">--rng-toast-shadow</code>.
+  </p>
+
+  <rng-doc-pager />
+</article>
+
+<!-- Toast host for live examples - renders the stack when ToastService.items() is non-empty -->
+<rng-toast />

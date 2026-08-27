@@ -1,0 +1,22 @@
+<div
+  class="rng-input"
+  [class.rng-input--error]="error()"
+  [class.rng-input--disabled]="disabled()">
+  <label
+    class="rng-input-checkbox"
+    [class.rng-input-checkbox--standalone]="standalone()">
+    <input
+      type="checkbox"
+      class="rng-input-checkbox__field"
+      [class.is--indeterminate]="indeterminate()"
+      [disabled]="disabled()"
+      [readonly]="readonly()"
+      [attr.aria-invalid]="invalid()"
+      [attr.aria-required]="required()"
+      [attr.name]="name()"
+      [checked]="checked()"
+      (change)="onChange($event)" />
+
+    <ng-content />
+  </label>
+</div>

@@ -1,0 +1,85 @@
+# Required GitHub Secrets (Settings -> Secrets and variables -> Actions):
+# - FTP_SERVER       : Hostinger FTP host, e.g. 145.223.XX.XX or ftp.yourdomain.com (from hPanel -> Files -> FTP Accounts)
+# - FTP_USERNAME     : FTP username, e.g. u123456789 or u123456789.yourdomain
+# - FTP_PASSWORD     : FTP password
+# - FTP_SERVER_DIR   : (optional) Remote directory, e.g. public_html/ or domains/yourdomain.com/public_html/
+#                      Defaults to public_html/ if not set. For addon domains use domains/yourdomain.com/public_html/
+# If Hostinger requires FTPS, change protocol from ftp to ftps below.
+name: Build and Deploy to Hostinger
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: hostinger-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build demo
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          ls -lh dist/demo/browser/
+          test -f dist/demo/browser/index.html || (echo "index.html not found in dist/demo/browser" && exit 1)
+
+      - name: Create .htaccess for SPA fallback
+        run: |
+          cat > dist/demo/browser/.htaccess << 'HTACCESS'
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteBase /
+            RewriteRule ^index\.html$ - [L]
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . /index.html [L]
+          </IfModule>
+          HTACCESS
+          echo "Created .htaccess:"
+          cat dist/demo/browser/.htaccess
+          ls -la dist/demo/browser/.htaccess
+
+      - name: Resolve FTP server dir
+        run: |
+          if [ -z "${FTP_SERVER_DIR}" ]; then
+            echo "FTP_SERVER_DIR=public_html/" >> $GITHUB_ENV
+            echo "Using default server-dir: public_html/"
+          else
+            echo "FTP_SERVER_DIR=${FTP_SERVER_DIR}" >> $GITHUB_ENV
+            echo "Using server-dir from secret: ${FTP_SERVER_DIR}"
+          fi
+        env:
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp # change to ftps if Hostinger requires TLS
+          local-dir: ./dist/demo/browser/
+          server-dir: ${{ env.FTP_SERVER_DIR }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+          log-level: verbose

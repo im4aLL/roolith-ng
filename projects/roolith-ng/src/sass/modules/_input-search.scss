@@ -1,0 +1,43 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-search {
+  .rng-input--search {
+    position: relative;
+
+    .rng-input__field {
+      padding-left: rem(31);
+    }
+
+    &:has(.rng-input__search-clear-button) .rng-input__field {
+      padding-right: rem(31);
+    }
+  }
+
+  .rng-input__search-icon-primary {
+    background-color: var(--rng-input-icon-color);
+    position: absolute;
+    left: rem(10);
+    top: rem(8);
+    pointer-events: none;
+  }
+
+  .rng-input__search-clear-button {
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: rem(3);
+    top: 0;
+    height: var(--rng-input-size);
+    color: var(--rng-input-icon-color);
+    @include m.transition(color);
+
+    &:hover {
+      color: var(--rng-input-icon-color-hover);
+      cursor: pointer;
+    }
+  }
+}

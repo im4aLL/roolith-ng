@@ -1,0 +1,232 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin code() {
+  rng-code-block {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  // Shiki - vitesse light / dark via CSS variables
+  // Light colors are inline, dark colors come from --shiki-dark vars.
+  .shiki {
+    display: block;
+    margin: 0;
+    padding: rem(16) rem(18);
+    overflow-x: auto;
+    max-width: 100%;
+    min-width: 0;
+    background-color: #ffffff;
+    color: #393a34;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    tab-size: 2;
+    @include m.nice-scroll();
+
+    code {
+      display: flex;
+      flex-direction: column;
+      font-family: inherit;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      color: inherit;
+    }
+
+    .line {
+      display: block;
+      min-height: 1.6em;
+    }
+
+    .line:empty {
+      min-height: 0.8em;
+    }
+  }
+
+  // Prose variant keeps the docs line-height
+  .doc-code-highlight--prose .shiki,
+  .doc-prose .shiki {
+    line-height: 1.7;
+
+    .line {
+      min-height: 1.7em;
+    }
+
+    .line:empty {
+      min-height: 0.85em;
+    }
+  }
+
+  .theme-dark .shiki,
+  .theme-dark .shiki span {
+    background-color: var(--shiki-dark-bg) !important;
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+
+  .theme-dark .shiki {
+    background-color: #121212 !important;
+  }
+
+  // Code highlight wrappers used by the shared code-block component
+  .doc-code-highlight {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+
+    &--block .shiki {
+      padding: rem(14);
+      border-radius: 0 0 var(--doc-radius-sm) var(--doc-radius-sm);
+      border: none;
+    }
+
+    &--prose .shiki {
+      padding: rem(14) rem(16);
+      border-radius: 0 0 var(--doc-radius) var(--doc-radius);
+      border: none;
+    }
+  }
+
+  // Prose code block - uses same header chrome as home page block/window variants
+  // Copy button lives in the header bar (doc-code-block__head) instead of floating over the code.
+  .doc-code-block,
+  .doc-code-window {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .doc-code-block--prose {
+    margin: rem(16) 0;
+    border-radius: var(--doc-radius);
+    overflow: hidden;
+
+    .doc-code-highlight--prose {
+      margin: 0;
+    }
+  }
+
+  // Integrate with existing chrome - when a shiki block lives inside a window, let it own the background
+  // Unconditional - window body never owns padding/background, shiki does. Keeps light mode from showing inset rounded gap.
+  .doc-code-window__body,
+  .doc-code-window__body--code {
+    padding: 0;
+    background-color: transparent;
+    overflow: hidden;
+  }
+
+  .doc-code-window__body:has(.shiki),
+  .doc-code-window__body:has(.doc-code-highlight) {
+    padding: 0;
+    background-color: transparent;
+    overflow: hidden;
+  }
+
+  .doc-code-window__body .shiki {
+    padding: rem(16) rem(18) rem(14);
+    border-radius: 0 0 var(--doc-radius) var(--doc-radius);
+  }
+
+  .doc-code-window__body:has(.doc-code-window__hint) .shiki {
+    border-radius: 0;
+  }
+
+  .doc-code-window__body:has(.shiki) .doc-code-window__hint {
+    display: block;
+    margin-top: 0;
+    padding: rem(10) rem(18) rem(14);
+    background-color: #ffffff;
+    border-top: rem(1) solid var(--doc-border);
+    font-size: 0.78rem;
+    color: var(--doc-text-faint);
+    line-height: 1.5;
+    font-family: var(--doc-base-font-family);
+    border-radius: 0 0 var(--doc-radius) var(--doc-radius);
+  }
+
+  .theme-dark .doc-code-window__body:has(.shiki) .doc-code-window__hint {
+    background-color: #121212;
+  }
+
+  .doc-code-window__body--code:has(.shiki) {
+    padding: 0;
+  }
+
+  .doc-code-block:has(.doc-code-highlight--block),
+  .doc-code-block:has(.doc-code-highlight--prose) {
+    overflow: hidden;
+  }
+
+  .doc-code-block__body:has(.shiki) {
+    padding: 0;
+    background-color: transparent;
+  }
+
+  // Docs prose - prose block now wraps highlight in doc-code-block--prose
+  // Keep fallback for raw <pre> without the component wrapper
+  .doc-prose .doc-code-block--prose {
+    margin: rem(16) 0;
+  }
+
+  .doc-prose .shiki {
+    margin: rem(16) 0;
+    padding: rem(20);
+    border: rem(1) solid var(--doc-border);
+    border-radius: var(--doc-radius);
+    background-color: #ffffff;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    @include m.nice-scroll();
+  }
+
+  .theme-dark .doc-prose .shiki {
+    background-color: #121212 !important;
+    border-color: var(--doc-border);
+  }
+
+  // When shiki is rendered via rng-code-block inside doc-prose, the outer
+  // doc-code-block already provides the single border and margin.
+  // Override the generic shiki border/margin that would otherwise
+  // create a nested second border and extra vertical gap.
+  .doc-prose .doc-code-block--prose .shiki,
+  .doc-prose .doc-code-highlight--prose .shiki {
+    margin: 0;
+    padding: rem(14) rem(16);
+    border: none;
+    border-radius: 0 0 var(--doc-radius) var(--doc-radius);
+    background-color: #ffffff;
+  }
+
+  .theme-dark .doc-prose .doc-code-block--prose .shiki,
+  .theme-dark .doc-prose .doc-code-highlight--prose .shiki {
+    background-color: #121212 !important;
+    border: none;
+  }
+
+  // Home-specific shiki tweaks - keep consistent radius and font size for the large example window
+  .doc-catalogue-code {
+    .shiki {
+      font-size: 0.8125rem;
+
+      @include m.breakpoint(medium-up) {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .doc-hero__install .shiki {
+    font-size: 0.9375rem;
+  }
+
+  .doc-install .shiki {
+    font-size: 0.875rem;
+  }
+}

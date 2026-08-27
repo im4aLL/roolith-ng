@@ -1,0 +1,54 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-chip {
+  .rng-input-chip {
+    --rng-input-chip-background-color: var(--rng-color-neutral-100);
+    --rng-input-chip-icon-color: var(--rng-input-placeholder-color);
+    --rng-input-chip-icon-hover-color: var(--rng-color-neutral-700);
+    --rng-input-chip-text-color: var(--rng-color-neutral-700);
+
+    .theme-dark & {
+      --rng-input-chip-background-color: var(--rng-color-neutral-200);
+    }
+
+    width: fit-content;
+    background-color: var(--rng-input-chip-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    gap: rem(4);
+    border-radius: rem(6);
+    font-size: rem(12);
+    padding-left: rem(6);
+    height: rem(22);
+    font-weight: var(--rng-font-weight-semi-bold);
+  }
+
+  .rng-input-chip__close {
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: rem(20);
+    width: rem(24);
+    padding: 0;
+
+    .rng-icon {
+      background-color: var(--rng-input-chip-icon-color);
+
+      &:hover {
+        background-color: var(--rng-input-chip-icon-hover-color);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .rng-input-chip__text {
+    background-color: transparent;
+    color: var(--rng-input-chip-text-color);
+    padding-inline: rem(3);
+  }
+}

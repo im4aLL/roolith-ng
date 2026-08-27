@@ -1,0 +1,24 @@
+<div
+  class="rng-input rng-input--search"
+  [class.rng-input--disabled]="disabled()">
+  <i class="rng-icon rng-icon--search rng-input__search-icon-primary"></i>
+  <input
+    #inputElement
+    type="text"
+    name="rng-input-search"
+    id="rng-input-search"
+    class="rng-input__field"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    (input)="onInput($event)" />
+
+  @if (isShowClearButton()) {
+    <button
+      type="button"
+      class="rng-input__search-clear-button"
+      (click)="clearInput()">
+      <i class="rng-icon rng-icon--close"></i>
+    </button>
+  }
+</div>

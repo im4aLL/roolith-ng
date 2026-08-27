@@ -1,0 +1,6 @@
+@use 'sass:map';
+@use '../settings' as s;
+
+@function font-weight($weight) {
+  @return map.get(s.$font-weights, $weight);
+}

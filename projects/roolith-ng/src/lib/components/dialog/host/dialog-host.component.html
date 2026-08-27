@@ -1,0 +1,11 @@
+@if (isDialogOpen()) {
+  <rng-dialog
+    [header]="header()"
+    [subheader]="subheader()"
+    [width]="width()"
+    [footerButtons]="footerButtons()"
+    (actionEvent)="onDialogActionEvent($event)"
+    (closeEvent)="onDialogCloseEvent()">
+    {{ content() }}
+  </rng-dialog>
+}

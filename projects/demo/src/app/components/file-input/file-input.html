@@ -1,0 +1,318 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">File Input</h1>
+  <p class="doc-prose__p">
+    A styled file upload field built as <code class="doc-prose__code">rng-file-input</code>.
+    Supports single and multiple file selection, <code class="doc-prose__code">accept</code> filters for MIME types or extensions,
+    and <code class="doc-prose__code">FormValueControl&lt;File[]&gt;</code> integration for signals forms.
+    Selected files are exposed as a <code class="doc-prose__code">File[]</code> model via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(fileChange)</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code> and <code class="doc-prose__code">hint</code>.
+    Use <code class="doc-prose__code">(fileChange)</code> to react to selection or bind <code class="doc-prose__code">[(value)]</code> for two-way sync.
+    The component updates <code class="doc-prose__code">value</code> to the selected <code class="doc-prose__code">File[]</code> and marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> on change.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Upload document"
+        hint="Accepted formats: PDF, DOCX"
+        accept=".pdf,.docx"
+        (fileChange)="onBasicFileChange($event)" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        @if (basicFiles().length > 0) {
+          <span>Selected: </span>
+          @for (file of basicFiles(); track file.name) {
+            <code class="doc-prose__code">{{ file.name }}</code>
+            <span> ({{ formatFileSize(file.size) }})</span>
+            @if (!$last) { <span>, </span> }
+          }
+        } @else {
+          <span>No file selected - choose a file to see <code class="doc-prose__code">fileChange</code> payload.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Accept filter</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">accept</code> to restrict selectable files.
+    It accepts a comma-separated list of MIME types or extensions such as <code class="doc-prose__code">.pdf</code>, <code class="doc-prose__code">.jpg,.png</code> or <code class="doc-prose__code">image/*</code>.
+    The value is forwarded to the native <code class="doc-prose__code">[accept]</code> attribute on <code class="doc-prose__code">&lt;input type="file"&gt;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Upload PDF only"
+        hint="Only .pdf files"
+        accept=".pdf"
+        (fileChange)="onAcceptPdfChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        PDF: @if (acceptPdfFiles().length > 0) { @for (file of acceptPdfFiles(); track file.name) { <code class="doc-prose__code">{{ file.name }}</code> @if (!$last) { <span>, </span> } } } @else { <code class="doc-prose__code">none</code> }
+      </p>
+      <rng-file-input
+        label="Upload image"
+        hint="JPG, PNG or WEBP"
+        accept=".jpg,.png,.webp"
+        (fileChange)="onAcceptImageChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Image: @if (acceptImageFiles().length > 0) { @for (file of acceptImageFiles(); track file.name) { <code class="doc-prose__code">{{ file.name }}</code> @if (!$last) { <span>, </span> } } } @else { <code class="doc-prose__code">none</code> }
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="acceptSnippet" language="html" title="accept" variant="prose" />
+  <rng-code-block [code]="acceptVariantsSnippet" language="typescript" title="accept - variants" variant="prose" />
+
+  <h3 class="doc-prose__h3">Multiple files</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[multiple]="true"</code> to allow selecting several files at once.
+    The <code class="doc-prose__code">value</code> model will contain all selected files as <code class="doc-prose__code">File[]</code>.
+    Without <code class="doc-prose__code">multiple</code> the model still holds an array but the native picker only allows one file.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Upload images"
+        hint="Select multiple JPG or PNG files"
+        accept=".jpg,.png,.webp"
+        [multiple]="true"
+        [(value)]="multipleFiles" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b); width: 100%;">
+        @if (multipleFiles().length > 0) {
+          <p style="margin: 0 0 0.375rem 0;">{{ multipleFiles().length }} file(s) selected:</p>
+          <ul style="margin: 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            @for (file of multipleFiles(); track file.name) {
+              <li><code class="doc-prose__code">{{ file.name }}</code> - {{ formatFileSize(file.size) }} - <code class="doc-prose__code">{{ file.type || 'unknown type' }}</code></li>
+            }
+          </ul>
+        } @else {
+          <span>No files selected - hold Cmd/Ctrl to select multiple files.</span>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="multipleSnippet" language="html" title="multiple" variant="prose" />
+  <rng-code-block [code]="multipleTsSnippet" language="typescript" title="multiple - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field via <code class="doc-prose__code">rng-input__hint</code>.
+    The hint is visible when not overridden by an error message.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Attachment"
+        hint="Accepted formats: PDF, DOCX - Max 5MB"
+        [(value)]="hintFiles" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Files: <code class="doc-prose__code">{{ hintFiles().length }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Upload document"
+        [error]="true"
+        errorMessage="Please select a file" />
+      <rng-file-input
+        label="Upload document"
+        hint="Accepted formats: PDF, DOCX"
+        [error]="true"
+        errorMessage="File is required"
+        [(value)]="errorFiles" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+        Current: <code class="doc-prose__code">{{ errorFiles().length > 0 ? errorFiles()[0].name : 'none' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code>,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required via <code class="doc-prose__code">aria-required</code>,
+    and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+    The component also reflects <code class="doc-prose__code">aria-invalid</code> when <code class="doc-prose__code">invalid()</code> or <code class="doc-prose__code">error()</code> is true.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Disabled"
+        [disabled]="true" />
+      <rng-file-input
+        label="Required"
+        [required]="true"
+        [(value)]="requiredFiles" />
+      <rng-file-input
+        label="With name"
+        name="attachment"
+        [(value)]="nameFiles" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Required: <code class="doc-prose__code">{{ requiredFiles().length }}</code> file(s) |
+        Name: <code class="doc-prose__code">{{ nameFiles().length }}</code> (<code class="doc-prose__code">name="attachment"</code>)
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+  <rng-code-block [code]="statesSnippet" language="html" title="states - combined" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and fileChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(fileChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;File[]&gt;</code> with <code class="doc-prose__code">fileChange</code> as its change output alias.
+    Selecting files via the native picker calls <code class="doc-prose__code">onFileChange</code> which sets <code class="doc-prose__code">value</code>, marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> and emits <code class="doc-prose__code">fileChange</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input [(value)]="twoWayFiles" label="Two-way binding" />
+      <rng-file-input [value]="twoWayFiles()" (fileChange)="onTwoWayFileChange($event)" label="With fileChange handler" />
+      <div style="font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        <p class="doc-prose__p" style="margin: 0;">
+          Current: <code class="doc-prose__code">{{ twoWayFiles().length }}</code> file(s)
+          @if (twoWayFiles().length > 0) {
+            <span> - </span>
+            @for (file of twoWayFiles(); track file.name) {
+              <code class="doc-prose__code">{{ file.name }}</code>@if (!$last) { <span>, </span> }
+            }
+          }
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and fileChange" variant="prose" />
+  <rng-code-block [code]="fileChangeTsSnippet" language="typescript" title="fileChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-file-input</code> implements <code class="doc-prose__code">FormValueControl&lt;File[]&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, hint, accept filter, multiple selection and live file list.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 420px; width: 100%;">
+      <rng-file-input
+        label="Upload documents"
+        hint="Accepted formats: PDF, DOCX - Max 10MB"
+        accept=".pdf,.docx"
+        [multiple]="true"
+        [(value)]="fullDocuments" />
+      <rng-file-input
+        label="Single file"
+        hint="Only one file"
+        accept=".pdf,.docx"
+        [(value)]="fullSingleFile" />
+      <div style="font-size: 0.8125rem; width: 100%;">
+        @if (fullDocuments().length > 0) {
+          <p class="doc-prose__p" style="margin: 0 0 0.375rem 0;">Documents ({{ fullDocuments().length }}):</p>
+          <ul style="margin: 0 0 0.5rem 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            @for (file of fullDocuments(); track file.name) {
+              <li><code class="doc-prose__code">{{ file.name }}</code> - {{ formatFileSize(file.size) }}</li>
+            }
+          </ul>
+        }
+        @if (fullSingleFile().length > 0) {
+          <p class="doc-prose__p" style="margin: 0 0 0.375rem 0;">Single: <code class="doc-prose__code">{{ fullSingleFile()[0].name }}</code> - {{ formatFileSize(fullSingleFile()[0].size) }}</p>
+        }
+        @if (fullDocuments().length > 0 || fullSingleFile().length > 0) {
+          <button type="button" (click)="clearFullFiles()" style="font-size: 0.8125rem; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; color: var(--rng-primary, #2563eb);">Clear all</button>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No files selected yet.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-file-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the input via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the input via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute forwarded to <code class="doc-prose__code">[attr.name]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">accept</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Comma-separated list of accepted MIME types or extensions - forwarded to native <code class="doc-prose__code">[accept]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">multiple</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Allows selecting multiple files at once via <code class="doc-prose__code">[multiple]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">invalid()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code> and native <code class="doc-prose__code">[disabled]</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required via <code class="doc-prose__code">aria-required</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-file-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">File[]</code></td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">The currently selected files - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code> / <code class="doc-prose__code">(fileChange)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-file-input</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">fileChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">File[]</code></td><td class="doc-prose__td">Emits the selected files on change - aliased from the <code class="doc-prose__code">value</code> model; also available as <code class="doc-prose__code">(valueChange)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;File[]&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;File[]&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.attachment"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onFileChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">onFileChange(event: Event): void</code></td><td class="doc-prose__td">Handles native <code class="doc-prose__code">change</code> - extracts <code class="doc-prose__code">File[]</code> from <code class="doc-prose__code">input.files</code>, sets <code class="doc-prose__code">value</code>, marks <code class="doc-prose__code">touched</code> as <code class="doc-prose__code">true</code> and emits <code class="doc-prose__code">fileChange</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

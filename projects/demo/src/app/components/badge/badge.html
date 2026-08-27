@@ -1,0 +1,131 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Badge</h1>
+  <p class="doc-prose__p">
+    A small label for status, counts or categories.
+    Supports eight color <code class="doc-prose__code">type</code> variants, two <code class="doc-prose__code">size</code> options and a <code class="doc-prose__code">status</code>
+    layout that pairs an icon with the label. Use <code class="doc-prose__code">rng-badge-extended</code> when you need
+    supplementary text beside the badge.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">Default badge and every <code class="doc-prose__code">type</code> variant.</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+    <rng-badge>Default</rng-badge>
+    <rng-badge type="primary">Primary</rng-badge>
+    <rng-badge type="success">Success</rng-badge>
+    <rng-badge type="danger">Danger</rng-badge>
+    <rng-badge type="warning">Warning</rng-badge>
+    <rng-badge type="info">Info</rng-badge>
+    <rng-badge type="subtle">Subtle</rng-badge>
+    <rng-badge type="intense">Intense</rng-badge>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">Large size</h3>
+  <p class="doc-prose__p">Use <code class="doc-prose__code">size="large"</code> for a bigger badge.</p>
+  <rng-badge size="large">Large badge</rng-badge>
+  <rng-code-block [code]="largeSnippet" language="html" title="large size" variant="prose" />
+
+  <h3 class="doc-prose__h3">Status variant</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">variant="status"</code> with <code class="doc-prose__code">icon</code> and <code class="doc-prose__code">iconColor</code> to render a badge that
+    represents a workflow state. The icon appears before the label text.
+  </p>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+    <rng-badge variant="status" icon="check-solid" iconColor="success">Approved</rng-badge>
+    <rng-badge variant="status" icon="spinner" iconColor="default">In Progress</rng-badge>
+    <rng-badge variant="status" icon="minus-circle-solid" iconColor="danger">Rejected</rng-badge>
+    <rng-badge variant="status" icon="bookmark-circle-solid" iconColor="info">Validated</rng-badge>
+    <rng-badge variant="status" icon="xmark-solid" iconColor="danger">Deleted</rng-badge>
+    <rng-badge variant="status" icon="redo-circle-solid" iconColor="secondary">Action Required</rng-badge>
+  </div>
+  <rng-code-block [code]="statusSnippet" language="html" title="status variant" variant="prose" />
+
+  <h3 class="doc-prose__h3">Extended badge - plain text</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-badge-extended</code> wraps a <code class="doc-prose__code">rng-badge</code> and displays companion text beside it
+    via the <code class="doc-prose__code">text</code> input.
+  </p>
+  <rng-badge-extended text="This is extended badge text">
+    <rng-badge>Default</rng-badge>
+  </rng-badge-extended>
+  <rng-code-block [code]="extendedSnippet" language="html" title="extended - plain text" variant="prose" />
+
+  <h3 class="doc-prose__h3">Extended badge - rich content</h3>
+  <p class="doc-prose__p">
+    For custom markup, project an <code class="doc-prose__code">&lt;ng-template #rngBadgeExtendedContent&gt;</code> instead of using
+    <code class="doc-prose__code">text</code>. The template content overrides the <code class="doc-prose__code">text</code> input when both are present.
+  </p>
+  <rng-badge-extended>
+    <rng-badge type="success">Active</rng-badge>
+    <ng-template #rngBadgeExtendedContent>
+      <strong class="doc-prose__strong">Status:</strong> All systems operational
+    </ng-template>
+  </rng-badge-extended>
+  <rng-code-block [code]="extendedRichSnippet" language="html" title="extended - rich content" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining types, sizing and the extended wrapper.</p>
+  <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+    <rng-badge type="primary" size="large">Large Primary</rng-badge>
+    <rng-badge variant="status" icon="check-solid" iconColor="success">Approved</rng-badge>
+    <rng-badge-extended text="Awaiting review">
+      <rng-badge type="warning">Pending</rng-badge>
+    </rng-badge-extended>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-badge</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'primary' | 'success' | 'danger' | 'warning' | 'info' | 'subtle' | 'intense'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Color variant of the badge</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">size</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'large'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Size variant of the badge</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">variant</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'status'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Layout variant - use <code class="doc-prose__code">'status'</code> for icon + label</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">icon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Icon shown before the badge text (status variant)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">iconColor</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Color applied to the badge icon</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-badge</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Text or content inside the badge</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-badge-extended</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">text</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">undefined</code></td><td class="doc-prose__td">Plain text to display next to the projected badge</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-badge-extended</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">The <code class="doc-prose__code">rng-badge</code> element</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">#rngBadgeExtendedContent</code></td><td class="doc-prose__td">A <code class="doc-prose__code">&lt;ng-template&gt;</code> for rich/custom extended text (overrides <code class="doc-prose__code">text</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

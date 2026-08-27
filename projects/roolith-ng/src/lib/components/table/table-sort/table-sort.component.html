@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="rng-table__col-hl"
+  [class.is--active]="isSortApplied()"
+  (click)="onSort()">
+  <ng-content />
+  <i
+    class="rng-icon rng-table__col-sort-icon"
+    [class]="sortDirectionIconClass()"></i>
+</button>

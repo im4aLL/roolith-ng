@@ -1,0 +1,52 @@
+<div
+  [id]="'rng-dropdown-' + name()"
+  class="rng-dropdown rng-animation rng-reveal"
+  [class.rng-dropdown--right]="isAlignedRight()"
+  [class.rng-dropdown--top]="isAlignedTop()"
+  [class.rng-dropdown--top-right]="isAlignedTopRight()"
+  popover
+  [style]="'--rng-dropdown-anchor: --rng-' + name()"
+  (toggle)="onToggle($event)"
+  #dropdownEl>
+  @if (groups().length > 0) {
+    <div class="rng-dropdown__body">
+      @for (group of groups(); track $index) {
+        <div class="rng-dropdown__group">
+          @if (group.headline) {
+            <h6 class="rng-dropdown__hl">{{ group.headline }}</h6>
+          }
+          <ul class="rng-dropdown__list">
+            @for (item of group.items; track item.value) {
+              <li
+                role="button"
+                class="rng-dropdown__item"
+                [class.rng-dropdown__item--danger]="item.isDanger"
+                [class.rng-dropdown__item--disabled]="item.isDisabled"
+                tabindex="0"
+                (click)="onItemClick(item)"
+                (keydown.enter)="onItemClick(item)"
+                (keydown.space)="onItemClick(item)">
+                <span class="rng-dropdown__item-primary">
+                  @if (item.icon) {
+                    <rng-icon [name]="item.icon" />
+                  }
+                  {{ item.label }}
+                </span>
+                @if (item.secondaryLabel || item.secondaryIcon) {
+                  <span class="rng-dropdown__item-secondary">
+                    @if (item.secondaryIcon) {
+                      <rng-icon [name]="item.secondaryIcon" />
+                    } @else {
+                      {{ item.secondaryLabel }}
+                    }
+                  </span>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+  <ng-content></ng-content>
+</div>

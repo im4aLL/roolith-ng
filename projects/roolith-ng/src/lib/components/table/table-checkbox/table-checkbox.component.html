@@ -1,0 +1,11 @@
+<div
+  class="rng-input"
+  [class.rng-input--disabled]="disabled()">
+  <label class="rng-input-checkbox rng-input-checkbox--standalone">
+    <input
+      type="checkbox"
+      class="rng-input-checkbox__field"
+      [checked]="fieldValue()"
+      (change)="onChange($event)" />
+  </label>
+</div>

@@ -1,0 +1,62 @@
+@if (total() > 0) {
+  <div class="rng-pagination">
+    @if (isShowPagination()) {
+      <ul class="rng-pagination__list">
+        <li class="rng-pagination__item">
+          <a
+            href=""
+            class="rng-button rng-button--ghost"
+            (click)="onPageChange($event, { type: 'previousPage' })">
+            <i class="rng-icon rng-icon--arrow-left"></i>
+            Previous
+          </a>
+        </li>
+        @for (pageNumber of pageNumbers(); track $index) {
+          @if (pageNumber === null) {
+            <li class="rng-pagination__item rng-pagination__item--break">
+              <i class="rng-icon rng-icon--more"></i>
+            </li>
+          } @else {
+            <li class="rng-pagination__item">
+              <a
+                href=""
+                class="rng-button"
+                [class.rng-button--gray]="pageNumber === currentPage()"
+                [class.rng-button--ghost]="pageNumber !== currentPage()"
+                (click)="onPageChange($event, { type: 'pageChange', page: pageNumber })">
+                {{ pageNumber }}
+              </a>
+            </li>
+          }
+        }
+        <li class="rng-pagination__item">
+          <a
+            href=""
+            class="rng-button rng-button--ghost"
+            (click)="onPageChange($event, { type: 'nextPage' })">
+            Next
+            <i class="rng-icon rng-icon--arrow-right"></i>
+          </a>
+        </li>
+      </ul>
+    }
+
+    <!-- meta -->
+    <div class="rng-pagination__meta">
+      <div class="rng-pagination__selector">
+        <span class="rng-pagination__selector-label">Rows per page</span>
+        <div class="rng-pagination__selector-field">
+          <rng-select-input
+            [data]="pageSizeOptions()"
+            [value]="selectedPageSizeOption()"
+            (valueChange)="onRowPerPageChange($event)"></rng-select-input>
+        </div>
+      </div>
+
+      <div class="rng-pagination__info">
+        {{ infoText() }}
+      </div>
+    </div>
+    <!-- meta -->
+  </div>
+}

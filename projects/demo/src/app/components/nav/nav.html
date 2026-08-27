@@ -1,0 +1,277 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Nav</h1>
+  <p class="doc-prose__p">
+    Two components for rendering navigation lists.
+    <code class="doc-prose__code">rng-nav</code> is a standalone list with optional submenu, badge and icon support.
+    <code class="doc-prose__code">rng-nav-group</code> wraps multiple named <code class="doc-prose__code">rng-nav</code> sections and emits the group id together with the clicked item.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">Or import individually if you only need one of them:</p>
+  <rng-code-block [code]="importNavSnippet" language="typescript" title="rng-nav only" variant="prose" />
+  <rng-code-block [code]="importGroupSnippet" language="typescript" title="rng-nav-group only" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass an array of <code class="doc-prose__code">INav</code> to <code class="doc-prose__code">[data]</code>.
+    Set <code class="doc-prose__code">isActive</code> to mark the current route - the component adds <code class="doc-prose__code">rng-nav__item--focused</code> to the active item.
+    Clicking a leaf item emits <code class="doc-prose__code">clickEvent</code> and updates the active state internally.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 280px;">
+      <rng-nav [data]="basicItems" (clickEvent)="onNavClick($event)" />
+    </div>
+  </div>
+  <rng-code-block [code]="basicDataSnippet" language="typescript" title="basic - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">With submenu</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">children</code> on an item to render a nested list inside <code class="doc-prose__code">rng-nav__sub-list</code>.
+    Clicking a parent item toggles its <code class="doc-prose__code">isOpen</code> state and adds <code class="doc-prose__code">rng-nav__item--active</code>.
+    Parent items do not emit <code class="doc-prose__code">clickEvent</code> - only leaf and child items do.
+    Expand child items to set the parent and the clicked child as active.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 280px;">
+      <rng-nav [data]="submenuItems" (clickEvent)="onNavClick($event)" />
+    </div>
+  </div>
+  <rng-code-block [code]="submenuDataSnippet" language="typescript" title="with submenu - data" variant="prose" />
+  <rng-code-block [code]="submenuSnippet" language="html" title="with submenu - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">With badge count</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">count</code> on an item to display a badge via <code class="doc-prose__code">rng-badge</code> next to the label.
+    The same badge is mirrored inside the tooltip when <code class="doc-prose__code">[collapsed]="true"</code>.
+    A falsy count (e.g. <code class="doc-prose__code">0</code> or <code class="doc-prose__code">null</code>) hides the badge.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 280px;">
+      <rng-nav [data]="badgeItems" (clickEvent)="onNavClick($event)" />
+    </div>
+  </div>
+  <rng-code-block [code]="badgeDataSnippet" language="typescript" title="with count - data" variant="prose" />
+  <rng-code-block [code]="badgeSnippet" language="html" title="with count - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">With icons</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">icon</code> from the <code class="doc-prose__code">IconNameType</code> set (e.g. <code class="doc-prose__code">'home'</code>, <code class="doc-prose__code">'settings'</code>).
+    The component renders <code class="doc-prose__code">rng-icon rng-icon--&lt;name&gt;</code> inside <code class="doc-prose__code">rng-nav__item-icon</code> - the artwork comes from the library SCSS mask.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 280px;">
+      <rng-nav [data]="iconItems" (clickEvent)="onNavClick($event)" />
+    </div>
+  </div>
+  <rng-code-block [code]="iconSnippet" language="typescript" title="with icon - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="with icon - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">With custom icons</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">customIcon</code> for any vendor class string such as Iconoir (<code class="doc-prose__code">iconoir-home</code>), Font Awesome (<code class="doc-prose__code">fa-solid fa-user</code>) or your own font.
+    The class is applied directly to <code class="doc-prose__code">rng-nav__item-icon</code> without <code class="doc-prose__code">rng-icon</code> - the SCSS rule <code class="doc-prose__code">rng-nav__item-icon:not(.rng-icon)</code> handles sizing and color.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 280px;">
+      <rng-nav [data]="customIconItems" (clickEvent)="onNavClick($event)" />
+    </div>
+  </div>
+  <rng-code-block [code]="customIconSnippet" language="typescript" title="with customIcon - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="with customIcon - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Collapsed mode</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[collapsed]="true"</code> to render the nav in compact mode - icons only with a tooltip on the right.
+    The component adds <code class="doc-prose__code">rng-nav--compact</code> and shows each item label inside
+    <code class="doc-prose__code">rng-tooltip__content</code>.
+    In this mode opening one submenu automatically closes any other open submenu.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+      <button type="button" class="doc-btn" (click)="isCollapsed = !isCollapsed" style="flex-shrink: 0;">
+        @if (isCollapsed) {
+          Expand
+        } @else {
+          Collapse
+        }
+      </button>
+      <div [style.max-width]="isCollapsed ? '88px' : '280px'" style="flex: 1; border: 1px solid var(--doc-border); border-radius: 0.5rem; padding: 0.5rem;">
+        <rng-nav [data]="collapsedItems" [collapsed]="isCollapsed" (clickEvent)="onNavClick($event)" />
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="collapsedSnippet" language="html" title="collapsed" variant="prose" />
+
+  <h3 class="doc-prose__h3">Listening to click events</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">clickEvent</code> on <code class="doc-prose__code">rng-nav</code> emits the clicked <code class="doc-prose__code">INav</code>.
+    Parent items with <code class="doc-prose__code">children</code> are excluded - they only toggle <code class="doc-prose__code">isOpen</code>.
+    Child clicks also update the active state on both the child and its parent via <code class="doc-prose__code">childItemClickHandler</code>.
+    The component calls <code class="doc-prose__code">event.preventDefault()</code> internally - handle routing in your callback.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 280px;">
+      <rng-nav [data]="basicItems" (clickEvent)="onNavClick($event)" />
+    </div>
+  </div>
+  @if (lastClicked) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last clicked</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">id: "{{ lastClicked.id }}"</code> •
+        <code class="doc-prose__code">name: "{{ lastClicked.name }}"</code> •
+        <code class="doc-prose__code">link: "{{ lastClicked.link }}"</code>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicSnippet" language="html" title="clickEvent - template" variant="prose" />
+  <rng-code-block [code]="clickHandlerSnippet" language="typescript" title="clickEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Nav group</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">rng-nav-group</code> to render multiple nav sections.
+    Each group has its own <code class="doc-prose__code">name</code> header, optional <code class="doc-prose__code">type</code> and <code class="doc-prose__code">variation</code> forwarded to its inner <code class="doc-prose__code">rng-nav</code>, and <code class="doc-prose__code">items</code>.
+    When <code class="doc-prose__code">name</code> is <code class="doc-prose__code">null</code> the header is not rendered.
+    The <code class="doc-prose__code">clickEvent</code> payload is <code class="doc-prose__code">INavClickEvent</code> with both <code class="doc-prose__code">item</code> and <code class="doc-prose__code">groupId</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 320px; border: 1px solid var(--doc-border); border-radius: 0.5rem; padding: 0.75rem;">
+      <rng-nav-group [data]="groupItems" (clickEvent)="onGroupNavClick($event)" />
+    </div>
+  </div>
+  <rng-code-block [code]="groupDataSnippet" language="typescript" title="nav group - data" variant="prose" />
+  <rng-code-block [code]="groupSnippet" language="html" title="nav group - template" variant="prose" />
+  @if (lastGroupClicked) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last group click</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">groupId: "{{ lastGroupClicked.groupId }}"</code> •
+        <code class="doc-prose__code">item: "{{ lastGroupClicked.item.name }}"</code> •
+        <code class="doc-prose__code">link: "{{ lastGroupClicked.item.link }}"</code>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="groupClickHandlerSnippet" language="typescript" title="group clickEvent - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Icons, badge counts, submenu, collapsed handling, and grouped sections together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 340px;">
+      <p class="doc-prose__p" style="font-weight: 600;">Standalone</p>
+      <div style="border: 1px solid var(--doc-border); border-radius: 0.5rem; padding: 0.75rem;">
+        <rng-nav [data]="submenuItems" (clickEvent)="onNavClick($event)" />
+      </div>
+      <p class="doc-prose__p" style="font-weight: 600;">Grouped</p>
+      <div style="border: 1px solid var(--doc-border); border-radius: 0.5rem; padding: 0.75rem;">
+        <rng-nav-group [data]="groupItems" (clickEvent)="onGroupNavClick($event)" />
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-nav</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">data</code></td><td class="doc-prose__td"><code class="doc-prose__code">INav[]</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">—</td><td class="doc-prose__td">Array of navigation items</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'warning' | 'info'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Contextual colour - adds <code class="doc-prose__code">rng-nav--warning</code> or <code class="doc-prose__code">rng-nav--info</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">variation</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'primary'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Visual style - <code class="doc-prose__code">'primary'</code> adds <code class="doc-prose__code">rng-nav--primary</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">collapsed</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Compact icon-only mode with tooltip; opening one submenu closes others. Adds <code class="doc-prose__code">rng-nav--compact</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-nav</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clickEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">INav</code></td><td class="doc-prose__td">Emits the clicked leaf or child item. Parent items with <code class="doc-prose__code">children</code> are not emitted - they toggle <code class="doc-prose__code">isOpen</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-nav-group</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">data</code></td><td class="doc-prose__td"><code class="doc-prose__code">INavGroup[]</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">—</td><td class="doc-prose__td">Array of nav group definitions rendered inside <code class="doc-prose__code">rng-nav__group-container</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-nav-group</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">clickEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">INavClickEvent</code></td><td class="doc-prose__td">Emits the clicked item and the <code class="doc-prose__code">id</code> of the containing group</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">INav</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Unique identifier for the item</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Display label rendered inside <code class="doc-prose__code">rng-nav__item-text</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">link</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Navigation href for the anchor</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isActive</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Marks the item as the currently active route - adds <code class="doc-prose__code">rng-nav__item--focused</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">count</code></td><td class="doc-prose__td"><code class="doc-prose__code">number | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional badge count shown in <code class="doc-prose__code">rng-nav__item-badge</code> and tooltip</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">icon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Built-in icon name from <code class="doc-prose__code">IconNameType</code> - renders <code class="doc-prose__code">rng-icon rng-icon--&lt;name&gt;</code> inside <code class="doc-prose__code">rng-nav__item-icon</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">customIcon</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Custom vendor class (e.g. <code class="doc-prose__code">iconoir-home</code>, <code class="doc-prose__code">fa-solid fa-user</code>) applied directly to <code class="doc-prose__code">rng-nav__item-icon</code> without <code class="doc-prose__code">rng-icon</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">children</code></td><td class="doc-prose__td"><code class="doc-prose__code">INav[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional nested items; presence turns the item into a submenu parent rendered in <code class="doc-prose__code">rng-nav__sub-list</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isOpen</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Tracks whether the submenu is currently expanded - adds <code class="doc-prose__code">rng-nav__item--active</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">INavGroup</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">id</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Unique identifier for the group - emitted as <code class="doc-prose__code">groupId</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Group header label rendered in <code class="doc-prose__code">rng-nav__group-header</code>; when <code class="doc-prose__code">null</code> the header is not rendered</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">NavType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional contextual colour forwarded to the group's <code class="doc-prose__code">rng-nav</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">variation</code></td><td class="doc-prose__td"><code class="doc-prose__code">NavVariationType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional visual style forwarded to the group's <code class="doc-prose__code">rng-nav</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">INav[]</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Navigation items for this group</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">INavClickEvent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">item</code></td><td class="doc-prose__td"><code class="doc-prose__code">INav</code></td><td class="doc-prose__td">The nav item that was clicked</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">groupId</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">The <code class="doc-prose__code">id</code> of the group the item belongs to</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Type aliases</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Alias</th><th class="doc-prose__th">Value</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">NavType</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'warning' | 'info'</code></td><td class="doc-prose__td">Contextual colour for <code class="doc-prose__code">rng-nav</code> and <code class="doc-prose__code">INavGroup.type</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">NavVariationType</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'primary'</code></td><td class="doc-prose__td">Visual style for <code class="doc-prose__code">rng-nav</code> and <code class="doc-prose__code">INavGroup.variation</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

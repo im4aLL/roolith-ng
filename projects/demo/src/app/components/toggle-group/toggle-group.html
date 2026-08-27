@@ -1,0 +1,267 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Toggle Group</h1>
+  <p class="doc-prose__p">
+    A segmented control that renders a list of buttons where one item can be active at a time.
+    Provide <code class="doc-prose__code">items</code> as <code class="doc-prose__code">IToggleGroupItem[]</code>, control the selected item with
+    <code class="doc-prose__code">value</code> (<code class="doc-prose__code">string | number | null</code>) and listen to <code class="doc-prose__code">valueChange</code>.
+    Supports <code class="doc-prose__code">vertical</code> and <code class="doc-prose__code">block</code> (full-width) layouts via
+    <code class="doc-prose__code">rng-toggle-group--vertical</code> and <code class="doc-prose__code">rng-toggle-group--block</code>.
+    The active item receives <code class="doc-prose__code">rng-toggle-group__item--active</code> where <code class="doc-prose__code">item.value === value()</code>.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">items</code> and bind the currently active value to <code class="doc-prose__code">[value]</code>.
+    Handle <code class="doc-prose__code">(valueChange)</code> to update your signal - the payload is the clicked <code class="doc-prose__code">IToggleGroupItem</code>.
+    The component is stateless and simply emits via <code class="doc-prose__code">selectItem(item)</code> - the parent owns the active state.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-toggle-group [items]="basicItems()" [value]="basicValue()" (valueChange)="onBasicChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Active: <code class="doc-prose__code">{{ basicValue() === null ? 'null' : basicValue() }}</code>
+        @if (basicValue() !== null) {
+          <span style="color: var(--rng-text-muted, #64748b);"> ({{ typeof basicValue() }})</span>
+        } @else {
+          <span style="color: var(--rng-text-muted, #64748b);"> - no item is active when value is null</span>
+        }
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">IToggleGroupItem</h3>
+  <p class="doc-prose__p">
+    Each entry in <code class="doc-prose__code">items</code> follows the <code class="doc-prose__code">IToggleGroupItem</code> interface.
+    <code class="doc-prose__code">value</code> can be a <code class="doc-prose__code">string</code> or <code class="doc-prose__code">number</code> - the active check uses strict equality
+    <code class="doc-prose__code">item.value === value()</code> inside <code class="doc-prose__code">toggle-group.component.html</code>.
+  </p>
+  <rng-code-block [code]="interfaceSnippet" language="typescript" title="IToggleGroupItem" variant="prose" />
+
+  <h3 class="doc-prose__h3">Value binding</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">value</code> defaults to <code class="doc-prose__code">null</code> - when <code class="doc-prose__code">null</code> no item has
+    <code class="doc-prose__code">rng-toggle-group__item--active</code>.
+    Use a string, number or <code class="doc-prose__code">null</code> to control the active item. The button for the matching item is the only one with the active class.
+  </p>
+  <rng-code-block [code]="nullValueSnippet" language="html" title="value - null" variant="prose" />
+
+  <h3 class="doc-prose__h3">Vertical</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[vertical]="true"</code> to stack items vertically.
+    This adds <code class="doc-prose__code">rng-toggle-group--vertical</code> to the container via <code class="doc-prose__code">containerClasses()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 240px; width: 100%;">
+      <rng-toggle-group [items]="verticalItems()" [value]="verticalValue()" [vertical]="true" (valueChange)="onVerticalChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Active: <code class="doc-prose__code">{{ verticalValue() === null ? 'null' : verticalValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="verticalSnippet" language="html" title="vertical" variant="prose" />
+
+  <h3 class="doc-prose__h3">Block (full-width)</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[block]="true"</code> to stretch the group to full width with equal-width items.
+    This adds <code class="doc-prose__code">rng-toggle-group--block</code> to the container via <code class="doc-prose__code">containerClasses()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch; width: 100%; max-width: 520px;">
+      <rng-toggle-group [items]="blockItems()" [value]="blockValue()" [block]="true" (valueChange)="onBlockChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Active: <code class="doc-prose__code">{{ blockValue() === null ? 'null' : blockValue() }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> - container is 100% width, items share the space equally.</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="blockSnippet" language="html" title="block" variant="prose" />
+
+  <h3 class="doc-prose__h3">Vertical + Block</h3>
+  <p class="doc-prose__p">
+    Combine <code class="doc-prose__code">[vertical]="true"</code> and <code class="doc-prose__code">[block]="true"</code> for a vertical full-width group.
+    Both classes are applied together via <code class="doc-prose__code">containerClasses()</code> which returns
+    <code class="doc-prose__code">&#123; 'rng-toggle-group': true, 'rng-toggle-group--vertical': vertical(), 'rng-toggle-group--block': block() &#125;</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch; width: 100%; max-width: 240px;">
+      <rng-toggle-group [items]="verticalBlockItems()" [value]="verticalBlockValue()" [vertical]="true" [block]="true" (valueChange)="onVerticalBlockChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Active: <code class="doc-prose__code">{{ verticalBlockValue() === null ? 'null' : verticalBlockValue() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="verticalBlockSnippet" language="html" title="vertical + block" variant="prose" />
+
+  <h3 class="doc-prose__h3">Layout variants at a glance</h3>
+  <p class="doc-prose__p">
+    All four layout combinations use the same <code class="doc-prose__code">items</code> and <code class="doc-prose__code">value</code> API - only the layout inputs change.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 520px;">
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Default (horizontal)</p>
+        <rng-toggle-group [items]="layoutItems()" [value]="layoutValue()" (valueChange)="onLayoutChange($event)" />
+      </div>
+      <div style="max-width: 240px;">
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Vertical</p>
+        <rng-toggle-group [items]="layoutItems()" [value]="layoutValue()" [vertical]="true" (valueChange)="onLayoutChange($event)" />
+      </div>
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Block</p>
+        <rng-toggle-group [items]="layoutItems()" [value]="layoutValue()" [block]="true" (valueChange)="onLayoutChange($event)" />
+      </div>
+      <div style="max-width: 240px;">
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Vertical + Block</p>
+        <rng-toggle-group [items]="layoutItems()" [value]="layoutValue()" [vertical]="true" [block]="true" (valueChange)="onLayoutChange($event)" />
+      </div>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Shared active: <code class="doc-prose__code">{{ layoutValue() === null ? 'null' : layoutValue() }}</code>
+        - selecting in any variant updates the same signal.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="layoutSnippet" language="html" title="layouts - all 4 variants" variant="prose" />
+
+  <h3 class="doc-prose__h3">Numeric values</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">IToggleGroupItem.value</code> accepts both <code class="doc-prose__code">string</code> and <code class="doc-prose__code">number</code>.
+    The template tracks items by <code class="doc-prose__code">item.value</code> via <code class="doc-prose__code">&#64;for (item of items(); track item.value)</code> and
+    compares with <code class="doc-prose__code">item.value === value()</code> using strict equality.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-toggle-group [items]="numericItems()" [value]="numericValue()" (valueChange)="onNumericChange($event)" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ numericValue() === null ? 'null' : numericValue() }}</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ numericValue() === null ? 'empty' : typeof numericValue() }})</span>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="numericSnippet" language="typescript" title="numeric - items" variant="prose" />
+  <rng-code-block [code]="numericTemplateSnippet" language="html" title="numeric - template" variant="prose" />
+  <rng-code-block [code]="numericHandlerSnippet" language="typescript" title="numeric - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Handling selection</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">(valueChange)</code> emits the full <code class="doc-prose__code">IToggleGroupItem</code> that was clicked via
+    <code class="doc-prose__code">selectItem(item)</code> calling <code class="doc-prose__code">valueChange.emit(item)</code>.
+    Update your own <code class="doc-prose__code">activeValue</code> signal in the handler - the component does not mutate <code class="doc-prose__code">value</code> internally.
+  </p>
+  @if (lastEvent) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last valueChange</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">label: "{{ lastEvent.label }}"</code> •
+        <code class="doc-prose__code">value: "{{ lastEvent.value }}"</code>
+        <span style="color: var(--rng-text-muted, #64748b);"> ({{ typeof lastEvent.value }})</span>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="handlerSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Signal-bound <code class="doc-prose__code">value</code> with horizontal, block and vertical layouts together and live <code class="doc-prose__code">valueChange</code> feedback.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 520px;">
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Default</p>
+        <rng-toggle-group [items]="fullItems()" [value]="fullValue()" (valueChange)="onFullChange($event)" />
+      </div>
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Block</p>
+        <rng-toggle-group [items]="fullItems()" [value]="fullBlockValue()" [block]="true" (valueChange)="onFullBlockChange($event)" />
+      </div>
+      <div style="max-width: 240px;">
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Vertical</p>
+        <rng-toggle-group [items]="fullItems()" [value]="fullVerticalValue()" [vertical]="true" (valueChange)="onFullVerticalChange($event)" />
+      </div>
+      <div style="font-size: 0.8125rem; width: 100%;">
+        <p class="doc-prose__p" style="margin: 0 0 0.25rem 0;">
+          Default: <code class="doc-prose__code">{{ fullValue() === null ? 'null' : fullValue() }}</code>
+          | Block: <code class="doc-prose__code">{{ fullBlockValue() === null ? 'null' : fullBlockValue() }}</code>
+          | Vertical: <code class="doc-prose__code">{{ fullVerticalValue() === null ? 'null' : fullVerticalValue() }}</code>
+        </p>
+        @if (fullLastEvent) {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">
+            Last change: <code class="doc-prose__code">{{ fullLastEvent.label }}</code>
+            (<code class="doc-prose__code">{{ fullLastEvent.value }}</code>)
+          </p>
+        } @else {
+          <p class="doc-prose__p" style="margin: 0; color: var(--rng-text-muted, #64748b);">No selection yet - click an item to see the payload.</p>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-toggle-group</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">IToggleGroupItem[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of items to render - tracked by <code class="doc-prose__code">item.value</code> via <code class="doc-prose__code">&#64;for (... track item.value)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Value of the currently active item - compared via <code class="doc-prose__code">item.value === value()</code> to apply <code class="doc-prose__code">rng-toggle-group__item--active</code>; <code class="doc-prose__code">null</code> means no active item</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">vertical</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Stacks items vertically - adds <code class="doc-prose__code">rng-toggle-group--vertical</code> via <code class="doc-prose__code">containerClasses()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">block</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Stretches to full width with equal-width items - adds <code class="doc-prose__code">rng-toggle-group--block</code> via <code class="doc-prose__code">containerClasses()</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-toggle-group</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">valueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">IToggleGroupItem</code></td><td class="doc-prose__td">Emitted when an item is clicked via <code class="doc-prose__code">selectItem(item)</code> calling <code class="doc-prose__code">valueChange.emit(item)</code> - parent should update <code class="doc-prose__code">value</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IToggleGroupItem</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Display text for the item - rendered inside <code class="doc-prose__code">rng-toggle-group__button</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Unique identifier - compared via <code class="doc-prose__code">item.value === value()</code> for active state and used as <code class="doc-prose__code">track</code> key in the <code class="doc-prose__code">&#64;for</code> loop</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectItem</code></td><td class="doc-prose__td"><code class="doc-prose__code">selectItem(item: IToggleGroupItem): void</code></td><td class="doc-prose__td">Handles item click - emits the clicked item via <code class="doc-prose__code">valueChange</code>; bound to <code class="doc-prose__code">(click)="selectItem(item)"</code> on <code class="doc-prose__code">rng-toggle-group__button</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">CSS classes</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Class</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-toggle-group</code></td><td class="doc-prose__td">Root <code class="doc-prose__code">&lt;ul&gt;</code> container</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-toggle-group--vertical</code></td><td class="doc-prose__td">Added when <code class="doc-prose__code">[vertical]="true"</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-toggle-group--block</code></td><td class="doc-prose__td">Added when <code class="doc-prose__code">[block]="true"</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-toggle-group__item</code></td><td class="doc-prose__td">Each <code class="doc-prose__code">&lt;li&gt;</code> wrapper for an item</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-toggle-group__item--active</code></td><td class="doc-prose__td">Applied when <code class="doc-prose__code">item.value === value()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-toggle-group__button</code></td><td class="doc-prose__td">The <code class="doc-prose__code">&lt;button&gt;</code> inside each item - click triggers <code class="doc-prose__code">selectItem</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

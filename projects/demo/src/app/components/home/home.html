@@ -1,0 +1,397 @@
+<!-- Hero -->
+<section class="doc-hero">
+  <div class="doc-hero__inner">
+    <span class="doc-hero__eyebrow">
+      <span class="doc-hero__eyebrow-dot" aria-hidden="true"></span>
+      Modern Angular - Standalone - Tree-shakable
+    </span>
+
+    <h1 class="doc-hero__title">
+      Enterprise UI,
+      <span class="doc-hero__title-accent">without the boilerplate.</span>
+    </h1>
+
+    <p class="doc-hero__subtitle">
+      A modern, Angular-native component library for serious apps.
+      Standalone components, form-ready inputs, data tables, and overlay primitives - all themed through SCSS
+      design tokens.
+    </p>
+
+    <div class="doc-hero__actions">
+      <a class="doc-btn doc-btn--primary" routerLink="/guide/getting-started">
+        <i class="iconoir-download" aria-hidden="true"></i>
+        Get Started
+      </a>
+      <a class="doc-btn" routerLink="/guide/components">Browse components <i class="iconoir-arrow-right" aria-hidden="true"></i></a>
+    </div>
+
+    <div class="doc-hero__install" aria-label="Install command">
+      <rng-code-block
+        [code]="installCmd"
+        language="bash"
+        title="bash"
+        variant="window"
+        [hint]="heroHint"
+        (copiedChange)="onCopied()"
+      />
+      <div class="doc-hero__meta">
+        <span><i class="iconoir-check-circle" aria-hidden="true"></i> No NgModule required</span>
+        <span><i class="iconoir-check-circle" aria-hidden="true"></i> sideEffects: false</span>
+        <span><i class="iconoir-check-circle" aria-hidden="true"></i> MIT Licensed</span>
+      </div>
+    </div>
+
+    <!-- Preview - built with real Roolith NG components inside styled box -->
+    <div class="doc-preview">
+      <div class="doc-preview-card">
+        <div class="doc-preview__header">
+          <span class="doc-preview__label">Preview - built with Roolith NG</span>
+          <span class="doc-preview__badge"><i class="iconoir-spark"></i> Live tokens</span>
+        </div>
+
+        <div class="doc-preview__grid">
+          <div class="doc-preview__mock">
+            <rng-card header="Create invoice" subheader="Form inputs • ReactiveForms ready">
+              <div class="doc-preview__form">
+                <rng-text-input label="Customer" placeholder="Customer name" [(value)]="previewCustomer" />
+
+                <div class="doc-preview__row">
+                  <rng-text-input label="Amount" placeholder="$ 0.00" [(value)]="previewAmount" />
+                  <rng-date-picker-input label="Due date" placeholder="Pick a date" [(value)]="previewDueDate" />
+                </div>
+
+                <rng-select-input
+                  label="Status"
+                  placeholder="Select status"
+                  [data]="previewStatusOptions"
+                  [(value)]="previewStatus"
+                />
+              </div>
+
+              <ng-container rngCardFooter>
+                <div class="doc-preview__footer">
+                  <rng-button variant="ghost">Cancel</rng-button>
+                  <rng-button variant="primary">Create invoice</rng-button>
+                </div>
+              </ng-container>
+            </rng-card>
+          </div>
+
+          <div class="doc-preview__mock">
+            <rng-card header="Invoices" subheader="Table with badges • sorting">
+              <rng-table
+                [data]="previewTableData"
+                [columns]="previewTableColumns"
+                [sortableColumns]="['customer', 'amount']"
+              >
+                <ng-template rngTableCell="status" let-value>
+                  @if (value === 'Paid') {
+                    <rng-badge type="success">Paid</rng-badge>
+                  } @else if (value === 'Pending') {
+                    <rng-badge type="warning">Pending</rng-badge>
+                  } @else {
+                    <rng-badge type="subtle">Draft</rng-badge>
+                  }
+                </ng-template>
+              </rng-table>
+
+              <ng-container rngCardFooter>
+                <div class="doc-preview__table-footer">
+                  <span class="doc-preview__table-meta">
+                    <i class="iconoir-clock-rotate-right" aria-hidden="true"></i>
+                    3 invoices • Updated just now
+                  </span>
+                  <div class="doc-preview__table-actions">
+                    <rng-button variant="ghost" size="small">
+                      <i class="iconoir-download" aria-hidden="true"></i>
+                      Export CSV
+                    </rng-button>
+                    <rng-button variant="ghost" size="small">
+                      <i class="iconoir-printer" aria-hidden="true"></i>
+                      Export PDF
+                    </rng-button>
+                  </div>
+                </div>
+              </ng-container>
+            </rng-card>
+          </div>
+        </div>
+
+        <div class="doc-preview__overlays">
+          <span class="doc-preview__chip"><i class="iconoir-bell"></i> Toast: Invoice created</span>
+          <span class="doc-preview__chip doc-preview__chip--muted"
+            ><i class="iconoir-chat-bubble"></i> Dialog / Drawer / Popover</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-stats">
+    @for (stat of stats; track stat.label) {
+      <div class="doc-stat">
+        <div class="doc-stat__value">{{ stat.value }}</div>
+        <div class="doc-stat__label">{{ stat.label }}</div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Features -->
+<section class="doc-section doc-section--features">
+  <div class="doc-section__head">
+    <span class="doc-kicker">Capabilities</span>
+    <h2>Designed for dashboards, not demos.</h2>
+    <p>
+      Opinionated where it helps, unopinionated where it counts. Compose consistent, accessible interfaces
+      without fighting the framework.
+    </p>
+  </div>
+
+  <div class="doc-features doc-features--landing">
+    @for (feature of features; track feature.title) {
+      <article class="doc-feature">
+        <div class="doc-feature__head">
+          <span class="doc-feature__icon"><i class="{{ feature.icon }}" aria-hidden="true"></i></span>
+          <h3 class="doc-feature__title">{{ feature.title }}</h3>
+        </div>
+        <p class="doc-feature__text">{{ feature.text }}</p>
+        <rng-code-block
+          class="doc-feature__code-block"
+          [code]="feature.code"
+          [language]="feature.codeLang"
+          variant="block"
+        />
+      </article>
+    }
+  </div>
+</section>
+
+<!-- Catalogue -->
+<section class="doc-section doc-section--catalogue" id="components">
+  <div class="doc-section__head">
+    <span class="doc-kicker">Component catalogue</span>
+    <h2>One import per component. No surprises.</h2>
+    <p>Every component is standalone and documented. Mix and match without pulling the whole library.</p>
+  </div>
+
+  <div class="doc-catalogue-index">
+    <div class="doc-catalogue-index__bar">
+      <div class="doc-catalogue-index__bar-left">
+        <span class="doc-catalogue-index__bar-label">Browse by category</span>
+        <span class="doc-catalogue-index__bar-meta">26 components &middot; Standalone & tree-shakable</span>
+      </div>
+      <a class="doc-catalogue-index__bar-link" routerLink="/guide/components">
+        View all components <i class="iconoir-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <div class="doc-catalogue-index__list">
+      @for (card of catalogue; track card.title; let i = $index) {
+        <article class="doc-catalogue-row">
+          <div class="doc-catalogue-row__main">
+            <div class="doc-catalogue-row__head">
+              <span class="doc-catalogue-row__num" aria-hidden="true">{{ formatIndex(i) }}</span>
+              <span class="doc-catalogue-row__icon"><i class="{{ card.icon }}" aria-hidden="true"></i></span>
+              <h3 class="doc-catalogue-row__title">{{ card.title }}</h3>
+              <span class="doc-catalogue-row__count">{{ card.pills.length }}</span>
+            </div>
+            <p class="doc-catalogue-row__text">{{ card.text }}</p>
+          </div>
+          <div class="doc-catalogue-row__components">
+            @for (pill of card.pills; track pill) {
+              <span class="doc-catalogue-tag">{{ pill }}</span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+
+  <div class="doc-catalogue-foot">
+    <div class="doc-catalogue-foot__copy">
+      <h3>Use only what you need</h3>
+      <p>
+        Each component is a standalone import with no global registration.
+        Tree-shaking removes everything you do not use.
+      </p>
+      <ul class="doc-catalogue-foot__points">
+        <li><i class="iconoir-check" aria-hidden="true"></i> Per-component imports</li>
+        <li><i class="iconoir-check" aria-hidden="true"></i> No NgModule - works with standalone APIs</li>
+        <li><i class="iconoir-check" aria-hidden="true"></i> Consistent props and design tokens</li>
+      </ul>
+    </div>
+    <rng-code-block
+      class="doc-catalogue-foot__code"
+      [code]="exampleCode"
+      language="typescript"
+      title="app/example.component.ts - standalone usage"
+      variant="window"
+      (copiedChange)="onCopied()"
+    />
+  </div>
+</section>
+
+<!-- Install / Theming -->
+<section class="doc-section" id="install">
+  <div class="doc-install">
+    <div class="doc-install-card">
+      <h3><i class="iconoir-download-circle"></i> Install in seconds</h3>
+      <p>Requires Angular 21+ (>=21.0.0). No extra setup for forms or theming.</p>
+
+      <rng-code-block
+        [code]="installCmd"
+        language="bash"
+        title="Terminal"
+        variant="block"
+        (copiedChange)="onCopied()"
+      />
+
+      <rng-code-block
+        [code]="peerCmd"
+        language="bash"
+        title="Peer dependencies"
+        variant="block"
+        (copiedChange)="onCopied()"
+      />
+
+      <rng-code-block
+        [code]="formsSnippet"
+        language="typescript"
+        title="Forms - add as needed"
+        variant="block"
+        (copiedChange)="onCopied()"
+      />
+
+      <ul class="doc-check-list">
+        <li><i class="iconoir-check"></i> Tree-shakable - import only what you use</li>
+        <li><i class="iconoir-check"></i> Works with standalone components</li>
+        <li><i class="iconoir-check"></i> Runtime deps: lodash-es, luxon, tslib</li>
+      </ul>
+    </div>
+
+    <div class="doc-install-card" id="theming">
+      <h3><i class="iconoir-palette"></i> Theming that scales</h3>
+      <p>Ship your brand in minutes. Override tokens, no rebuild hacks.</p>
+
+      <rng-code-block
+        [code]="scssSnippet"
+        language="scss"
+        title="SCSS - modern @use syntax"
+        variant="block"
+        (copiedChange)="onCopied()"
+      />
+
+      <div class="doc-theming-grid">
+        <div class="doc-theming-item">
+          <span class="doc-swatch" style="--swatch: #3451b2"></span>
+          <div>
+            <strong>--rng-primary</strong>
+            <span>CSS variables for every token</span>
+          </div>
+        </div>
+        <div class="doc-theming-item">
+          <span class="doc-swatch" style="--swatch: #5672CD"></span>
+          <div>
+            <strong>SCSS variables</strong>
+            <span>Override before the mixin</span>
+          </div>
+        </div>
+        <div class="doc-theming-item">
+          <span class="doc-swatch" style="--swatch: #1b1b1f"></span>
+          <div>
+            <strong>Dark mode</strong>
+            <span>Light / dark via custom properties</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="doc-muted">Change a single token and every component follows. No forking, no patching.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Why -->
+<section class="doc-section">
+  <div class="doc-why">
+    <div>
+      <h2>Why teams switch to Roolith NG</h2>
+      <p class="doc-why__lead">
+        Built for developers who have shipped with Angular long enough to know what hurts - inconsistent a11y,
+        tangled form logic, tables that need a week.
+      </p>
+    </div>
+    <ul class="doc-why__list">
+      <li class="doc-why__item">
+        <i class="iconoir-check-circle" aria-hidden="true"></i>
+        <div>
+          <strong>Consistent, accessible, themeable</strong>
+          <span>Base styles, resets and tokens ship together. You compose, we handle the boring bits.</span>
+        </div>
+      </li>
+      <li class="doc-why__item">
+        <i class="iconoir-check-circle" aria-hidden="true"></i>
+        <div>
+          <strong>Enterprise defaults, escape hatches</strong>
+          <span>Sensible out of the box, overridable everywhere through SCSS and CSS variables.</span>
+        </div>
+      </li>
+      <li class="doc-why__item">
+        <i class="iconoir-check-circle" aria-hidden="true"></i>
+        <div>
+          <strong>Own your bundle</strong>
+          <span>Standalone components and <code>sideEffects: false</code> mean you only ship what you import.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="doc-cta">
+  <div class="doc-cta__card">
+    <div>
+      <h2>Start with one component.</h2>
+      <p>Install the package, import a Card and a Button. Scale to tables and filters when you need them.</p>
+    </div>
+    <div class="doc-cta__actions">
+      <a
+        class="doc-btn doc-btn--primary"
+        href="https://github.com/im4aLL/roolith-ng"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg
+          class="doc-icon doc-icon--github"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          width="16"
+          height="16"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+          />
+        </svg>
+        View on GitHub
+      </a>
+      <button
+        class="doc-btn"
+        type="button"
+        [class.doc-copy-btn--copied]="ctaCopied()"
+        (click)="copyText(installCmd)"
+      >
+        @if (ctaCopied()) {
+          <i class="iconoir-check"></i> Copied!
+        } @else {
+          <i class="iconoir-copy"></i> Copy install
+        }
+      </button>
+    </div>
+  </div>
+</section>
+
+@if (toastMessage()) {
+  <div class="doc-toast doc-toast--show" role="status" aria-live="polite">{{ toastMessage() }}</div>
+}

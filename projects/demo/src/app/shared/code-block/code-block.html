@@ -1,0 +1,78 @@
+@let variantValue = variant();
+@let titleValue = title();
+
+@if (variantValue === 'window') {
+  <div class="doc-code-window">
+    <div class="doc-code-window__bar">
+      <span class="doc-code-window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="doc-code-window__title">{{ titleValue || language() }}</span>
+      @if (showCopy()) {
+        <button
+          class="doc-copy-btn"
+          [class.doc-copy-btn--copied]="copied()"
+          type="button"
+          (click)="copy()"
+          aria-label="Copy code"
+        >
+          @if (copied()) {
+            <i class="iconoir-check" aria-hidden="true"></i>
+            <span>Copied!</span>
+          } @else {
+            <i class="iconoir-copy" aria-hidden="true"></i>
+            <span>Copy</span>
+          }
+        </button>
+      }
+    </div>
+    <div class="doc-code-window__body doc-code-window__body--code">
+      <div class="doc-code-highlight" [innerHTML]="safeHtml()"></div>
+      @if (hint()) {
+        <span class="doc-code-window__hint">{{ hint() }}</span>
+      }
+    </div>
+  </div>
+} @else if (variantValue === 'block') {
+  <div class="doc-code-block">
+    <div class="doc-code-block__head">
+      <span>{{ titleValue || language() }}</span>
+      @if (showCopy()) {
+        <button
+          class="doc-copy-btn doc-copy-btn--sm"
+          [class.doc-copy-btn--copied]="copied()"
+          type="button"
+          (click)="copy()"
+          aria-label="Copy code"
+        >
+          @if (copied()) {
+            <i class="iconoir-check"></i> Copied!
+          } @else {
+            <i class="iconoir-copy"></i> Copy
+          }
+        </button>
+      }
+    </div>
+    <div class="doc-code-highlight doc-code-highlight--block" [innerHTML]="safeHtml()"></div>
+  </div>
+} @else {
+  <div class="doc-code-block doc-code-block--prose">
+    <div class="doc-code-block__head">
+      <span>{{ titleValue || language() }}</span>
+      @if (showCopy()) {
+        <button
+          class="doc-copy-btn doc-copy-btn--sm"
+          [class.doc-copy-btn--copied]="copied()"
+          type="button"
+          (click)="copy()"
+          aria-label="Copy code"
+        >
+          @if (copied()) {
+            <i class="iconoir-check"></i> Copied!
+          } @else {
+            <i class="iconoir-copy"></i> Copy
+          }
+        </button>
+      }
+    </div>
+    <div class="doc-code-highlight doc-code-highlight--prose" [innerHTML]="safeHtml()"></div>
+  </div>
+}

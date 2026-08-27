@@ -1,0 +1,84 @@
+@use 'sass:color';
+
+// Base
+$base-font-size: 16px !default;
+$base-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !default;
+$base-backup-font-family:
+  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', sans-serif !default;
+
+// Breakpoint
+$breakpoints: (
+  small: 0,
+  medium: 640px,
+  large: 1024px,
+  xlarge: 1200px,
+  xxlarge: 1440px,
+) !default;
+
+// Grid settings
+$container-width: 84.375rem !default; // 1350px
+
+$grid-gutter-size: 20px !default; // 20px
+$grid-gutter: (
+  small: $grid-gutter-size,
+  medium: $grid-gutter-size,
+  large: $grid-gutter-size,
+  xxlarge: $grid-gutter-size,
+) !default;
+
+$grid-column-count: 12 !default;
+$grid-layout: traditional !default; // css-grid || traditional
+
+// Colors
+$primary-color: #3e63dd !default;
+$secondary-color: #0d1b2a !default;
+$warning-color: #ffbd2e !default;
+$danger-color: #ff5f56 !default;
+$success-color: #27c93f !default;
+$info-color: #4895ef !default;
+$dark-color: #171717 !default;
+$white-color: #ffffff !default;
+$gray-color: #e7ecef !default;
+
+$colors: (
+  'primary': $primary-color,
+  'primary-light': color.scale($primary-color, $lightness: 7%),
+  'primary-lighter': color.scale($primary-color, $lightness: 14%),
+  'secondary': $secondary-color,
+  'secondary-light': color.scale($secondary-color, $lightness: 10%),
+  'secondary-dark': color.scale($secondary-color, $lightness: -10%),
+  'warning': $warning-color,
+  'danger': $danger-color,
+  'success': $success-color,
+  'info': $info-color,
+  'neutral-900': $dark-color,
+  'neutral-800': color.scale($dark-color, $lightness: 10%),
+  'neutral-700': color.scale($dark-color, $lightness: 30%),
+  'neutral-600': color.scale($dark-color, $lightness: 50%),
+  'neutral': $white-color,
+  'neutral-300': $gray-color,
+  'neutral-200': color.scale($gray-color, $lightness: 10%),
+  'neutral-150': color.scale($gray-color, $lightness: 15%),
+  'neutral-100': color.scale($gray-color, $lightness: 20%),
+  'neutral-400': color.scale($gray-color, $lightness: -10%),
+  'neutral-500': color.scale($gray-color, $lightness: -20%),
+  'neutral-50': color.scale($gray-color, $lightness: 60%),
+) !default;
+
+// font
+$font-weights: (
+  'regular': 400,
+  'semi-bold': 500,
+  'bold': 700,
+) !default;
+
+// animation
+$animation-easing: cubic-bezier(1, 0, 0, 1) !default;
+$animation-duration: 0.25s !default;
+
+// misc
+$border-radius: 10px !default;
+$focus-outline: 0.0625rem dotted rgba($primary-color, 0.3) !default;
+$shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.1) !default;
+$shadow-small: 0 2px 4px 0 rgba(0, 0, 0, 0.05) !default;

@@ -1,0 +1,248 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Theming</h1>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">@im4all/roolith-ng</code> ships its design tokens as CSS custom properties under the <code class="doc-prose__code">--rng-*</code> namespace.
+    Theming means overriding variables - no SCSS fork or component rewrite required.
+    Tokens are emitted by the <code class="doc-prose__code">css-variable()</code> mixin.
+  </p>
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-spark" aria-hidden="true"></i> Prerequisite</p>
+    <p class="doc-prose__p">
+      Install from npm (<code class="doc-prose__code">npm install @im4all/roolith-ng</code>) and include styles once in <code class="doc-prose__code">src/styles.scss</code> with <code class="doc-prose__code">@use '@im4all/roolith-ng/sass/rng-scss' as rng; &#64;include rng.rng-everything();</code>.
+      See <a class="doc-prose__link" routerLink="/guide/getting-started">Getting Started</a> for install, peer dependencies and the full <code class="doc-prose__code">rng-everything()</code> setup.
+    </p>
+  </div>
+
+  <h2 class="doc-prose__h2">How variables are defined</h2>
+  <p class="doc-prose__p">
+    The <code class="doc-prose__code">css-variable()</code> mixin emits a <code class="doc-prose__code">:root</code> block with light-theme tokens and a <code class="doc-prose__code">.theme-dark</code> block with overrides.
+    It is called inside <code class="doc-prose__code">rng-base-style()</code>, and <code class="doc-prose__code">rng-everything()</code> includes it along with reset, typography, layout and component modules.
+    Defaults come from SCSS variables like <code class="doc-prose__code">$primary-color</code>, the <code class="doc-prose__code">$colors</code> map and <code class="doc-prose__code">$border-radius</code>.
+  </p>
+  <rng-code-block [code]="tokenExample" language="scss" title="tokens emitted to :root" variant="prose" />
+  <rng-code-block [code]="darkExample" language="css" title=".theme-dark overrides" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-settings" aria-hidden="true"></i> Modular import</p>
+    <p class="doc-prose__p">If you do not need all CSS, import only the base tokens:</p>
+  </div>
+  <rng-code-block [code]="modularExample" language="scss" title="modular import" variant="prose" />
+
+  <h2 class="doc-prose__h2">Color tokens</h2>
+  <p class="doc-prose__p">The color system is the most overridden area. All values below are CSS variables you can set at runtime.</p>
+
+  <h3 class="doc-prose__h3">Brand and semantic</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Purpose</th><th class="doc-prose__th">Default</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-primary</code></td><td class="doc-prose__td">Primary brand, active states, focus</td><td class="doc-prose__td"><code class="doc-prose__code">#3e63dd</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-primary-light</code></td><td class="doc-prose__td">Hover / lighter primary (scale 7%)</td><td class="doc-prose__td"><code class="doc-prose__code">color.scale(primary, 7%)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-primary-lighter</code></td><td class="doc-prose__td">Lighter primary (scale 14%)</td><td class="doc-prose__td"><code class="doc-prose__code">color.scale(primary, 14%)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-secondary</code></td><td class="doc-prose__td">Secondary actions, header (overridden in dark mode)</td><td class="doc-prose__td"><code class="doc-prose__code">#0d1b2a</code> / <code class="doc-prose__code">#778da9</code> in <code class="doc-prose__code">.theme-dark</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-secondary-light</code></td><td class="doc-prose__td">Secondary hover</td><td class="doc-prose__td"><code class="doc-prose__code">color.scale(secondary, 10%)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-secondary-dark</code></td><td class="doc-prose__td">Secondary active</td><td class="doc-prose__td"><code class="doc-prose__code">color.scale(secondary, -10%)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-success</code></td><td class="doc-prose__td">Success state</td><td class="doc-prose__td"><code class="doc-prose__code">#27c93f</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-warning</code></td><td class="doc-prose__td">Warning state</td><td class="doc-prose__td"><code class="doc-prose__code">#ffbd2e</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-danger</code></td><td class="doc-prose__td">Danger / error state</td><td class="doc-prose__td"><code class="doc-prose__code">#ff5f56</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-info</code></td><td class="doc-prose__td">Info state (overridden in dark mode)</td><td class="doc-prose__td"><code class="doc-prose__code">#a8b1ff</code> / <code class="doc-prose__code">#3451b2</code> in <code class="doc-prose__code">.theme-dark</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Neutral scale</h3>
+  <p class="doc-prose__p">Generated from the <code class="doc-prose__code">$colors</code> map and exposed via the <code class="doc-prose__code">theme-default</code> mixin.</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Purpose</th><th class="doc-prose__th">Default</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral</code></td><td class="doc-prose__td">Base neutral (white in light)</td><td class="doc-prose__td"><code class="doc-prose__code">#ffffff</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-50</code></td><td class="doc-prose__td">Lightest gray</td><td class="doc-prose__td"><code class="doc-prose__code">#f5f5f7</code> approx.</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-100</code></td><td class="doc-prose__td">Light gray</td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef scaled 20%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-150</code></td><td class="doc-prose__td">Gray 150</td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef scaled 15%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-200</code></td><td class="doc-prose__td">Border subtle</td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef scaled 10%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-300</code></td><td class="doc-prose__td">Default border (<code class="doc-prose__code">--rng-border-color</code>)</td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-400</code></td><td class="doc-prose__td">Muted border</td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef scaled -10%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-500</code></td><td class="doc-prose__td">Muted text</td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef scaled -20%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-600</code></td><td class="doc-prose__td">Secondary text</td><td class="doc-prose__td"><code class="doc-prose__code">#171717 scaled 50%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-700</code></td><td class="doc-prose__td">Body text faint</td><td class="doc-prose__td"><code class="doc-prose__code">#171717 scaled 30%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-800</code></td><td class="doc-prose__td">Heading text</td><td class="doc-prose__td"><code class="doc-prose__code">#171717 scaled 10%</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-900</code></td><td class="doc-prose__td">Primary text (<code class="doc-prose__code">--rng-surface-text-color</code>)</td><td class="doc-prose__td"><code class="doc-prose__code">#171717</code></td></tr>
+    </tbody>
+  </table>
+  <p class="doc-prose__p">In <code class="doc-prose__code">.theme-dark</code> every neutral is recomputed with <code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s ...)</code> so a single <code class="doc-prose__code">--rng-surface-bg-color</code> change reflows the scale.</p>
+
+  <h3 class="doc-prose__h3">Surface and accent</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Purpose</th><th class="doc-prose__th">Light default</th><th class="doc-prose__th">Dark override</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-surface-bg-color</code></td><td class="doc-prose__td">App / card background</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral)</code> (#ffffff)</td><td class="doc-prose__td"><code class="doc-prose__code">#1b1b1b</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-surface-text-color</code></td><td class="doc-prose__td">Primary text</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-900)</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-600)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-surface-alt-text-color</code></td><td class="doc-prose__td">Text on dark surfaces</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-100)</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-900)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-border-color</code></td><td class="doc-prose__td">Default hairline border</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-300)</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-200)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-accent</code></td><td class="doc-prose__td">Accent alias (follows primary)</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-primary)</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-primary)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-accent-light</code></td><td class="doc-prose__td">Accent hover</td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from accent h s calc(l - 5))</code></td><td class="doc-prose__td">-</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-accent-dark</code></td><td class="doc-prose__td">Accent active</td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from accent h s calc(l + 5))</code></td><td class="doc-prose__td">-</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="doc-prose__h2">Overriding tokens</h2>
+  <p class="doc-prose__p">Two supported paths - pick runtime (simplest for npm consumers) or build-time if you control SCSS.</p>
+
+  <h3 class="doc-prose__h3">Runtime with CSS variables (recommended)</h3>
+  <p class="doc-prose__p">Set variables anywhere after the library CSS - typically in your global <code class="doc-prose__code">styles.scss</code> or a theme stylesheet. Every component reads the updated value.</p>
+  <rng-code-block [code]="cssOverride" language="css" title="styles.scss - runtime override" variant="prose" />
+
+  <div class="doc-callout doc-callout--warning">
+    <p class="doc-callout__title"><i class="iconoir-warning-triangle" aria-hidden="true"></i> Contrast check</p>
+    <p class="doc-prose__p">When you change <code class="doc-prose__code">--rng-color-primary</code>, review <code class="doc-prose__code">--rng-surface-bg-color</code> and <code class="doc-prose__code">--rng-border-color</code> so focus rings and borders stay visible on both light and <code class="doc-prose__code">.theme-dark</code> backgrounds.</p>
+  </div>
+
+  <h3 class="doc-prose__h3">Build-time with SCSS</h3>
+  <p class="doc-prose__p">Override the <code class="doc-prose__code">!default</code> SCSS variables <em>before</em> including the mixins. Use the modern <code class="doc-prose__code">@use ... with</code> syntax.</p>
+  <rng-code-block [code]="scssOverride" language="scss" title="styles.scss - SCSS override" variant="prose" />
+  <p class="doc-prose__p">Available SCSS overrides include <code class="doc-prose__code">$primary-color</code>, <code class="doc-prose__code">$secondary-color</code>, <code class="doc-prose__code">$warning-color</code>, <code class="doc-prose__code">$danger-color</code>, <code class="doc-prose__code">$success-color</code>, <code class="doc-prose__code">$info-color</code>, <code class="doc-prose__code">$dark-color</code>, <code class="doc-prose__code">$gray-color</code>, <code class="doc-prose__code">$border-radius</code>, <code class="doc-prose__code">$shadow</code> and the full <code class="doc-prose__code">$colors</code> map.</p>
+
+  <h2 class="doc-prose__h2">Dark mode</h2>
+  <p class="doc-prose__p">Dark mode is a single class: <code class="doc-prose__code">.theme-dark</code> on <code class="doc-prose__code">document.documentElement</code> (or any ancestor of your app). It recomputes the neutral scale and swaps surface, border and info tokens.</p>
+  <rng-code-block [code]="toggleExample" language="typescript" title="toggle dark mode" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-half-moon" aria-hidden="true"></i> System preference</p>
+    <p class="doc-prose__p">Respect the OS setting with <code class="doc-prose__code">prefers-color-scheme</code> and persist the choice in <code class="doc-prose__code">localStorage</code> if you want it sticky. The library does not persist for you - your app owns the toggle.</p>
+  </div>
+
+  <h2 class="doc-prose__h2">Custom theme class</h2>
+  <p class="doc-prose__p">Ship a brand palette without forking by adding your own class that overrides the same variables. Apply it alongside or instead of <code class="doc-prose__code">.theme-dark</code>.</p>
+  <rng-code-block [code]="customExample" language="css" title="custom brand theme" variant="prose" />
+  <p class="doc-prose__p">Because <code class="doc-prose__code">--rng-color-accent</code> aliases <code class="doc-prose__code">--rng-color-primary</code>, changing primary automatically updates accent unless you override it explicitly. The light/dark accent variants use <code class="doc-prose__code">hsl(from ...)</code> so they track your custom color.</p>
+
+  <h2 class="doc-prose__h2">Other tokens</h2>
+  <p class="doc-prose__p">Beyond colors, the same <code class="doc-prose__code">:root</code> block exposes typography, spacing, animation and shadow tokens:</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Purpose</th><th class="doc-prose__th">Default</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-base-font-size</code></td><td class="doc-prose__td">Root font size</td><td class="doc-prose__td"><code class="doc-prose__code">16px</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-base-font-family</code></td><td class="doc-prose__td">System font stack</td><td class="doc-prose__td"><code class="doc-prose__code">system-ui, ...</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-font-weight-regular</code></td><td class="doc-prose__td">Regular weight</td><td class="doc-prose__td"><code class="doc-prose__code">400</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-font-weight-semi-bold</code></td><td class="doc-prose__td">Semi-bold</td><td class="doc-prose__td"><code class="doc-prose__code">500</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-font-weight-bold</code></td><td class="doc-prose__td">Bold</td><td class="doc-prose__td"><code class="doc-prose__code">700</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-animation-easing</code></td><td class="doc-prose__td">Easing curve</td><td class="doc-prose__td"><code class="doc-prose__code">cubic-bezier(1, 0, 0, 1)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-animation-duration</code></td><td class="doc-prose__td">Default duration</td><td class="doc-prose__td"><code class="doc-prose__code">0.25s</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-border-radius</code></td><td class="doc-prose__td">Corner radius</td><td class="doc-prose__td"><code class="doc-prose__code">10px</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-focus-outline</code></td><td class="doc-prose__td">Focus ring</td><td class="doc-prose__td"><code class="doc-prose__code">0.0625rem dotted rgba(#3e63dd, 0.3)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-shadow</code></td><td class="doc-prose__td">Default shadow</td><td class="doc-prose__td"><code class="doc-prose__code">0 4px 6px 0 rgba(0,0,0,0.1)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-shadow-small</code></td><td class="doc-prose__td">Small shadow</td><td class="doc-prose__td"><code class="doc-prose__code">0 2px 4px 0 rgba(0,0,0,0.05)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-shadow-xsmall</code></td><td class="doc-prose__td">Extra small shadow</td><td class="doc-prose__td"><code class="doc-prose__code">0 1px 2px 0 rgba(0,0,0,0.05)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="doc-prose__h2">Complete list of CSS design tokens</h2>
+  <p class="doc-prose__p">
+    Every variable emitted by the <code class="doc-prose__code">css-variable()</code> mixin.
+    Light defaults come from SCSS variables and the <code class="doc-prose__code">$colors</code> map.
+    Dark overrides are provided by the <code class="doc-prose__code">theme-dark</code> and <code class="doc-prose__code">theme-default</code> mixins.
+    Override any <code class="doc-prose__code">--rng-*</code> variable at runtime - no rebuild needed.
+  </p>
+
+  <h3 class="doc-prose__h3">Base</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Light default</th><th class="doc-prose__th">Dark override</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-base-font-size</code></td><td class="doc-prose__td"><code class="doc-prose__code">16px</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Root font size (<code class="doc-prose__code">$base-font-size</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-base-font-family</code></td><td class="doc-prose__td"><code class="doc-prose__code">system-ui, ...</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">System font stack (<code class="doc-prose__code">$base-font-family</code> + <code class="doc-prose__code">$base-backup-font-family</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Brand and semantic colors</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Light default</th><th class="doc-prose__th">Dark override</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-primary</code></td><td class="doc-prose__td"><code class="doc-prose__code">#3e63dd</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Primary brand - buttons, links, focus</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-primary-light</code></td><td class="doc-prose__td"><code class="doc-prose__code">#4c6edf</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-primary) h s 40%)</code></td><td class="doc-prose__td">Primary hover (light) / dark recomputed</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-primary-lighter</code></td><td class="doc-prose__td"><code class="doc-prose__code">#5979e2</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-primary) h s 60%)</code></td><td class="doc-prose__td">Primary lighter (light) / dark recomputed</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-secondary</code></td><td class="doc-prose__td"><code class="doc-prose__code">#0d1b2a</code></td><td class="doc-prose__td"><code class="doc-prose__code">#778da9</code></td><td class="doc-prose__td">Secondary - headers, secondary buttons (overridden in dark mode)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-secondary-light</code></td><td class="doc-prose__td"><code class="doc-prose__code">#18314d</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Secondary hover (<code class="doc-prose__code">color.scale 10%</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-secondary-dark</code></td><td class="doc-prose__td"><code class="doc-prose__code">#0c1826</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Secondary active (<code class="doc-prose__code">color.scale -10%</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-warning</code></td><td class="doc-prose__td"><code class="doc-prose__code">#ffbd2e</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Warning state</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-danger</code></td><td class="doc-prose__td"><code class="doc-prose__code">#ff5f56</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Danger / error state</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-success</code></td><td class="doc-prose__td"><code class="doc-prose__code">#27c93f</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Success state</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-info</code></td><td class="doc-prose__td"><code class="doc-prose__code">#a8b1ff</code></td><td class="doc-prose__td"><code class="doc-prose__code">#3451b2</code></td><td class="doc-prose__td">Info state - inverted in dark</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Neutral scale</h3>
+  <p class="doc-prose__p">Light values are <code class="doc-prose__code">color.scale</code> from <code class="doc-prose__code">$dark-color #171717</code> and <code class="doc-prose__code">$gray-color #e7ecef</code>. Dark values are recomputed from <code class="doc-prose__code">--rng-color-neutral</code> with <code class="doc-prose__code">hsl(from ...)</code>.</p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Light default</th><th class="doc-prose__th">Dark override</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral</code></td><td class="doc-prose__td"><code class="doc-prose__code">#ffffff</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-surface-bg-color)</code> (#1b1b1b)</td><td class="doc-prose__td">Base neutral - white in light</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-50</code></td><td class="doc-prose__td"><code class="doc-prose__code">#f5f7f9</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 6%)</code></td><td class="doc-prose__td">Lightest gray</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-100</code></td><td class="doc-prose__td"><code class="doc-prose__code">#ecf0f2</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 12%)</code></td><td class="doc-prose__td">Light gray / alt text bg</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-150</code></td><td class="doc-prose__td"><code class="doc-prose__code">#ebeff1</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 17%)</code></td><td class="doc-prose__td">Gray 150</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-200</code></td><td class="doc-prose__td"><code class="doc-prose__code">#e9eef1</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 22%)</code></td><td class="doc-prose__td">Subtle border / dark border</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-300</code></td><td class="doc-prose__td"><code class="doc-prose__code">#e7ecef</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 35%)</code></td><td class="doc-prose__td">Default border</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-400</code></td><td class="doc-prose__td"><code class="doc-prose__code">#cbd6dc</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 50%)</code></td><td class="doc-prose__td">Muted border</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-500</code></td><td class="doc-prose__td"><code class="doc-prose__code">#afbfc9</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 65%)</code></td><td class="doc-prose__td">Muted text</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-600</code></td><td class="doc-prose__td"><code class="doc-prose__code">#8b8b8b</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 78%)</code></td><td class="doc-prose__td">Secondary text / dark primary text</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-700</code></td><td class="doc-prose__td"><code class="doc-prose__code">#5d5d5d</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 88%)</code></td><td class="doc-prose__td">Body text faint</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-800</code></td><td class="doc-prose__td"><code class="doc-prose__code">#2e2e2e</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 94%)</code></td><td class="doc-prose__td">Heading text</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-neutral-900</code></td><td class="doc-prose__td"><code class="doc-prose__code">#171717</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-neutral) h s 98%)</code></td><td class="doc-prose__td">Primary text</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Surface and accent</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Light default</th><th class="doc-prose__th">Dark override</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-surface-bg-color</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral)</code> (#ffffff)</td><td class="doc-prose__td"><code class="doc-prose__code">#1b1b1b</code></td><td class="doc-prose__td">App and card background</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-surface-text-color</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-900)</code> (#171717)</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-600)</code></td><td class="doc-prose__td">Primary text on surface</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-surface-alt-text-color</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-100)</code> (#ecf0f2)</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-900)</code></td><td class="doc-prose__td">Text on dark surfaces</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-border-color</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-300)</code> (#e7ecef)</td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-neutral-200)</code></td><td class="doc-prose__td">Default hairline border</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-accent</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-primary)</code></td><td class="doc-prose__td"><code class="doc-prose__code">var(--rng-color-primary)</code></td><td class="doc-prose__td">Accent alias - follows primary</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-accent-light</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-accent) h s calc(l - 5))</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Accent hover</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-color-accent-dark</code></td><td class="doc-prose__td"><code class="doc-prose__code">hsl(from var(--rng-color-accent) h s calc(l + 5))</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Accent active</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Typography, animation and misc</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Variable</th><th class="doc-prose__th">Light default</th><th class="doc-prose__th">Dark override</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-font-weight-regular</code></td><td class="doc-prose__td"><code class="doc-prose__code">400</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Regular weight (<code class="doc-prose__code">$font-weights regular</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-font-weight-semi-bold</code></td><td class="doc-prose__td"><code class="doc-prose__code">500</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Semi-bold weight</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-font-weight-bold</code></td><td class="doc-prose__td"><code class="doc-prose__code">700</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Bold weight</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-animation-easing</code></td><td class="doc-prose__td"><code class="doc-prose__code">cubic-bezier(1, 0, 0, 1)</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Easing curve (<code class="doc-prose__code">$animation-easing</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-animation-duration</code></td><td class="doc-prose__td"><code class="doc-prose__code">0.25s</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Default duration (<code class="doc-prose__code">$animation-duration</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-border-radius</code></td><td class="doc-prose__td"><code class="doc-prose__code">10px</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Corner radius (<code class="doc-prose__code">$border-radius</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-focus-outline</code></td><td class="doc-prose__td"><code class="doc-prose__code">0.0625rem dotted rgba(62, 99, 221, 0.3)</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Focus ring (<code class="doc-prose__code">$focus-outline</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-shadow</code></td><td class="doc-prose__td"><code class="doc-prose__code">0 4px 6px 0 rgba(0, 0, 0, 0.1)</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Default shadow (<code class="doc-prose__code">$shadow</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-shadow-small</code></td><td class="doc-prose__td"><code class="doc-prose__code">0 2px 4px 0 rgba(0, 0, 0, 0.05)</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Small shadow (<code class="doc-prose__code">$shadow-small</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">--rng-shadow-xsmall</code></td><td class="doc-prose__td"><code class="doc-prose__code">0 1px 2px 0 rgba(0, 0, 0, 0.05)</code></td><td class="doc-prose__td"><code class="doc-prose__code">-</code></td><td class="doc-prose__td">Extra small shadow</td></tr>
+    </tbody>
+  </table>
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-copy" aria-hidden="true"></i> Copy and customize</p>
+    <p class="doc-prose__p">Copy the full block below into your global stylesheet and edit what you need. Variables not overridden keep their light defaults - dark values apply only inside <code class="doc-prose__code">.theme-dark</code>.</p>
+  </div>
+  <rng-code-block [code]="completeList" language="css" title="Complete token list - :root + .theme-dark" variant="prose" />
+
+  <rng-doc-pager />
+</article>

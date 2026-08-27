@@ -1,0 +1,40 @@
+<div
+  [id]="'rng-popover-' + name()"
+  [class]="classNames()"
+  [class.rng-popover--right]="isAlignedRight()"
+  [class.rng-popover--top]="isAlignedTop()"
+  [class.rng-popover--top-right]="isAlignedTopRight()"
+  popover
+  [style]="'--rng-popover-anchor: --rng-' + name()"
+  (toggle)="onToggle($event)"
+  #popoverEl>
+  @if (headerContent() || subtextContent()) {
+    <div class="rng-popover__header">
+      @if (headerContent()) {
+        <h5 class="rng-popover__hl">
+          <ng-container *ngTemplateOutlet="headerContent()"></ng-container>
+        </h5>
+      }
+
+      @if (subtextContent()) {
+        <div class="rng-popover__subtext">
+          <ng-container *ngTemplateOutlet="subtextContent()"></ng-container>
+        </div>
+      }
+    </div>
+  } @else {
+    @if (header()) {
+      <h5 class="rng-popover__hl">{{ header() }}</h5>
+    }
+
+    @if (subtext()) {
+      <div class="rng-popover__subtext">{{ subtext() }}</div>
+    }
+  }
+
+  <div
+    class="rng-popover__content"
+    [class.rng-popover__content--spacing]="headerContent() || subtextContent()">
+    <ng-content></ng-content>
+  </div>
+</div>

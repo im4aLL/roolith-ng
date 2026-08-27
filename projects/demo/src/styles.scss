@@ -1,0 +1,5 @@
+@use '@im4all/roolith-ng/sass/rng-scss' as rng;
+@use './sass/docs.scss' as docs;
+
+@include rng.rng-everything();
+@include docs.doc-everything();

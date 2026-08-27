@@ -1,0 +1,345 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Date Time Picker</h1>
+  <p class="doc-prose__p">
+    A combined date and time picker built as <code class="doc-prose__code">rng-date-time-picker-input</code>.
+    Combines a calendar date picker and a 12-hour time selector into a single field - selecting a date closes the popover while time is adjusted inline in the same panel.
+    Uses Luxon <code class="doc-prose__code">DateTime</code> as the value type and supports <code class="doc-prose__code">FormValueControl</code> integration for signals forms.
+    When only a date is selected and no time has been chosen, the value defaults to midnight (<code class="doc-prose__code">00:00</code>).
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">label</code> and <code class="doc-prose__code">placeholder</code>.
+    Bind the selected date and time with two-way <code class="doc-prose__code">[(value)]</code> - the model type is <code class="doc-prose__code">DateTime | null</code>.
+    Click the field to open the popover with <code class="doc-prose__code">rng-calendar</code> and time controls.
+    Selecting a date closes the popover; adjust hours, minutes and <code class="doc-prose__code">AM</code>/<code class="doc-prose__code">PM</code> inline without reopening.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Schedule"
+        placeholder="Select date and time..."
+        [(value)]="basicDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Selected: <code class="doc-prose__code">{{ basicDateTime()?.toISO() ?? 'null' }}</code>
+        @if (basicDateTime()) {
+          <span> ({{ basicDateTime()?.toLocaleString(DateTime.DATETIME_MED) }})</span>
+        }
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Placeholder</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">placeholder</code> when no date and time is selected.
+    The placeholder is shown inside <code class="doc-prose__code">rng-input__field--placeholder</code> until a date is picked.
+    Once a date is selected the formatted value (via <code class="doc-prose__code">dateTimeFieldLabel()</code>) replaces the placeholder.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        placeholder="e.g. Jun 15, 2024 03:30 PM"
+        [(value)]="placeholderDateTime" />
+      <rng-date-time-picker-input
+        label="With label and placeholder"
+        placeholder="Select date and time"
+        [(value)]="placeholderDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ placeholderDateTime()?.toISO() ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="placeholderSnippet" language="html" title="placeholder" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom display format</h3>
+  <p class="doc-prose__p">
+    Control how the selected date is displayed with <code class="doc-prose__code">[format]</code> - a Luxon <code class="doc-prose__code">DateTimeFormatOptions</code> object.
+    Defaults to <code class="doc-prose__code">DateTime.DATE_MED</code> (e.g. <code class="doc-prose__code">Jun 15, 2024</code>).
+    The field text is derived from <code class="doc-prose__code">dateTimeFieldLabel()</code> which appends <code class="doc-prose__code">hh:mm AM/PM</code> when a time is selected.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Appointment (MM/DD/YYYY)"
+        [format]="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+        [(value)]="formatDateTime" />
+      <rng-date-time-picker-input
+        label="Long format"
+        [format]="{ year: 'numeric', month: 'long', day: 'numeric' }"
+        [(value)]="formatDateTimeNumeric" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Numeric: <code class="doc-prose__code">{{ formatDateTime()?.toISO() ?? 'null' }}</code> |
+        Long: <code class="doc-prose__code">{{ formatDateTimeNumeric()?.toISO() ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="formatSnippet" language="html" title="custom format" variant="prose" />
+  <rng-code-block [code]="formatTsSnippet" language="typescript" title="custom format - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Hint</h3>
+  <p class="doc-prose__p">
+    Provide <code class="doc-prose__code">hint</code> to show helper text below the field via <code class="doc-prose__code">rng-input__hint</code>.
+    The hint is visible when not overridden by an error message via <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Schedule"
+        hint="Choose a date and time in the next 7 days"
+        [(value)]="hintDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Value: <code class="doc-prose__code">{{ hintDateTime()?.toISO() ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="hintSnippet" language="html" title="hint" variant="prose" />
+
+  <h3 class="doc-prose__h3">Error state</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[error]="true"</code> to apply error styling via <code class="doc-prose__code">rng-input--error</code>.
+    When <code class="doc-prose__code">errorMessage</code> is provided it overrides <code class="doc-prose__code">hint</code> in the hint area
+    via the computed <code class="doc-prose__code">hintMessage()</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Schedule"
+        [error]="true"
+        errorMessage="Please select a valid date and time" />
+      <rng-date-time-picker-input
+        label="Schedule"
+        hint="Choose a future date and time"
+        [error]="true"
+        errorMessage="Date and time are required"
+        [(value)]="errorDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+        Use <code class="doc-prose__code">errorMessage</code> to replace the hint when invalid - otherwise <code class="doc-prose__code">hint</code> is shown.
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="errorSnippet" language="html" title="error" variant="prose" />
+  <rng-code-block [code]="hintVsErrorSnippet" language="html" title="hint vs error" variant="prose" />
+
+  <h3 class="doc-prose__h3">States</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">[disabled]="true"</code> to disable the field via <code class="doc-prose__code">rng-input--disabled</code>,
+    <code class="doc-prose__code">[readonly]="true"</code> to make it read-only,
+    <code class="doc-prose__code">[required]="true"</code> for ARIA required, and <code class="doc-prose__code">name</code> to set the native <code class="doc-prose__code">name</code> attribute.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Disabled"
+        placeholder="Select date and time"
+        [disabled]="true" />
+      <rng-date-time-picker-input
+        label="Disabled with value"
+        [disabled]="true"
+        [(value)]="disabledDateTime" />
+      <rng-date-time-picker-input
+        label="Readonly"
+        [readonly]="true"
+        [(value)]="readonlyDateTime" />
+      <rng-date-time-picker-input
+        label="Required"
+        [required]="true"
+        [(value)]="requiredDateTime" />
+      <rng-date-time-picker-input
+        label="With name"
+        name="scheduledAt"
+        [(value)]="nameDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Disabled: <code class="doc-prose__code">{{ disabledDateTime()?.toISO() ?? 'null' }}</code> |
+        Readonly: <code class="doc-prose__code">{{ readonlyDateTime()?.toISO() ?? 'null' }}</code> |
+        Required: <code class="doc-prose__code">{{ requiredDateTime()?.toISO() ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="html" title="disabled" variant="prose" />
+  <rng-code-block [code]="readonlySnippet" language="html" title="readonly" variant="prose" />
+  <rng-code-block [code]="requiredSnippet" language="html" title="required" variant="prose" />
+  <rng-code-block [code]="nameSnippet" language="html" title="name" variant="prose" />
+
+  <h3 class="doc-prose__h3">Time selection</h3>
+  <p class="doc-prose__p">
+    The popover contains a <code class="doc-prose__code">rng-calendar</code> for the date and inline time controls:
+    two <code class="doc-prose__code">rng-select-plain</code> fields for hours (01-12) and minutes (00-59) plus a <code class="doc-prose__code">rng-button-group</code> for <code class="doc-prose__code">AM</code>/<code class="doc-prose__code">PM</code>.
+    Picking a date in the calendar calls <code class="doc-prose__code">onCalendarValueChange</code>, sets <code class="doc-prose__code">calendarValue</code>, marks <code class="doc-prose__code">touched</code> and closes the popover.
+    Time changes call <code class="doc-prose__code">onChangeHour</code>, <code class="doc-prose__code">onChangeMinute</code> or <code class="doc-prose__code">onChangeHourFormat</code> and are merged into <code class="doc-prose__code">value</code> via an effect that applies 12-hour to 24-hour conversion.
+    If no hour or minute is selected (empty option with <code class="doc-prose__code">value: -1</code>), the value defaults to midnight (<code class="doc-prose__code">date.startOf('day')</code>).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Schedule with time"
+        hint="Pick a date, then set hours, minutes and AM/PM"
+        [(value)]="basicDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Time defaults to <code class="doc-prose__code">00:00</code> until you choose hour and minute - check the ISO output after picking only a date vs date + time.
+      </p>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Field label: <code class="doc-prose__code">{{ basicDateTime()?.toLocaleString(DateTime.DATETIME_MED) ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="timeSelectionSnippet" language="html" title="time selection" variant="prose" />
+
+  <h3 class="doc-prose__h3">Pre-set value</h3>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">[value]</code> is bound externally, both the calendar and the time selectors initialize from it in <code class="doc-prose__code">ngOnInit</code> via <code class="doc-prose__code">_initFromValue()</code>.
+    The date part is stored in <code class="doc-prose__code">calendarValue</code> as <code class="doc-prose__code">startOf('day')</code> and the time part sets <code class="doc-prose__code">selectedHour</code>, <code class="doc-prose__code">selectedMinute</code> and <code class="doc-prose__code">selectedHourFormat</code> (12-hour conversion).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Start date & time"
+        [(value)]="presetDateTime" />
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Pre-set: <code class="doc-prose__code">{{ presetDateTime()?.toISO() ?? 'null' }}</code>
+        ({{ presetDateTime()?.toLocaleString(DateTime.DATETIME_MED) ?? '' }})
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="presetSnippet" language="html" title="pre-set value" variant="prose" />
+  <rng-code-block [code]="presetTsSnippet" language="typescript" title="pre-set - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Two-way binding and valueChange</h3>
+  <p class="doc-prose__p">
+    Bind <code class="doc-prose__code">[(value)]</code> for two-way sync or listen to <code class="doc-prose__code">(valueChange)</code> for explicit handling.
+    The <code class="doc-prose__code">value</code> model is a <code class="doc-prose__code">model&lt;DateTime | null&gt;</code> with an associated <code class="doc-prose__code">valueChange</code> output.
+    Selecting a date or changing time triggers the internal effect which updates <code class="doc-prose__code">value</code> - when time is incomplete the value is the date at midnight.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input [(value)]="twoWayDateTime" label="Two-way binding" />
+      <rng-date-time-picker-input [value]="twoWayDateTime()" (valueChange)="onDateTimeChange($event)" label="With valueChange handler" />
+      <p class="doc-prose__p" style="margin: 0;">
+        Current value: <code class="doc-prose__code">{{ twoWayDateTime()?.toISO() ?? 'null' }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="twoWaySnippet" language="html" title="two-way and valueChange" variant="prose" />
+  <rng-code-block [code]="valueChangeTsSnippet" language="typescript" title="valueChange - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With FormField (signals forms)</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-date-time-picker-input</code> implements <code class="doc-prose__code">FormValueControl&lt;DateTime | null&gt;</code> and can be bound to a signals form via
+    <code class="doc-prose__code">[formField]</code>. The component syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <rng-code-block [code]="formFieldSnippet" language="typescript" title="formField - component" variant="prose" />
+  <rng-code-block [code]="formFieldTemplateSnippet" language="html" title="formField - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Resetting the value</h3>
+  <p class="doc-prose__p">
+    Reset the model to <code class="doc-prose__code">null</code> to clear the field.
+    Both <code class="doc-prose__code">calendarValue</code> and the time selectors will reflect the cleared state on next open; the effect will keep <code class="doc-prose__code">value</code> as <code class="doc-prose__code">null</code> until a new date is picked.
+  </p>
+  <rng-code-block [code]="clearSnippet" language="typescript" title="resetting" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Combining label, placeholder, custom format, hint, pre-set value and live value display.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; max-width: 340px; width: 100%;">
+      <rng-date-time-picker-input
+        label="Event schedule"
+        placeholder="Select date and time"
+        hint="Must be a future date and time"
+        [format]="{ year: 'numeric', month: 'long', day: 'numeric' }"
+        [(value)]="eventDateTime" />
+      <rng-date-time-picker-input
+        label="Appointment"
+        [format]="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+        [(value)]="fullDateTime" />
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+          Event: <code class="doc-prose__code">{{ eventDateTime()?.toISO() ?? 'null' }}</code> |
+          Appt: <code class="doc-prose__code">{{ fullDateTime()?.toISO() ?? 'null' }}</code>
+        </p>
+        @if (eventDateTime() || fullDateTime()) {
+          <button type="button" (click)="clearFullDateTime()" style="font-size: 0.8125rem; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; color: var(--rng-primary, #2563eb);">Clear</button>
+        }
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example - template" variant="prose" />
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-date-time-picker-input</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Field label rendered above the input via <code class="doc-prose__code">&lt;label [for]="id()"&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">placeholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Placeholder shown when no date/time is selected - visible via <code class="doc-prose__code">isShowPlaceholder()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hint</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Helper text shown below the input via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Native <code class="doc-prose__code">name</code> attribute</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">format</code></td><td class="doc-prose__td"><code class="doc-prose__code">DateTimeFormatOptions</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">DateTime.DATE_MED</code></td><td class="doc-prose__td">Luxon format options for displaying the date portion via <code class="doc-prose__code">dateTimeFieldLabel()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">error</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Applies error styling via <code class="doc-prose__code">rng-input--error</code> - also checked with <code class="doc-prose__code">errors().length</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">errorMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Overrides <code class="doc-prose__code">hint</code> when <code class="doc-prose__code">error</code> is <code class="doc-prose__code">true</code> via <code class="doc-prose__code">hintMessage()</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">disabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Disables the field via <code class="doc-prose__code">rng-input--disabled</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">readonly</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Makes the field read-only</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">required</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">false</code></td><td class="doc-prose__td">Marks the field as required (ARIA)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-date-time-picker-input</code> Models (two-way)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Model</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">DateTime | null</code></td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">The selected date + time as a Luxon DateTime - two-way bindable via <code class="doc-prose__code">[(value)]</code> and <code class="doc-prose__code">(valueChange)</code>. When only a date is selected, defaults to midnight (<code class="doc-prose__code">00:00</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">FormValueControl integration</h3>
+  <p class="doc-prose__p">
+    When used with signals forms, bind the field via <code class="doc-prose__code">[formField]="form.controls.*"</code>.
+    The component implements <code class="doc-prose__code">FormValueControl&lt;DateTime | null&gt;</code> and syncs <code class="doc-prose__code">value</code>, <code class="doc-prose__code">disabled</code>, <code class="doc-prose__code">required</code>, <code class="doc-prose__code">invalid</code>, <code class="doc-prose__code">touched</code> and validation state from the form.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">formField</code></td><td class="doc-prose__td"><code class="doc-prose__code">FieldTree&lt;DateTime | null&gt;</code></td><td class="doc-prose__td">Signals form field binding - use <code class="doc-prose__code">[formField]="form.controls.scheduledAt"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onCalendarValueChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">onCalendarValueChange(value: DateTime | null): void</code></td><td class="doc-prose__td">Handles calendar selection - sets <code class="doc-prose__code">calendarValue</code>, marks <code class="doc-prose__code">touched</code> and hides the popover. The time effect merges the time part.</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeHour</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeHour(data: ISelectPlainOption | undefined): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">selectedHour</code> - triggers the merge effect to update <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeMinute</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeMinute(data: ISelectPlainOption | undefined): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">selectedMinute</code> - triggers the merge effect to update <code class="doc-prose__code">value</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onChangeHourFormat</code></td><td class="doc-prose__td"><code class="doc-prose__code">onChangeHourFormat(format: string): void</code></td><td class="doc-prose__td">Sets <code class="doc-prose__code">selectedHourFormat</code> (<code class="doc-prose__code">AM</code> / <code class="doc-prose__code">PM</code>) - triggers the merge effect</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Computed helpers</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">dateTimeFieldLabel</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Formatted display value - <code class="doc-prose__code">date.toLocaleString(format())</code> plus <code class="doc-prose__code">hh:mm AM/PM</code> when time is selected</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isShowPlaceholder</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">Whether the placeholder is visible - true when <code class="doc-prose__code">dateTimeFieldLabel()</code> is empty</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hintMessage</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">Resolves <code class="doc-prose__code">errorMessage</code> when <code class="doc-prose__code">error</code> is true, otherwise <code class="doc-prose__code">hint</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

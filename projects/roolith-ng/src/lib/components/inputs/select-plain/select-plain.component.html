@@ -1,0 +1,38 @@
+<div
+  class="rng-input rng-input--select"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--error]="error()">
+  @if (label()) {
+    <label
+      [for]="id()"
+      class="rng-input__label">
+      {{ label() }}
+    </label>
+  }
+  <div class="rng-input__field-wrapper">
+    <select
+      class="rng-input__field"
+      [id]="id()"
+      [value]="value()"
+      (change)="onChangeHandler($event)"
+      (blur)="touched.set(true)"
+      [disabled]="disabled()"
+      [attr.aria-invalid]="invalid()"
+      [attr.aria-required]="required()"
+      [attr.name]="name()">
+      @for (item of data(); track item.value) {
+        <option
+          [value]="item.value"
+          [selected]="item.value === value()?.value">
+          {{ item.label }}
+        </option>
+      }
+    </select>
+
+    <i class="rng-icon rng-icon--select rng-input__icon"></i>
+  </div>
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>

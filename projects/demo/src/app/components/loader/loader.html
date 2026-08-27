@@ -1,0 +1,297 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Loader</h1>
+  <p class="doc-prose__p">
+    A global overlay for async operations and a lightweight inline spinner.
+    <code class="doc-prose__code">rng-loader</code> is controlled by <code class="doc-prose__code">LoaderService</code> and covers the viewport -
+    blocking by default or non-blocking when requested. <code class="doc-prose__code">rng-inline-loader</code> is a self-contained
+    spinner for buttons, cards, table cells and other inline contexts.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Setup</h2>
+
+  <h3 class="doc-prose__h3">Root loader host</h3>
+  <p class="doc-prose__p">
+    Place <code class="doc-prose__code">&lt;rng-loader /&gt;</code> once in your root layout template (e.g. <code class="doc-prose__code">app.component.html</code>)
+    so it is globally available. The component reads <code class="doc-prose__code">LoaderService.isLoading()</code>,
+    <code class="doc-prose__code">isNonBlocking()</code> and <code class="doc-prose__code">message()</code> and renders the overlay when needed.
+    Without the host, calls to <code class="doc-prose__code">LoaderService.show()</code> will update the signals but nothing will appear.
+  </p>
+  <rng-code-block [code]="setupSnippet" language="html" title="app.component.html" variant="prose" />
+
+  <h3 class="doc-prose__h3">Injecting the service</h3>
+  <p class="doc-prose__p">
+    Inject <code class="doc-prose__code">LoaderService</code> in any component or service to control the loader.
+    The service is <code class="doc-prose__code">providedIn: 'root'</code> so no extra provider is needed.
+  </p>
+  <rng-code-block [code]="injectSnippet" language="typescript" title="injecting LoaderService" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Demo setup</p>
+    <p class="doc-prose__p">
+      This page already renders <code class="doc-prose__code">&lt;rng-loader /&gt;</code> at the bottom.
+      All blocking and non-blocking buttons below drive the same global overlay via <code class="doc-prose__code">LoaderService</code>.
+      Each demo auto-hides after 2 seconds - in real code you would call <code class="doc-prose__code">hide()</code> in a <code class="doc-prose__code">finally</code> block.
+    </p>
+  </div>
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Blocking loader (default)</h3>
+  <p class="doc-prose__p">
+    Covers the full viewport and blocks user interaction.
+    The overlay uses <code class="doc-prose__code">rng-loader</code> with <code class="doc-prose__code">rng-loader__content</code>,
+    <code class="doc-prose__code">rng-loader__icon</code> and <code class="doc-prose__code">rng-loader__text</code>. The icon renders
+    <code class="doc-prose__code">rng-icon--spinner</code> when blocking. Default message is <code class="doc-prose__code">'Processing...'</code>.
+    Call <code class="doc-prose__code">hide()</code> to dismiss and reset all state.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showBlocking()">Show blocking loader</rng-button>
+      <rng-button variant="secondary" (clickEvent)="showBlockingCustom()">With custom message</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="blockingSnippet" language="typescript" title="show blocking" variant="prose" />
+  <rng-code-block [code]="hideSnippet" language="typescript" title="hide" variant="prose" />
+  <rng-code-block [code]="autoHideSnippet" language="typescript" title="auto-hide demo (2s)" variant="prose" />
+
+  <h3 class="doc-prose__h3">Blocking loader with custom message</h3>
+  <p class="doc-prose__p">
+    Pass a string to <code class="doc-prose__code">show(message)</code> to override the default text.
+    The message is rendered inside <code class="doc-prose__code">rng-loader__text</code>. When no message is stored the component falls back to <code class="doc-prose__code">'Processing...'</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showBlockingCustom()">Show "Saving changes..."</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="blockingCustomSnippet" language="typescript" title="blocking with message" variant="prose" />
+
+  <h3 class="doc-prose__h3">Non-blocking loader</h3>
+  <p class="doc-prose__p">
+    Displays the loader without blocking interaction.
+    <code class="doc-prose__code">showNonBlocking()</code> sets <code class="doc-prose__code">isNonBlocking</code> to <code class="doc-prose__code">true</code> which adds
+    <code class="doc-prose__code">rng-loader--non-blocking</code> to the overlay. The icon switches to <code class="doc-prose__code">rng-icon--loader</code>.
+    The user can still interact with the page while the loader is visible.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showNonBlocking()">Show non-blocking</rng-button>
+      <rng-button variant="secondary" (clickEvent)="showNonBlockingCustom()">With custom message</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="nonBlockingSnippet" language="typescript" title="show non-blocking" variant="prose" />
+  <rng-code-block [code]="hideSnippet" language="typescript" title="hide" variant="prose" />
+
+  <h3 class="doc-prose__h3">Non-blocking loader with custom message</h3>
+  <p class="doc-prose__p">
+    Same as above but with a custom string: <code class="doc-prose__code">showNonBlocking('Loading data...')</code>.
+    Default is still <code class="doc-prose__code">'Processing...'</code> when omitted.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showNonBlockingCustom()">Show "Loading data..."</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="nonBlockingCustomSnippet" language="typescript" title="non-blocking with message" variant="prose" />
+
+  <h3 class="doc-prose__h3">Usage in an async operation</h3>
+  <p class="doc-prose__p">
+    Wrap the operation in <code class="doc-prose__code">show()</code> / <code class="doc-prose__code">hide()</code> with a <code class="doc-prose__code">try / finally</code>
+    so the loader always clears even when the request fails. Use <code class="doc-prose__code">showNonBlocking</code> instead if the UI should remain interactive.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <rng-button variant="primary" (clickEvent)="showAsync()">Simulate async (2s)</rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="asyncSnippet" language="typescript" title="async operation" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-warning-triangle" aria-hidden="true"></i> Hide is blocked during active HTTP requests</p>
+    <p class="doc-prose__p">
+      <code class="doc-prose__code">hide()</code> is a no-op while <code class="doc-prose__code">_activeRequests &gt; 0</code> (incremented by <code class="doc-prose__code">startRequest()</code>
+      and decremented by <code class="doc-prose__code">endRequest()</code> from the global loading interceptor).
+      Internal <code class="doc-prose__code">_hide()</code> resets <code class="doc-prose__code">isLoading</code>, <code class="doc-prose__code">isNonBlocking</code> and <code class="doc-prose__code">message</code>.
+      For manual flows with no interceptor, <code class="doc-prose__code">hide()</code> clears the overlay immediately.
+    </p>
+  </div>
+
+  <h2 class="doc-prose__h2">Inline Loader</h2>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-inline-loader</code> is a lightweight, self-contained spinner for use inline within UI elements
+    such as buttons, cards or table cells. It does not depend on <code class="doc-prose__code">LoaderService</code> - just drop it in the template.
+    Content projection overrides the default <code class="doc-prose__code">Loading...</code> text, and the spinner renders
+    <code class="doc-prose__code">rng-inline-loader</code> with <code class="doc-prose__code">rng-icon--loader rng-spinner</code>.
+  </p>
+
+  <h3 class="doc-prose__h3">Import</h3>
+  <rng-code-block [code]="inlineImportSnippet" language="typescript" title="import InlineLoaderComponent" variant="prose" />
+
+  <h3 class="doc-prose__h3">Basic usage</h3>
+  <p class="doc-prose__p">
+    Renders a spinner with the default <code class="doc-prose__code">Loading...</code> text.
+  </p>
+  <div class="doc-prose__example">
+    <rng-inline-loader />
+  </div>
+  <rng-code-block [code]="inlineBasicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom label</h3>
+  <p class="doc-prose__p">
+    Project any text or markup inside the element to override the default label.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <rng-inline-loader>Fetching data...</rng-inline-loader>
+      <rng-inline-loader>Saving...</rng-inline-loader>
+      <rng-inline-loader>Loading activity...</rng-inline-loader>
+    </div>
+  </div>
+  <rng-code-block [code]="inlineCustomSnippet" language="html" title="custom label" variant="prose" />
+
+  <h3 class="doc-prose__h3">Inside a button</h3>
+  <p class="doc-prose__p">
+    Use the inline loader inside a button to indicate an in-progress action.
+    Disable the button while loading and swap the label for the spinner.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <button
+        type="button"
+        class="rng-button rng-button--primary"
+        [disabled]="isInlineLoading()"
+        (click)="triggerInlineButton()"
+        style="min-width: 8rem;">
+        @if (isInlineLoading()) {
+          <rng-inline-loader>Saving...</rng-inline-loader>
+        } @else {
+          Save
+        }
+      </button>
+      <rng-button variant="secondary" (clickEvent)="triggerInlineButton()">
+        @if (isInlineLoading()) {
+          <rng-inline-loader>Saving...</rng-inline-loader>
+        } @else {
+          Trigger button loading (2s)
+        }
+      </rng-button>
+    </div>
+  </div>
+  <rng-code-block [code]="inlineButtonSnippet" language="html" title="inside button" variant="prose" />
+
+  <h3 class="doc-prose__h3">Inside a card</h3>
+  <p class="doc-prose__p">
+    Inline loaders work well inside cards or other containers to show localized loading without a full-page overlay.
+  </p>
+  <div class="doc-prose__example">
+    <div style="max-width: 420px; display: flex; flex-direction: column; gap: 0.75rem;">
+      <rng-card header="Recent activity" subheader="Last updated just now">
+        @if (isCardLoading()) {
+          <rng-inline-loader>Loading activity...</rng-inline-loader>
+        } @else {
+          <p style="margin: 0;">Activity loaded - 3 new items.</p>
+        }
+      </rng-card>
+      <div>
+        <rng-button variant="primary" size="small" (clickEvent)="triggerCardLoading()">Reload activity (2s)</rng-button>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="inlineCardSnippet" language="html" title="inside card" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">
+    Global blocking / non-blocking loaders via <code class="doc-prose__code">LoaderService</code> and local inline spinners together.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <rng-button variant="primary" (clickEvent)="showBlocking()">Blocking</rng-button>
+        <rng-button variant="secondary" (clickEvent)="showNonBlocking()">Non-blocking</rng-button>
+        <rng-button variant="ghost" (clickEvent)="triggerInlineButton()">
+          @if (isInlineLoading()) {
+            <rng-inline-loader>Saving...</rng-inline-loader>
+          } @else {
+            Inline button
+          }
+        </rng-button>
+      </div>
+      <rng-inline-loader>Fetching data...</rng-inline-loader>
+    </div>
+  </div>
+  <rng-code-block [code]="fullComponentSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">LoaderService</code> Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">show</code></td><td class="doc-prose__td"><code class="doc-prose__code">show(message?: string): void</code></td><td class="doc-prose__td">Shows the blocking loader. Sets <code class="doc-prose__code">message</code>, <code class="doc-prose__code">isNonBlocking</code> to <code class="doc-prose__code">false</code> and <code class="doc-prose__code">isLoading</code> to <code class="doc-prose__code">true</code>. Default message: <code class="doc-prose__code">'Processing...'</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">showNonBlocking</code></td><td class="doc-prose__td"><code class="doc-prose__code">showNonBlocking(message?: string): void</code></td><td class="doc-prose__td">Shows the non-blocking loader. Sets <code class="doc-prose__code">isNonBlocking</code> to <code class="doc-prose__code">true</code> and <code class="doc-prose__code">isLoading</code> to <code class="doc-prose__code">true</code>. Default message: <code class="doc-prose__code">'Processing...'</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">hide</code></td><td class="doc-prose__td"><code class="doc-prose__code">hide(): void</code></td><td class="doc-prose__td">Hides the loader and resets all state. No-op while <code class="doc-prose__code">_activeRequests &gt; 0</code>. Delegates to internal <code class="doc-prose__code">_hide()</code> which clears <code class="doc-prose__code">isLoading</code>, <code class="doc-prose__code">isNonBlocking</code> and <code class="doc-prose__code">message</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">startRequest</code></td><td class="doc-prose__td"><code class="doc-prose__code">startRequest(): void</code></td><td class="doc-prose__td">Increments the active request counter and shows the non-blocking loader. Called by the global loading interceptor</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">endRequest</code></td><td class="doc-prose__td"><code class="doc-prose__code">endRequest(): void</code></td><td class="doc-prose__td">Decrements the active request counter and hides the loader when no requests remain. Called by the global loading interceptor</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">LoaderService</code> Signals (readonly)</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Signal</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isLoading</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;boolean&gt; (readonly)</code></td><td class="doc-prose__td">Whether the loader is currently visible</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isNonBlocking</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;boolean&gt; (readonly)</code></td><td class="doc-prose__td">Whether the loader is in non-blocking mode - adds <code class="doc-prose__code">rng-loader--non-blocking</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">message</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;string | null&gt; (readonly)</code></td><td class="doc-prose__td">The current loader message. <code class="doc-prose__code">rng-loader</code> falls back to <code class="doc-prose__code">'Processing...'</code> when <code class="doc-prose__code">null</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-loader</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Selector</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-loader</code></td><td class="doc-prose__td">Global overlay. Renders <code class="doc-prose__code">rng-loader</code> with <code class="doc-prose__code">rng-loader__content</code>, <code class="doc-prose__code">rng-loader__icon</code> and <code class="doc-prose__code">rng-loader__text</code>. Adds <code class="doc-prose__code">rng-loader--non-blocking</code> when <code class="doc-prose__code">isNonBlocking()</code> is <code class="doc-prose__code">true</code>. No inputs - all state comes from <code class="doc-prose__code">LoaderService</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-inline-loader</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Selector</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rng-inline-loader</code></td><td class="doc-prose__td">Inline spinner. Renders <code class="doc-prose__code">rng-inline-loader</code> with <code class="doc-prose__code">rng-icon--loader rng-spinner</code> and projects <code class="doc-prose__code">&lt;ng-content&gt;</code> with default <code class="doc-prose__code">Loading...</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-inline-loader</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Text or markup displayed next to the spinner. Defaults to <code class="doc-prose__code">Loading...</code> when nothing is projected</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Styling notes</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">rng-loader</code> is a fixed fullscreen overlay.
+    <code class="doc-prose__code">rng-loader--non-blocking</code> relaxes pointer-events so the page remains interactive.
+    <code class="doc-prose__code">rng-inline-loader</code> is inline-flex with a spinning icon - use it inside buttons, cards or table cells without any service wiring.
+  </p>
+
+  <rng-doc-pager />
+</article>
+
+<!-- Global loader host for service-driven examples - renders the overlay when LoaderService.isLoading() is true -->
+<rng-loader />

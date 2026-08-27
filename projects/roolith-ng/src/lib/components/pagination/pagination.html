@@ -1,0 +1,74 @@
+<div class="rng-pagination">
+  <ul class="rng-pagination__list">
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--ghost">
+        <i class="rng-icon rng-icon--arrow-left"></i>
+        Previous
+      </a>
+    </li>
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--ghost">
+        1
+      </a>
+    </li>
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--gray">
+        2
+      </a>
+    </li>
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--ghost">
+        3
+      </a>
+    </li>
+    <li class="rng-pagination__item rng-pagination__item--break">
+      <i class="rng-icon rng-icon--more"></i>
+    </li>
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--ghost">
+        99
+      </a>
+    </li>
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--ghost">
+        100
+      </a>
+    </li>
+    <li class="rng-pagination__item">
+      <a
+        href=""
+        class="rng-button rng-button--ghost">
+        Next
+        <i class="rng-icon rng-icon--arrow-right"></i>
+      </a>
+    </li>
+  </ul>
+
+  <!-- meta -->
+  <div class="rng-pagination__meta">
+    <!-- selector -->
+    <div class="rng-pagination__selector">
+      <span class="rng-pagination__selector-label">Rows per page</span>
+      <div class="rng-pagination__selector-field">
+        <rng-select-input
+          [data]="paginationPageSizeOptions()"
+          [value]="paginationPageSizeOptions()[1]"></rng-select-input>
+      </div>
+    </div>
+    <!-- selector -->
+    <div class="rng-pagination__info">Total row(s) 1000. Showing page 1 out of 100.</div>
+  </div>
+  <!-- meta -->
+</div>

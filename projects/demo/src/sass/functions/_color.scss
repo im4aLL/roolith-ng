@@ -1,0 +1,6 @@
+@use 'sass:map';
+@use '../settings' as s;
+
+@function color($name) {
+  @return map.get(s.$colors, $name);
+}

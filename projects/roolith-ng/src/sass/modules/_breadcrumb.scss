@@ -1,0 +1,38 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin breadcrumb {
+  .rng-breadcrumb {
+    --rng-breadcrumb-color: var(--rng-color-neutral-600);
+    --rng-breadcrumb-active-color: var(--rng-color-neutral-900);
+    --rng-breadcrumb-spacing: #{rem(6)};
+
+    font-size: rem(14);
+    display: flex;
+    gap: var(--rng-breadcrumb-spacing);
+  }
+
+  .rng-breadcrumb__item {
+    display: flex;
+    align-items: center;
+    gap: var(--rng-breadcrumb-spacing);
+
+    a {
+      color: var(--rng-breadcrumb-color);
+    }
+
+    &:after {
+      @extend .rng-icon, .rng-icon--arrow-right;
+      content: '';
+      background-color: var(--rng-breadcrumb-color);
+    }
+  }
+
+  .rng-breadcrumb__item--active {
+    color: var(--rng-breadcrumb-active-color);
+
+    &:after {
+      display: none;
+    }
+  }
+}

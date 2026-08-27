@@ -1,0 +1,27 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin list {
+  .rng-list {
+    --rng-list-border-color: var(--rng-border-color);
+    --rng-list-header-color: var(--rng-color-neutral-700);
+  }
+
+  .rng-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+    padding-block: rem(5);
+    border-bottom: rem(1) solid var(--rng-list-border-color);
+    font-size: rem(14);
+
+    &:first-child {
+      padding-top: 0;
+    }
+  }
+
+  .rng-list__header {
+    font-weight: var(--rng-font-weight-semi-bold);
+    color: var(--rng-list-header-color);
+  }
+}

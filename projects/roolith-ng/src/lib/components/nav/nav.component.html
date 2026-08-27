@@ -1,0 +1,275 @@
+<nav
+  class="rng-nav"
+  [class.rng-nav--compact]="collapsed()"
+  [class.rng-nav--primary]="variation() === 'primary'"
+  [class]="typeClassName()">
+  <ul class="rng-nav__list">
+    @for (item of items(); track item.name) {
+      <li
+        class="rng-nav__item"
+        [class.rng-nav__item--focused]="item.isActive"
+        [class.rng-nav__item--active]="item.isOpen"
+        (click)="toggleSubmenu(item)"
+        tabindex="0"
+        (keydown.enter)="toggleSubmenu(item)"
+        (keydown.space)="toggleSubmenu(item)">
+        <a
+          [attr.href]="item.link"
+          class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+          (click)="menuItemClickHandler($event, item)">
+          @if (item.icon) {
+            <i [class]="'rng-icon rng-nav__item-icon rng-icon--' + item.icon"></i>
+          } @else if (item.customIcon) {
+            <i
+              class="rng-nav__item-icon rng-nav__item-icon--custom"
+              [class]="item.customIcon"></i>
+          }
+
+          <span class="rng-nav__item-text">{{ item.name }}</span>
+
+          @if (item.count) {
+            <span class="rng-badge rng-nav__item-badge">
+              {{ item.count }}
+            </span>
+          }
+
+          <span class="rng-tooltip__content rng-nav__item-tooltip">
+            <span>{{ item.name }}</span>
+            @if (item.count) {
+              <span class="rng-badge">
+                {{ item.count }}
+              </span>
+            }
+          </span>
+        </a>
+
+        <!-- Children -->
+        @if (item.children?.length) {
+          <ul class="rng-nav__sub-list">
+            @for (child of item.children; track child.name) {
+              <li
+                class="rng-nav__item"
+                [class.rng-nav__item--focused]="child.isActive"
+                (click)="childItemClickHandler($event, item, child)"
+                tabindex="0"
+                (keydown.enter)="childItemClickHandler($event, item, child)"
+                (keydown.space)="childItemClickHandler($event, item, child)">
+                <a
+                  [attr.href]="child.link"
+                  class="rng-nav__item-link"
+                  (click)="childMenuItemClickHandler($event, child)">
+                  @if (child.icon) {
+                    <i [class]="'rng-icon rng-nav__item-icon rng-icon--' + child.icon"></i>
+                  } @else if (child.customIcon) {
+                    <i
+                      class="rng-nav__item-icon rng-nav__item-icon--custom"
+                      [class]="child.customIcon"></i>
+                  }
+                  <span class="rng-nav__item-text">{{ child.name }}</span>
+                  @if (child.count) {
+                    <span class="rng-badge rng-nav__item-badge">
+                      {{ child.count }}
+                    </span>
+                  }
+                </a>
+              </li>
+            }
+          </ul>
+        }
+        <!-- children -->
+      </li>
+    }
+  </ul>
+</nav>
+
+<!--
+
+<nav class="rng-nav rng-nav--warning">
+  <ul class="rng-nav__list">
+    <li
+      tabindex="0"
+      class="rng-nav__item rng-nav__item--focused">
+      <a
+        class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+        href="/dashboard">
+        <i class="rng-icon rng-nav__item-icon rng-icon--home"></i>
+        <span class="rng-nav__item-text">Dashboard</span>
+
+        <span class="rng-tooltip__content rng-nav__item-tooltip">
+          <span>Dashboard</span>
+        </span>
+      </a>
+    </li>
+    <li
+      tabindex="0"
+      class="rng-nav__item">
+      <a
+        class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+        href="/users">
+        <i class="rng-icon rng-nav__item-icon rng-icon--users"></i>
+        <span class="rng-nav__item-text">Users</span>
+        <span class="rng-badge rng-nav__item-badge">12</span>
+
+        <span class="rng-tooltip__content rng-nav__item-tooltip">
+          <span>Users</span>
+          <span class="rng-badge">12</span>
+        </span>
+      </a>
+    </li>
+    <li
+      tabindex="0"
+      class="rng-nav__item rng-nav__item--active">
+      <a
+        class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+        href="/projects">
+        <i class="rng-icon rng-nav__item-icon rng-icon--arrow-union"></i>
+        <span class="rng-nav__item-text">Projects</span>
+
+        <span class="rng-tooltip__content rng-nav__item-tooltip">
+          <span>Projects</span>
+        </span>
+      </a>
+      <ul class="rng-nav__sub-list">
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/projects/all">
+            <span class="rng-nav__item-text">All Projects</span>
+          </a>
+        </li>
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/projects/mine">
+            <span class="rng-nav__item-text">My Projects</span>
+          </a>
+        </li>
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/projects/archived">
+            <span class="rng-nav__item-text">Archived</span>
+            <span class="rng-badge rng-nav__item-badge">3</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li
+      tabindex="0"
+      class="rng-nav__item">
+      <a
+        class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+        href="/messages">
+        <i class="rng-icon rng-nav__item-icon rng-icon--help"></i>
+        <span class="rng-nav__item-text">Messages</span>
+        <span class="rng-badge rng-nav__item-badge">5</span>
+
+        <span class="rng-tooltip__content rng-nav__item-tooltip">
+          <span>Messages</span>
+          <span class="rng-badge">5</span>
+        </span>
+      </a>
+    </li>
+    <li
+      tabindex="0"
+      class="rng-nav__item">
+      <a
+        class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+        href="/analytics">
+        <i class="rng-icon rng-nav__item-icon rng-icon--bar-chart"></i>
+        <span class="rng-nav__item-text">Analytics</span>
+
+        <span class="rng-tooltip__content rng-nav__item-tooltip">
+          <span>Analytics</span>
+        </span>
+      </a>
+      <ul class="rng-nav__sub-list">
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/analytics/traffic">
+            <span class="rng-nav__item-text">Traffic</span>
+          </a>
+        </li>
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/analytics/revenue">
+            <span class="rng-nav__item-text">Revenue</span>
+          </a>
+        </li>
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/analytics/reports">
+            <span class="rng-nav__item-text">Reports</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li
+      tabindex="0"
+      class="rng-nav__item">
+      <a
+        class="rng-nav__item-link rng-tooltip rng-tooltip--right"
+        href="/settings">
+        <i class="rng-icon rng-nav__item-icon rng-icon--settings"></i>
+        <span class="rng-nav__item-text">Settings</span>
+
+        <span class="rng-tooltip__content rng-nav__item-tooltip">
+          <span>Settings</span>
+        </span>
+      </a>
+      <ul class="rng-nav__sub-list">
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/settings/profile">
+            <i class="rng-icon rng-nav__item-icon rng-icon--user"></i>
+
+            <span class="rng-nav__item-text">Profile</span>
+          </a>
+        </li>
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/settings/security">
+            <i class="rng-icon rng-nav__item-icon rng-icon--calendar"></i>
+
+            <span class="rng-nav__item-text">Security</span>
+          </a>
+        </li>
+        <li
+          tabindex="0"
+          class="rng-nav__item">
+          <a
+            class="rng-nav__item-link"
+            href="/settings/notifications">
+            <i class="rng-icon rng-nav__item-icon rng-icon--task-list"></i>
+
+            <span class="rng-nav__item-text">Notifications</span>
+            <span class="rng-badge rng-nav__item-badge">2</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+-->

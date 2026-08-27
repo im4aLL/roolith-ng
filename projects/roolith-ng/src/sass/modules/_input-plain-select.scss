@@ -1,0 +1,24 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-plain-select {
+  .rng-input--select {
+    .rng-input__field {
+      appearance: none;
+      width: 100%;
+      padding-right: rem(32);
+    }
+
+    .rng-input__field-wrapper {
+      width: 100%;
+      position: relative;
+    }
+
+    .rng-input__icon {
+      pointer-events: none;
+      position: absolute;
+      right: rem(8);
+      top: rem(8);
+    }
+  }
+}

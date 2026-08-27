@@ -1,0 +1,21 @@
+@use './css-var' as *;
+@use './reset';
+@use './base';
+@use './typography';
+@use './modules' as mod;
+
+@mixin doc-everything() {
+  @include css-variable();
+  @include reset.reset();
+  @include base.base();
+  @include typography.typography();
+  @include mod.layout();
+  @include mod.button();
+  @include mod.doc-button();
+  @include mod.card();
+  @include mod.home();
+  @include mod.doc();
+  @include mod.outline();
+  @include mod.code();
+  @include mod.components();
+}

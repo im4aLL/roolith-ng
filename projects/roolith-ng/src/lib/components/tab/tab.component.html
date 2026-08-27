@@ -1,0 +1,39 @@
+<div
+  class="rng-tab"
+  [class.rng-tab--vertical]="vertical()"
+  [class.rng-tab--block]="block()"
+  [class.rng-tab--flip]="flip()">
+  <div class="rng-tab__nav">
+    <rng-toggle-group
+      [items]="items()"
+      [block]="block()"
+      [vertical]="vertical()"
+      [value]="selectedItem()?.value ?? null"
+      (valueChange)="onTabChange($event)" />
+  </div>
+
+  <div class="rng-tab__content">
+    @for (tabContent of contents(); track tabContent.key) {
+      <div
+        class="rng-tab__pane"
+        [class.rng-tab__pane--active]="tabContent.key === selectedItem()?.value">
+        <ng-container
+          *ngTemplateOutlet="
+            customTemplateData()[tabContent.key] || default;
+            context: { $implicit: tabContent }
+          "></ng-container>
+      </div>
+    }
+  </div>
+</div>
+
+<ng-template
+  #default
+  let-item>
+  @if (item.header) {
+    <h6 class="rng-tab__hl">{{ item.header }}</h6>
+  }
+  <div class="rng-tab__text">
+    {{ item.content }}
+  </div>
+</ng-template>

@@ -1,0 +1,33 @@
+<div
+  class="rng-input rng-input-switch"
+  [class.rng-input--disabled]="disabled()"
+  [class.rng-input--readonly]="readonly()"
+  [class.rng-input--error]="error()">
+  <label
+    [for]="id()"
+    class="rng-input-switch__label">
+    <input
+      type="checkbox"
+      [id]="id()"
+      class="rng-input-switch__field"
+      [checked]="value()"
+      [disabled]="disabled()"
+      [attr.aria-invalid]="invalid()"
+      [attr.aria-required]="required()"
+      [attr.name]="name()"
+      (change)="onChange($event.target.checked)"
+      (blur)="touched.set(true)" />
+
+    <span class="rng-input-switch__track">
+      <span class="rng-input-switch__thumb"></span>
+    </span>
+
+    @if (label()) {
+      <span class="rng-input-switch__text">{{ label() }}</span>
+    }
+  </label>
+
+  @if (hintMessage()) {
+    <span class="rng-input__hint">{{ hintMessage() }}</span>
+  }
+</div>

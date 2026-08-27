@@ -1,0 +1,18 @@
+<nav class="doc-outline__inner" aria-label="On this page">
+  @if (items().length > 0) {
+    <p class="doc-outline__title">On this page</p>
+    <ol class="doc-outline__list">
+      @for (item of items(); track item.id) {
+        <li class="doc-outline__item">
+          <a
+            class="doc-outline__link"
+            [class.doc-outline__link--active]="activeId() === item.id"
+            [href]="hrefFor(item.id)"
+            (click)="onLinkClick($event, item.id)"
+            >{{ item.text }}</a
+          >
+        </li>
+      }
+    </ol>
+  }
+</nav>

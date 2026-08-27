@@ -1,0 +1,111 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin layout-logo {
+  .rng-layout__logo {
+    display: flex;
+    align-items: center;
+    padding: rem(20) rem(20) rem(15) rem(20);
+  }
+
+  .rng-layout__logo-img {
+    height: rem(30);
+    max-width: 100%;
+  }
+
+  .theme-dark .rng-layout__logo-img {
+    filter: invert(1) brightness(1.2);
+  }
+}
+
+@mixin layout-alt {
+  .rng-layout--alt {
+    overflow-x: clip;
+
+    .rng-layout__primary {
+      width: rem(270);
+
+      @include m.breakpoint(large-up) {
+        width: 0;
+      }
+    }
+
+    .rng-main {
+      filter: blur(5px);
+
+      @include m.breakpoint(medium-up) {
+        filter: none;
+      }
+    }
+  }
+}
+
+@mixin layout-copyright {
+  .rng-layout__copyright {
+    padding: rem(15) rem(20);
+    font-size: rem(12);
+    line-height: rem(18);
+    color: var(--rng-color-neutral-500);
+    margin-top: auto;
+  }
+}
+
+@mixin layout-sidebar {
+  .rng-layout__sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .rng-layout__nav-wrapper {
+    background-color: var(--rng-layout-sidebar-background);
+    padding: rem(10);
+    max-height: calc(100dvh - #{rem(80)} - #{rem(35)});
+    overflow-y: auto;
+    width: rem(270);
+    @include m.nice-scroll();
+  }
+}
+
+@mixin layout {
+  .rng-layout {
+    --rng-layout-background: var(--rng-color-neutral);
+    --rng-layout-sidebar-background: var(--rng-color-neutral-50);
+
+    display: flex;
+    flex-direction: row;
+    min-height: 100dvh;
+  }
+
+  .rng-layout__primary {
+    background-color: var(--rng-layout-sidebar-background);
+    width: 0;
+    overflow: clip;
+    border-right: rem(1) solid var(--rng-border-color);
+    @include m.transition('width');
+
+    @include m.breakpoint(large-up) {
+      width: rem(270);
+    }
+  }
+
+  .rng-layout__secondary {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rng-main {
+    height: calc(100dvh - #{rem(53)});
+    padding: rem(20);
+    overflow-y: auto;
+    @include m.nice-scroll();
+    @include m.transition('filter');
+  }
+
+  @include layout-sidebar();
+  @include layout-logo();
+  @include layout-alt();
+  @include layout-copyright();
+}

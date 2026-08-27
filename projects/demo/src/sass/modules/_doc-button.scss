@@ -1,0 +1,76 @@
+@use '../functions' as *;
+
+@mixin doc-button() {
+  .doc-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: rem(6);
+    padding: rem(2) rem(8);
+    font-size: 0.8125rem;
+    font-weight: var(--doc-font-weight-medium);
+    line-height: 1.5;
+    border: rem(1) solid var(--doc-border);
+    border-radius: rem(6);
+    background-color: var(--doc-btn-alt-bg);
+    color: var(--doc-text);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition:
+      background-color var(--doc-duration) var(--doc-easing),
+      border-color var(--doc-duration) var(--doc-easing),
+      color var(--doc-duration) var(--doc-easing);
+  }
+
+  .doc-button:hover {
+    background-color: var(--doc-btn-alt-bg-hover);
+    border-color: var(--doc-border-strong);
+  }
+
+  .doc-button:active {
+    background-color: var(--doc-btn-alt-bg-active);
+    border-color: var(--doc-border-strong);
+  }
+
+  .doc-button:focus-visible {
+    outline: rem(2) solid var(--doc-primary);
+    outline-offset: rem(2);
+  }
+
+  .doc-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .doc-button--link {
+    padding: 0;
+    border-width: 0;
+    border-color: transparent;
+    background: transparent;
+    color: var(--doc-primary);
+    font-weight: var(--doc-font-weight-regular);
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+  }
+
+  .doc-button--link:hover {
+    background: transparent;
+    border-color: transparent;
+    color: var(--doc-primary-strong);
+  }
+
+  .doc-button--link:active {
+    background: transparent;
+    border-color: transparent;
+    color: var(--doc-primary);
+  }
+
+  .doc-button--link:disabled {
+    opacity: 0.5;
+  }
+
+  .theme-dark .doc-button:not(.doc-button--link):hover {
+    color: #ffffff;
+  }
+}

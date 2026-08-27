@@ -1,0 +1,51 @@
+<div class="rng-dialog">
+  <div
+    class="rng-dialog__content"
+    [class.rng-dialog__content--no-footer]="!hasButtons()"
+    [style.width.px]="width()">
+    <!-- header -->
+    <div class="rng-dialog__header">
+      <h3 class="rng-dialog__title">{{ header() }}</h3>
+
+      @if (subheader()) {
+        <div class="rng-dialog__subtitle">
+          {{ subheader() }}
+        </div>
+      }
+    </div>
+    <!-- header -->
+
+    <!-- body -->
+    <div class="rng-dialog__body">
+      <ng-content />
+    </div>
+    <!-- body -->
+
+    @if (hasButtons()) {
+      <!-- footer -->
+      <div class="rng-dialog__footer">
+        <div class="rng-dialog__action">
+          @for (button of buttons(); track button.value) {
+            <div class="rng-dialog__action-item">
+              <rng-button
+                [variant]="button.variant || 'ghost'"
+                (clickEvent)="action(button.value)">
+                {{ button.label }}
+              </rng-button>
+            </div>
+          }
+        </div>
+      </div>
+      <!-- footer -->
+    }
+
+    <!-- close -->
+    <div class="rng-dialog__close">
+      <rng-button
+        icon="delete"
+        variant="ghost"
+        (clickEvent)="close()"></rng-button>
+    </div>
+    <!-- close -->
+  </div>
+</div>

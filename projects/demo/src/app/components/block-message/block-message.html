@@ -1,0 +1,76 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Block Message</h1>
+  <p class="doc-prose__p">
+    A centered block-level placeholder for empty states, hints or contextual notices.
+    Renders an optional <code class="doc-prose__code">header</code> above the projected description and can constrain
+    the container with a fixed <code class="doc-prose__code">height</code>. Ideal for "no results", "no data" or
+    guidance messages inside cards or content areas.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">Fallback text without a header - ideal for simple empty states.</p>
+  <rng-block-message>No items to display yet.</rng-block-message>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">With header</h3>
+  <p class="doc-prose__p">
+    Add a <code class="doc-prose__code">header</code> to label the message. The header renders as a heading
+    above the description paragraph.
+  </p>
+  <rng-block-message header="Hint">
+    Select an item to view its details. Use the controls above to make a selection.
+  </rng-block-message>
+  <rng-code-block [code]="withHeaderSnippet" language="html" title="with header" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom height</h3>
+  <p class="doc-prose__p">
+    Control the vertical size with <code class="doc-prose__code">height</code> - any valid CSS height such as
+    <code class="doc-prose__code">'300px'</code>, <code class="doc-prose__code">'50%'</code> or <code class="doc-prose__code">'40vh'</code>. Useful when the empty state
+    should fill a card or content area.
+  </p>
+  <div style="border: 1px dashed var(--rng-border-color, #e2e8f0); border-radius: 0.5rem; overflow: hidden;">
+    <rng-block-message header="No results" height="220px">
+      No data available for the selected filters.
+    </rng-block-message>
+  </div>
+  <rng-code-block [code]="heightSnippet" language="html" title="custom height" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Header and height together for a full empty-state placeholder.</p>
+  <div style="border: 1px dashed var(--rng-border-color, #e2e8f0); border-radius: 0.5rem; overflow: hidden;">
+    <rng-block-message header="No results" height="300px">
+      No data available for the selected filters. Try adjusting the filters or clearing the search.
+    </rng-block-message>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="html" title="full example" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-block-message</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">header</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Optional heading rendered above the description text</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">height</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Inline height of the container (e.g. <code class="doc-prose__code">'300px'</code>, <code class="doc-prose__code">'50%'</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-block-message</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Description text or rich content projected via <code class="doc-prose__code">&lt;ng-content /&gt;</code></td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

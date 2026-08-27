@@ -1,0 +1,160 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '../settings' as s;
+@use '../mixins' as m;
+
+$grid-css-grid-small-gutter: map.get(s.$grid-gutter, 'small');
+$grid-css-grid-medium-gutter: map.get(s.$grid-gutter, 'medium');
+$grid-css-grid-large-gutter: map.get(s.$grid-gutter, 'large');
+$grid-css-grid-xxlarge-gutter: map.get(s.$grid-gutter, 'xxlarge');
+
+@mixin css-grid() {
+  .container {
+    max-width: s.$container-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .column {
+    padding-left: math.div($grid-css-grid-small-gutter, 2);
+    padding-right: math.div($grid-css-grid-small-gutter, 2);
+
+    @include m.breakpoint(medium-up) {
+      padding-left: math.div($grid-css-grid-medium-gutter, 2);
+      padding-right: math.div($grid-css-grid-medium-gutter, 2);
+    }
+
+    @include m.breakpoint(large-up) {
+      padding-left: math.div($grid-css-grid-large-gutter, 2);
+      padding-right: math.div($grid-css-grid-large-gutter, 2);
+    }
+
+    @include m.breakpoint(xxlarge-up) {
+      padding-left: math.div($grid-css-grid-xxlarge-gutter, 2);
+      padding-right: math.div($grid-css-grid-xxlarge-gutter, 2);
+    }
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(s.$grid-column-count, 1fr);
+    grid-gap: $grid-css-grid-small-gutter;
+    padding-left: math.div($grid-css-grid-small-gutter, 2);
+    padding-right: math.div($grid-css-grid-small-gutter, 2);
+
+    @include m.breakpoint(medium-up) {
+      grid-gap: $grid-css-grid-medium-gutter;
+      padding-left: math.div($grid-css-grid-medium-gutter, 2);
+      padding-right: math.div($grid-css-grid-medium-gutter, 2);
+    }
+
+    @include m.breakpoint(large-up) {
+      grid-gap: $grid-css-grid-large-gutter;
+      padding-left: math.div($grid-css-grid-large-gutter, 2);
+      padding-right: math.div($grid-css-grid-large-gutter, 2);
+    }
+
+    @include m.breakpoint(xxlarge-up) {
+      padding-left: math.div($grid-css-grid-xxlarge-gutter, 2);
+      padding-right: math.div($grid-css-grid-xxlarge-gutter, 2);
+    }
+  }
+
+  [class^='large-'],
+  [class^='medium-'] {
+    grid-column: span s.$grid-column-count;
+  }
+
+  @for $i from 1 through s.$grid-column-count {
+    .small-#{$i} {
+      grid-column: span $i;
+    }
+
+    .small-push-#{$i} {
+      position: relative;
+      left: math.div($i, s.$grid-column-count);
+      margin-left: math.div($grid-css-grid-small-gutter, 2);
+      margin-right: - math.div($grid-css-grid-small-gutter, 2);
+    }
+
+    .small-pull-#{$i} {
+      position: relative;
+      left: - math.div($i, s.$grid-column-count);
+      margin-left: - math.div($grid-css-grid-small-gutter, 2);
+      margin-right: math.div($grid-css-grid-small-gutter, 2);
+    }
+  }
+
+  @include m.breakpoint(medium-up) {
+    @for $i from 1 through s.$grid-column-count {
+      .medium-#{$i} {
+        grid-column: span $i;
+      }
+
+      .medium-push-#{$i} {
+        position: relative;
+        left: math.div($i, s.$grid-column-count);
+        margin-left: math.div($grid-css-grid-medium-gutter, 2);
+        margin-right: - math.div($grid-css-grid-medium-gutter, 2);
+      }
+
+      .medium-pull-#{$i} {
+        position: relative;
+        left: - math.div($i, s.$grid-column-count);
+        margin-left: - math.div($grid-css-grid-medium-gutter, 2);
+        margin-right: math.div($grid-css-grid-medium-gutter, 2);
+      }
+    }
+  }
+
+  @include m.breakpoint(large-up) {
+    @for $i from 1 through s.$grid-column-count {
+      .large-#{$i} {
+        grid-column: span $i;
+      }
+
+      .large-push-#{$i} {
+        position: relative;
+        left: math.div($i, s.$grid-column-count);
+        margin-left: math.div($grid-css-grid-large-gutter, 2);
+        margin-right: - math.div($grid-css-grid-large-gutter, 2);
+      }
+
+      .large-pull-#{$i} {
+        position: relative;
+        left: - math.div($i, s.$grid-column-count);
+        margin-left: - math.div($grid-css-grid-large-gutter, 2);
+        margin-right: math.div($grid-css-grid-large-gutter, 2);
+      }
+    }
+
+    @include m.breakpoint(xxlarge-up) {
+      @for $i from 1 through s.$grid-column-count {
+        .xxlarge-#{$i} {
+          grid-column: span $i;
+        }
+
+        .xxlarge-push-#{$i} {
+          position: relative;
+          left: math.div($i, s.$grid-column-count);
+          margin-left: math.div($grid-css-grid-xxlarge-gutter, 2);
+          margin-right: - math.div($grid-css-grid-xxlarge-gutter, 2);
+        }
+
+        .xxlarge-pull-#{$i} {
+          position: relative;
+          left: - math.div($i, s.$grid-column-count);
+          margin-left: - math.div($grid-css-grid-xxlarge-gutter, 2);
+          margin-right: math.div($grid-css-grid-xxlarge-gutter, 2);
+        }
+      }
+    }
+  }
+
+  .column .row,
+  .row .row,
+  .row .column {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

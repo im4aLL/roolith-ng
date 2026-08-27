@@ -1,0 +1,69 @@
+<div style="text-align: center">
+  <button
+    class="rng-button rng-dropdown__trigger"
+    popovertarget="rng-dropdown-el"
+    style="anchor-name: --dropdown1">
+    Dropdown example
+  </button>
+</div>
+
+<!-- rng-dropdown--right, rng-dropdown--top, rng-dropdown--top-right -->
+<div
+  id="rng-dropdown-el"
+  class="rng-dropdown rng-animation rng-reveal"
+  popover
+  style="--rng-dropdown-anchor: --dropdown1">
+  <div class="rng-dropdown__body">
+    <!-- group -->
+    <div class="rng-dropdown__group">
+      <h6 class="rng-dropdown__hl">User Settings</h6>
+      <ul class="rng-dropdown__list">
+        <li class="rng-dropdown__item">
+          <span class="rng-dropdown__item-primary">Profile</span>
+          <span class="rng-dropdown__item-secondary">Ctrl + k</span>
+        </li>
+        <li class="rng-dropdown__item">
+          <span class="rng-dropdown__item-primary">Account</span>
+          <span class="rng-dropdown__item-secondary">Ctrl + j</span>
+        </li>
+        <li class="rng-dropdown__item">
+          <span class="rng-dropdown__item-primary">Team Settings</span>
+          <span class="rng-dropdown__item-secondary">Backspace</span>
+        </li>
+      </ul>
+    </div>
+    <!-- group -->
+
+    <!-- group -->
+    <div class="rng-dropdown__group">
+      <ul class="rng-dropdown__list">
+        <li class="rng-dropdown__item">
+          <span class="rng-dropdown__item-primary">Export Report</span>
+        </li>
+        <li class="rng-dropdown__item">
+          <span class="rng-dropdown__item-primary">Payroll</span>
+          <span class="rng-dropdown__item-secondary">
+            <rng-icon name="check" />
+          </span>
+        </li>
+        <li class="rng-dropdown__item">
+          <span class="rng-dropdown__item-primary">Bank Account</span>
+        </li>
+      </ul>
+    </div>
+    <!-- group -->
+
+    <!-- group -->
+    <div class="rng-dropdown__group">
+      <ul class="rng-dropdown__list">
+        <li class="rng-dropdown__item rng-dropdown__item--danger">
+          <span class="rng-dropdown__item-primary">
+            <i class="rng-icon rng-icon--logout"></i>
+            Logout
+          </span>
+        </li>
+      </ul>
+    </div>
+    <!-- group -->
+  </div>
+</div>

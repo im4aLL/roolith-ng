@@ -1,0 +1,130 @@
+@use '../settings' as s;
+
+@mixin animation() {
+  .rng-animation {
+    visibility: visible !important;
+    animation-duration: var(--rng-animation-duration);
+    animation-fill-mode: both;
+    transition-timing-function: var(--rng-animation-easing);
+  }
+
+  .rng-fadeInUp {
+    animation-name: fadeInUp;
+  }
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 15%, 0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .rng-fadeInDown {
+    animation-name: fadeInDown;
+  }
+
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, -25%, 0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .rng-fadeIn {
+    animation-name: fadeIn;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .rng-fadeOut {
+    animation-name: fadeOut;
+  }
+
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translate3d(-20%, 0, 0);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .rng-fadeInLeft {
+    animation-name: fadeInLeft;
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translate3d(20%, 0, 0);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .rng-fadeInRight {
+    animation-name: fadeInRight;
+  }
+
+  .rng-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .rng-reveal {
+    animation: reveal 140ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top;
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}

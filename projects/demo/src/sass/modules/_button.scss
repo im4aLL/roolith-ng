@@ -1,0 +1,78 @@
+@use '../functions' as *;
+
+@mixin button() {
+  .doc-btn {
+    display: inline-block;
+    padding: 0 rem(20);
+    border: rem(1) solid var(--doc-border);
+    border-radius: 1.25rem;
+    background-color: var(--doc-btn-alt-bg);
+    color: var(--doc-text);
+    font-size: 0.875rem;
+    font-weight: var(--doc-font-weight-medium);
+    line-height: 2.7;
+    text-align: center;
+    white-space: nowrap;
+    transition:
+      color var(--doc-duration) var(--doc-easing),
+      border-color var(--doc-duration) var(--doc-easing),
+      background-color var(--doc-duration) var(--doc-easing);
+
+    &:hover {
+      background-color: var(--doc-btn-alt-bg-hover);
+      border-color: var(--doc-border-strong);
+      text-decoration: none;
+    }
+
+    &:active {
+      background-color: var(--doc-btn-alt-bg-active);
+      border-color: var(--doc-border-strong);
+    }
+
+    &:has(svg),
+    &:has(i) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: rem(8);
+      line-height: 1;
+      padding: rem(12) rem(20);
+      vertical-align: middle;
+    }
+
+    svg {
+      width: rem(16);
+      height: rem(16);
+      display: block;
+      flex-shrink: 0;
+    }
+
+    i {
+      font-size: 1rem;
+      line-height: 1;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+  }
+
+  .theme-dark .doc-btn:not(.doc-btn--primary):hover {
+    color: #ffffff;
+  }
+
+  .doc-btn--primary {
+    border-color: transparent;
+    background-color: var(--doc-btn-brand-bg);
+    color: #fff;
+
+    &:hover {
+      background-color: var(--doc-btn-brand-bg-hover);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    &:active {
+      background-color: var(--doc-btn-brand-bg-active);
+      border-color: transparent;
+    }
+  }
+}

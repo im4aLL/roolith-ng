@@ -1,0 +1,60 @@
+@use '../functions' as *;
+@use '../mixins' as m;
+
+@mixin input-select {
+  .rng-input__field--select {
+    --rng-input-select-spacing-x: var(--rng-input-padding-y);
+    --rng-input-select-spacing-y: var(--rng-input-padding-y);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--rng-input-select-spacing-x);
+  }
+
+  .rng-input__field--select-multiple {
+    --rng-input-multi-select-item-spacing: #{rem(4)};
+
+    min-width: rem(150);
+    gap: var(--rng-input-multi-select-item-spacing);
+    height: auto;
+    flex-wrap: wrap;
+    min-height: var(--rng-input-size);
+    justify-content: flex-start;
+
+    .rng-input__plain {
+      width: auto;
+      flex: 1;
+      min-width: rem(16);
+      padding-inline: calc(var(--rng-input-select-spacing-x) - var(--rng-input-select-spacing-y));
+    }
+
+    &.rng-input__field--focused .rng-input__plain {
+      min-width: rem(32);
+    }
+
+    &.has--item {
+      padding-inline-start: var(--rng-input-padding-y);
+      padding-inline-end: rem(26);
+
+      .rng-input__plain {
+        padding-inline: rem(4);
+      }
+    }
+
+    .rng-input__icon {
+      position: absolute;
+      right: rem(8);
+      top: rem(8);
+      pointer-events: none;
+    }
+  }
+
+  .rng-input--readonly .rng-input__field--select,
+  .rng-input--readonly .rng-input__field--select-multiple {
+    .rng-input__icon,
+    .rng-input__plain {
+      opacity: 0.5;
+    }
+  }
+}

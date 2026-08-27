@@ -1,0 +1,101 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Button Group</h1>
+  <p class="doc-prose__p">
+    Renders a set of toggle buttons where one can be active at a time.
+    Provide a list of <code class="doc-prose__code">labels</code> and control the selected item with
+    <code class="doc-prose__code">activeLabel</code>. The active button receives <code class="doc-prose__code">rng-button--active</code>
+    and selection is reported via <code class="doc-prose__code">labelSelected</code>. An optional
+    <code class="doc-prose__code">size</code> input mirrors the button sizes.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass an array of strings to <code class="doc-prose__code">[labels]</code> and bind the currently active value to
+    <code class="doc-prose__code">[activeLabel]</code>. Handle <code class="doc-prose__code">labelSelected</code> to update the active state.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" (labelSelected)="onTabSelect($event)"></rng-button-group>
+    </div>
+  </div>
+  <rng-code-block [code]="dataSnippet" language="typescript" title="button group - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+
+  <h3 class="doc-prose__h3">Sizes</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">size</code> to scale the group. Accepts <code class="doc-prose__code">'xsmall'</code>,
+    <code class="doc-prose__code">'small'</code>, <code class="doc-prose__code">'large'</code> and <code class="doc-prose__code">'default'</code>.
+    The value maps to <code class="doc-prose__code">rng-button-group--&lt;size&gt;</code> and <code class="doc-prose__code">rng-button--&lt;size&gt;</code> on the inner buttons.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" size="xsmall" (labelSelected)="onTabSelect($event)"></rng-button-group>
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" size="small" (labelSelected)="onTabSelect($event)"></rng-button-group>
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" (labelSelected)="onTabSelect($event)"></rng-button-group>
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" size="large" (labelSelected)="onTabSelect($event)"></rng-button-group>
+    </div>
+  </div>
+  <rng-code-block [code]="sizeSnippet" language="html" title="sizes" variant="prose" />
+
+  <h3 class="doc-prose__h3">Listening to selection</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">labelSelected</code> emits the clicked label as a <code class="doc-prose__code">string</code>.
+    The component calls <code class="doc-prose__code">event.preventDefault()</code> internally before emitting.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" (labelSelected)="onTabSelect($event)"></rng-button-group>
+    </div>
+  </div>
+  @if (activeTab) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Active label</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">labelSelected: "{{ activeTab }}"</code>
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicSnippet" language="html" title="labelSelected - template" variant="prose" />
+  <rng-code-block [code]="handlerSnippet" language="typescript" title="labelSelected - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Data definition, template binding and selection handling together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+      <rng-button-group [labels]="tabs" [activeLabel]="activeTab" (labelSelected)="onTabSelect($event)"></rng-button-group>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button-group</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">labels</code></td><td class="doc-prose__td"><code class="doc-prose__code">string[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of button labels to render</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">activeLabel</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Currently active/selected label</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">size</code></td><td class="doc-prose__td"><code class="doc-prose__code">'default' | 'small' | 'xsmall' | 'large'</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">'default'</code></td><td class="doc-prose__td">Size variant applied to the group and its buttons</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-button-group</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">labelSelected</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Emitted with the clicked label</td></tr>
+    </tbody>
+  </table>
+
+  <rng-doc-pager />
+</article>

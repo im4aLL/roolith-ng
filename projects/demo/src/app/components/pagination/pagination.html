@@ -1,0 +1,292 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Pagination</h1>
+  <p class="doc-prose__p">
+    A pager for large data sets built as <code class="doc-prose__code">rng-pagination</code>.
+    Renders Previous / Next controls, numbered page buttons with ellipsis (<code class="doc-prose__code">null</code> gaps) and a meta area with a rows-per-page selector and info text.
+    The component hides itself when <code class="doc-prose__code">total</code> is <code class="doc-prose__code">0</code> and hides the page navigation when everything fits on one page while keeping the selector and info visible.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass <code class="doc-prose__code">total</code> and bind the active page via <code class="doc-prose__code">[selectedPageNumber]</code>.
+    Listen to <code class="doc-prose__code">(changeEvent)</code> and set the new page from <code class="doc-prose__code">event.page</code>.
+    With the defaults (<code class="doc-prose__code">perPage 10</code>, <code class="doc-prose__code">maxPageItem 10</code>) a <code class="doc-prose__code">total</code> of <code class="doc-prose__code">120</code> yields 12 pages.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <rng-pagination
+        [total]="basicTotal()"
+        [selectedPageNumber]="basicPage()"
+        (changeEvent)="onBasicPageChange($event)"></rng-pagination>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Current page: <code class="doc-prose__code">{{ basicPage() }}</code> of <code class="doc-prose__code">{{ basicTotalPages() }}</code> •
+        Total: <code class="doc-prose__code">{{ basicTotal() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="basicSnippet" language="html" title="basic" variant="prose" />
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - component" variant="prose" />
+
+  <h3 class="doc-prose__h3">Custom page size and max visible pages</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">[perPage]</code> to change the initial rows per page (one of <code class="doc-prose__code">5 | 10 | 15 | 20 | 25 | 50 | 100</code>).
+    Set <code class="doc-prose__code">[maxPageItem]</code> to control how many numbered buttons are shown at once.
+    When the page count exceeds <code class="doc-prose__code">maxPageItem</code> the component collapses middle pages with an ellipsis (<code class="doc-prose__code">rng-pagination__item--break</code> with <code class="doc-prose__code">rng-icon--more</code>).
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <rng-pagination
+        [total]="customTotal()"
+        [perPage]="25"
+        [maxPageItem]="5"
+        [selectedPageNumber]="customPage()"
+        (changeEvent)="onCustomPageChange($event)"></rng-pagination>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Current page: <code class="doc-prose__code">{{ customPage() }}</code> •
+        perPage <code class="doc-prose__code">25</code> •
+        maxPageItem <code class="doc-prose__code">5</code> •
+        Total pages: <code class="doc-prose__code">{{ customTotalPages() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="customSnippet" language="html" title="custom perPage and maxPageItem" variant="prose" />
+
+  <div class="doc-callout">
+    <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Ellipsis generation</p>
+    <p class="doc-prose__p">
+      Page numbers are produced by <code class="doc-prose__code">_generatePageNumbers()</code>.
+      When <code class="doc-prose__code">totalPages &lt;= maxPageItem</code> all pages are shown.
+      Otherwise the first and last page are always kept, the window around <code class="doc-prose__code">currentPage</code> is centered, and gaps are rendered as <code class="doc-prose__code">null</code> entries.
+      Example with 10 pages and <code class="doc-prose__code">maxPageItem 10</code> is never collapsed; with <code class="doc-prose__code">maxPageItem 5</code> a middle page like 5 renders as <code class="doc-prose__code">[1, null, 4, 5, 6, null, 10]</code> or similar.
+    </p>
+  </div>
+
+  <h3 class="doc-prose__h3">Handling all event types</h3>
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">(changeEvent)</code> emits <code class="doc-prose__code">IPaginationEvent</code> with <code class="doc-prose__code">type</code> set to
+    <code class="doc-prose__code">'pageChange'</code>, <code class="doc-prose__code">'nextPage'</code>, <code class="doc-prose__code">'previousPage'</code> or <code class="doc-prose__code">'pageSizeChange'</code>.
+    Page events carry <code class="doc-prose__code">page</code>; <code class="doc-prose__code">pageSizeChange</code> carries <code class="doc-prose__code">rowsPerPage</code> and resets to page <code class="doc-prose__code">1</code>.
+    The component calls <code class="doc-prose__code">preventDefault()</code> on the underlying anchor clicks - update your state in the handler and reload data.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <rng-pagination
+        [total]="eventTotal()"
+        [perPage]="eventPageSize()"
+        [selectedPageNumber]="eventPage()"
+        (changeEvent)="onEventPageChange($event)"></rng-pagination>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; font-size: 0.8125rem;">
+        <span>Current page: <code class="doc-prose__code">{{ eventPage() }}</code></span>
+        <span>Page size: <code class="doc-prose__code">{{ eventPageSize() }}</code></span>
+        <button type="button" class="doc-btn" (click)="resetEventDemo()">Reset</button>
+      </div>
+      @if (lastEvent()) {
+        <div class="doc-callout" style="margin: 0;">
+          <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last event</p>
+          <p class="doc-prose__p" style="margin: 0;">
+            <code class="doc-prose__code">type: "{{ lastEvent()!.type }}"</code>
+            @if (lastEvent()!.page !== undefined) {
+              • <code class="doc-prose__code">page: {{ lastEvent()!.page }}</code>
+            }
+            @if (lastEvent()!.rowsPerPage !== undefined) {
+              • <code class="doc-prose__code">rowsPerPage: {{ lastEvent()!.rowsPerPage }}</code>
+            }
+          </p>
+        </div>
+      } @else {
+        <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">Click a page number, Previous / Next, or change "Rows per page" to see the emitted event.</p>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="eventHandlerSnippet" language="typescript" title="handling all types - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">Visibility rules</h3>
+  <p class="doc-prose__p">
+    The top-level <code class="doc-prose__code">&#64;if (total() &gt; 0)</code> in the template means nothing renders when <code class="doc-prose__code">total 0</code>.
+    When <code class="doc-prose__code">totalPages &lt;= 1</code> the computed <code class="doc-prose__code">isShowPagination()</code> is <code class="doc-prose__code">false</code> so
+    <code class="doc-prose__code">rng-pagination__list</code> (Previous, page buttons, Next) is hidden but the meta row is still shown.
+    The meta row contains the <code class="doc-prose__code">rng-select-input</code> for rows per page and <code class="doc-prose__code">infoText()</code> which reads
+    <code class="doc-prose__code">"Total records X. Showing page Y out of Z."</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Not rendered (total 0)</p>
+        <div style="border: 1px dashed var(--doc-border); border-radius: 0.5rem; padding: 0.75rem; font-size: 0.8125rem; color: var(--rng-text-muted, #64748b);">
+          <rng-pagination [total]="0" [selectedPageNumber]="1" (changeEvent)="onVisibilityPageChange($event)"></rng-pagination>
+          <span>No output - container is empty when <code class="doc-prose__code">total 0</code>. Inspect to see no <code class="doc-prose__code">rng-pagination</code> element.</span>
+        </div>
+      </div>
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Single page (total 8, perPage 10) - navigation hidden, meta visible</p>
+        <rng-pagination [total]="8" [selectedPageNumber]="1" (changeEvent)="onVisibilityPageChange($event)"></rng-pagination>
+      </div>
+      <div>
+        <p class="doc-prose__p" style="margin: 0 0 0.5rem 0; font-size: 0.8125rem; font-weight: 600;">Interactive total (drag the selector by changing page size)</p>
+        <rng-pagination
+          [total]="visibilityTotal()"
+          [selectedPageNumber]="visibilityPage()"
+          (changeEvent)="onVisibilityPageChange($event)"></rng-pagination>
+        <p class="doc-prose__p" style="margin: 0.5rem 0 0 0; font-size: 0.8125rem;">
+          Total: <code class="doc-prose__code">{{ visibilityTotal() }}</code> •
+          Page: <code class="doc-prose__code">{{ visibilityPage() }}</code>
+        </p>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="visibilitySnippet" language="html" title="visibility rules" variant="prose" />
+
+  <h3 class="doc-prose__h3">Wiring to a data set</h3>
+  <p class="doc-prose__p">
+    A typical pattern is to keep <code class="doc-prose__code">currentPage</code> and <code class="doc-prose__code">pageSize</code> as signals and derive the visible slice with a <code class="doc-prose__code">computed</code>.
+    On <code class="doc-prose__code">pageSizeChange</code> reset to page <code class="doc-prose__code">1</code> so the user does not land on an empty page when the page size grows.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 520px;">
+      <table class="doc-prose__table">
+        <thead>
+          <tr class="doc-prose__tr"><th class="doc-prose__th">#</th><th class="doc-prose__th">Item</th></tr>
+        </thead>
+        <tbody>
+          @for (item of pagedItems(); track item) {
+            <tr class="doc-prose__tr"><td class="doc-prose__td">{{ item }}</td><td class="doc-prose__td">{{ item }} details</td></tr>
+          }
+        </tbody>
+      </table>
+      <rng-pagination
+        [total]="dataTotalItems.length"
+        [perPage]="dataPageSize()"
+        [selectedPageNumber]="dataPage()"
+        (changeEvent)="onDataPageChange($event)"></rng-pagination>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; font-size: 0.8125rem;">
+        <span>Showing <code class="doc-prose__code">{{ pagedItems().length }}</code> of <code class="doc-prose__code">{{ dataTotalItems.length }}</code></span>
+        <span>• Page <code class="doc-prose__code">{{ dataPage() }}</code> • Page size <code class="doc-prose__code">{{ dataPageSize() }}</code></span>
+        <button type="button" class="doc-btn" (click)="resetDataDemo()">Reset to page 1</button>
+      </div>
+    </div>
+  </div>
+  <rng-code-block [code]="dataSnippet" language="typescript" title="wiring to data - component" variant="prose" />
+  <rng-code-block [code]="dataTemplateSnippet" language="html" title="wiring to data - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Custom <code class="doc-prose__code">perPage</code> and <code class="doc-prose__code">maxPageItem</code> with full event handling and external page control via <code class="doc-prose__code">[selectedPageNumber]</code>.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <rng-pagination
+        [total]="fullTotal()"
+        [perPage]="fullPageSize()"
+        [maxPageItem]="5"
+        [selectedPageNumber]="fullPage()"
+        (changeEvent)="onFullPageChange($event)"></rng-pagination>
+      <p class="doc-prose__p" style="margin: 0; font-size: 0.8125rem;">
+        Total <code class="doc-prose__code">{{ fullTotal() }}</code> •
+        Page <code class="doc-prose__code">{{ fullPage() }}</code> •
+        Page size <code class="doc-prose__code">{{ fullPageSize() }}</code> •
+        Pages <code class="doc-prose__code">{{ fullTotalPages() }}</code>
+      </p>
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-pagination</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">total</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">—</td><td class="doc-prose__td">Total number of records. When <code class="doc-prose__code">0</code> the component renders nothing via <code class="doc-prose__code">&#64;if (total() &gt; 0)</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">perPage</code></td><td class="doc-prose__td"><code class="doc-prose__code">PageSizeOptionType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">10</code></td><td class="doc-prose__td">Initial rows per page. Allowed: <code class="doc-prose__code">5 | 10 | 15 | 20 | 25 | 50 | 100</code>. Synced to <code class="doc-prose__code">rowsPerPage</code> signal via <code class="doc-prose__code">_perPageEffect</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">maxPageItem</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">10</code></td><td class="doc-prose__td">Maximum number of page number buttons to display (including first and last). Gaps are rendered as <code class="doc-prose__code">null</code> ellipsis</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedPageNumber</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">1</code></td><td class="doc-prose__td">Currently active page for external control. Synced to <code class="doc-prose__code">currentPage</code> via <code class="doc-prose__code">_selectedPageEffect</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-pagination</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Payload</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">changeEvent</code></td><td class="doc-prose__td"><code class="doc-prose__code">IPaginationEvent</code></td><td class="doc-prose__td">Emitted on page change or page size change. The component calls <code class="doc-prose__code">event.preventDefault()</code> on anchor clicks before emitting</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IPaginationEvent</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">type</code></td><td class="doc-prose__td"><code class="doc-prose__code">'pageChange' | 'nextPage' | 'previousPage' | 'pageSizeChange'</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Type of pagination action. <code class="doc-prose__code">pageChange</code> for a numbered button, <code class="doc-prose__code">nextPage</code> / <code class="doc-prose__code">previousPage</code> for the edge controls, <code class="doc-prose__code">pageSizeChange</code> for the selector</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">page</code></td><td class="doc-prose__td"><code class="doc-prose__code">number</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">New page number (present for <code class="doc-prose__code">pageChange</code>, <code class="doc-prose__code">nextPage</code>, <code class="doc-prose__code">previousPage</code> and also <code class="doc-prose__code">1</code> for <code class="doc-prose__code">pageSizeChange</code>)</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rowsPerPage</code></td><td class="doc-prose__td"><code class="doc-prose__code">PageSizeOptionType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">New page size (present only for <code class="doc-prose__code">pageSizeChange</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">PageSizeOptionType</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Alias</th><th class="doc-prose__th">Value</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">PageSizeOptionType</code></td><td class="doc-prose__td"><code class="doc-prose__code">5 | 10 | 15 | 20 | 25 | 50 | 100</code></td><td class="doc-prose__td">Union of <code class="doc-prose__code">PAGINATION_PAGE_SIZE_OPTIONS</code> values. Used for <code class="doc-prose__code">perPage</code> and <code class="doc-prose__code">rowsPerPage</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">PAGINATION_PAGE_SIZE_OPTIONS</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Constant</th><th class="doc-prose__th">Value</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">PAGINATION_PAGE_SIZE_OPTIONS</code></td><td class="doc-prose__td"><code class="doc-prose__code">readonly [5, 10, 15, 20, 25, 50, 100]</code></td><td class="doc-prose__td">Source of truth for page size options. Mapped to <code class="doc-prose__code">ISelectInput[]</code> as <code class="doc-prose__code">pageSizeOptions</code> with labels like <code class="doc-prose__code">"10 rows"</code> for <code class="doc-prose__code">rng-select-input</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Internal signals and computeds</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Member</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rowsPerPage</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;PageSizeOptionType&gt;</code></td><td class="doc-prose__td">Current page size signal, initialized from <code class="doc-prose__code">perPage</code> and updated on selector change</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">currentPage</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;number&gt;</code></td><td class="doc-prose__td">Current page signal, initialized from <code class="doc-prose__code">selectedPageNumber</code> and updated on navigation</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">pageNumbers</code></td><td class="doc-prose__td"><code class="doc-prose__code">Signal&lt;Array&lt;number | null&gt;&gt;</code></td><td class="doc-prose__td">Derived page buttons with <code class="doc-prose__code">null</code> for ellipsis breaks. Regenerated when <code class="doc-prose__code">currentPage</code> changes via <code class="doc-prose__code">_currentPageNumberEffect</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">totalPages</code></td><td class="doc-prose__td"><code class="doc-prose__code">Computed&lt;number&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">Math.ceil(total() / rowsPerPage())</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isShowPagination</code></td><td class="doc-prose__td"><code class="doc-prose__code">Computed&lt;boolean&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">totalPages() &gt; 1</code> - gates <code class="doc-prose__code">rng-pagination__list</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">infoText</code></td><td class="doc-prose__td"><code class="doc-prose__code">Computed&lt;string&gt;</code></td><td class="doc-prose__td"><code class="doc-prose__code">`Total records {{ '{{' }}total(){{ '}}' }}. Showing page {{ '{{' }}currentPage(){{ '}}' }} out of {{ '{{' }}totalPages(){{ '}}' }}.`</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">selectedPageSizeOption</code></td><td class="doc-prose__td"><code class="doc-prose__code">Computed&lt;ISelectInput | undefined&gt;</code></td><td class="doc-prose__td">Lookup of the selected option from <code class="doc-prose__code">pageSizeOptions</code> for binding to <code class="doc-prose__code">rng-select-input</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Methods</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Method</th><th class="doc-prose__th">Signature</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onPageChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">onPageChange(event: Event, payload: IPaginationEvent): void</code></td><td class="doc-prose__td">Handles Previous / Next / page clicks. Computes the new page, guards no-ops, updates <code class="doc-prose__code">currentPage</code> and emits <code class="doc-prose__code">changeEvent</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">onRowPerPageChange</code></td><td class="doc-prose__td"><code class="doc-prose__code">onRowPerPageChange(event: ISelectInput | undefined): void</code></td><td class="doc-prose__td">Handles rows-per-page selection. Updates <code class="doc-prose__code">rowsPerPage</code>, resets <code class="doc-prose__code">currentPage</code> to <code class="doc-prose__code">1</code>, and emits <code class="doc-prose__code">&#123; page: 1, type: 'pageSizeChange', rowsPerPage &#125;</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Styling notes</h3>
+  <p class="doc-prose__p">
+    The host renders <code class="doc-prose__code">rng-pagination</code> with <code class="doc-prose__code">rng-pagination__list</code> for the navigation and
+    <code class="doc-prose__code">rng-pagination__meta</code> for the selector and info.
+    Page buttons use <code class="doc-prose__code">rng-button rng-button--ghost</code> normally and <code class="doc-prose__code">rng-button--gray</code> for the active page.
+    Ellipsis uses <code class="doc-prose__code">rng-pagination__item--break</code> with <code class="doc-prose__code">rng-icon--more</code>.
+    Previous and Next use <code class="doc-prose__code">rng-icon--arrow-left</code> and <code class="doc-prose__code">rng-icon--arrow-right</code>.
+    The selector area uses <code class="doc-prose__code">rng-pagination__selector</code>, <code class="doc-prose__code">rng-pagination__selector-label</code>, <code class="doc-prose__code">rng-pagination__selector-field</code> and the info uses <code class="doc-prose__code">rng-pagination__info</code>.
+  </p>
+
+  <rng-doc-pager />
+</article>

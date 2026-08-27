@@ -1,0 +1,452 @@
+<article class="doc-prose">
+  <h1 class="doc-prose__h1">Dropdown</h1>
+  <p class="doc-prose__p">
+    Displays a menu to the user - such as a set of actions or functions - triggered by a button.
+    Wire a trigger element with <code class="doc-prose__code">[rngDropdownTarget]</code> to the matching
+    <code class="doc-prose__code">name</code> of <code class="doc-prose__code">rng-dropdown</code>.
+    The dropdown is rendered as a native <code class="doc-prose__code">popover</code> anchored via
+    <code class="doc-prose__code">anchor-name: --rng-&lt;name&gt;</code> and auto-positions to avoid viewport overflow.
+    Supports grouped items with optional <code class="doc-prose__code">headline</code>, per-item <code class="doc-prose__code">icon</code>,
+    a secondary slot via <code class="doc-prose__code">secondaryLabel</code> or <code class="doc-prose__code">secondaryIcon</code>,
+    plus <code class="doc-prose__code">isDanger</code> and <code class="doc-prose__code">isDisabled</code> states.
+  </p>
+
+  <h2 class="doc-prose__h2">Import</h2>
+  <rng-code-block [code]="importSnippet" language="typescript" title="app/example.component.ts" variant="prose" />
+  <p class="doc-prose__p">
+    <code class="doc-prose__code">IMPORT_DROPDOWN</code> includes both <code class="doc-prose__code">DropdownComponent</code> and <code class="doc-prose__code">DropdownTargetDirective</code>.
+    Or import individually:
+  </p>
+  <rng-code-block [code]="importIndividualSnippet" language="typescript" title="individual import" variant="prose" />
+
+  <h2 class="doc-prose__h2">Wiring trigger and panel</h2>
+  <p class="doc-prose__p">
+    Place <code class="doc-prose__code">rngDropdownTarget="&lt;name&gt;"</code> on a wrapper element that contains the trigger button.
+    The directive finds the first clickable element inside the wrapper and sets
+    <code class="doc-prose__code">popovertarget="rng-dropdown-&lt;name&gt;"</code>, the <code class="doc-prose__code">rng-dropdown__trigger</code> class and
+    <code class="doc-prose__code">anchor-name: --rng-&lt;name&gt;</code> automatically.
+    The <code class="doc-prose__code">name</code> input on <code class="doc-prose__code">rng-dropdown</code> must match exactly.
+    The panel itself renders with <code class="doc-prose__code">id="rng-dropdown-&lt;name&gt;"</code>, <code class="doc-prose__code">popover</code> and
+    <code class="doc-prose__code">--rng-dropdown-anchor: --rng-&lt;name&gt;</code>.
+  </p>
+  <rng-code-block [code]="targetSnippet" language="html" title="trigger + panel" variant="prose" />
+
+  <h2 class="doc-prose__h2">Usage</h2>
+
+  <h3 class="doc-prose__h3">Basic</h3>
+  <p class="doc-prose__p">
+    Pass an array of <code class="doc-prose__code">IDropdownGroup</code> to <code class="doc-prose__code">[groups]</code>.
+    Each group has an optional <code class="doc-prose__code">headline</code> rendered in <code class="doc-prose__code">rng-dropdown__hl</code>
+    and an <code class="doc-prose__code">items</code> array. The <code class="doc-prose__code">value</code> of each item is the identifier you receive in
+    <code class="doc-prose__code">itemClick</code>. The dropdown closes automatically via <code class="doc-prose__code">hidePopover()</code> after emitting.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-basic">
+        <rng-button icon="user">Account</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-basic"
+        [groups]="basicGroups()"
+        (itemClick)="onItemClick($event, 'basic')" />
+      @if (lastClickedSource === 'basic' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }} ({{ lastClicked.value }})</code></span
+        >
+      }
+    </div>
+  </div>
+  @if (lastClickedSource === 'basic' && lastClicked) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-info-circle" aria-hidden="true"></i> Last selection</p>
+      <p class="doc-prose__p">
+        <code class="doc-prose__code">label: "{{ lastClicked.label }}"</code> •
+        <code class="doc-prose__code">value: "{{ lastClicked.value }}"</code>
+        @if (lastClicked.secondaryLabel) {
+          <span> • </span><code class="doc-prose__code">secondaryLabel: "{{ lastClicked.secondaryLabel }}"</code>
+        }
+        @if (lastClicked.isDanger) {
+          <span> • </span><code class="doc-prose__code">isDanger</code>
+        }
+      </p>
+    </div>
+  }
+  <rng-code-block [code]="basicTsSnippet" language="typescript" title="basic - data" variant="prose" />
+  <rng-code-block [code]="basicSnippet" language="html" title="basic - template" variant="prose" />
+  <rng-code-block [code]="itemClickHandlerSnippet" language="typescript" title="itemClick - handler" variant="prose" />
+
+  <h3 class="doc-prose__h3">With item icons</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">icon</code> on any <code class="doc-prose__code">IDropdownItem</code> to render an icon before the label via
+    <code class="doc-prose__code">rng-icon</code> inside <code class="doc-prose__code">rng-dropdown__item-primary</code>.
+    Combine with <code class="doc-prose__code">isDanger</code> to highlight destructive actions with <code class="doc-prose__code">rng-dropdown__item--danger</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-icons">
+        <rng-button icon="more-vertical">Actions</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-icons"
+        [groups]="iconGroups()"
+        (itemClick)="onItemClick($event, 'icons')" />
+      @if (lastClickedSource === 'icons' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="withIconSnippet" language="typescript" title="with icon - data" variant="prose" />
+  <rng-code-block [code]="withIconTemplateSnippet" language="html" title="with icon - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Secondary label and secondary icon</h3>
+  <p class="doc-prose__p">
+    Use <code class="doc-prose__code">secondaryLabel</code> to render text in the right slot, or
+    <code class="doc-prose__code">secondaryIcon</code> to render an icon there.
+    The secondary content renders inside <code class="doc-prose__code">rng-dropdown__item-secondary</code> and
+    <code class="doc-prose__code">secondaryIcon</code> takes precedence over <code class="doc-prose__code">secondaryLabel</code> when both are set.
+    Typical uses are keyboard shortcuts (<code class="doc-prose__code">secondaryLabel: 'Ctrl + k'</code>) or status checks.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-secondary">
+        <rng-button>Options</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-secondary"
+        [groups]="secondaryGroups()"
+        (itemClick)="onItemClick($event, 'secondary')" />
+      @if (lastClickedSource === 'secondary' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }}</code>
+          @if (lastClicked.secondaryIcon) {
+            <span> • secondaryIcon: <code class="doc-prose__code">{{ lastClicked.secondaryIcon }}</code></span>
+          }
+          @if (lastClicked.secondaryLabel) {
+            <span> • secondaryLabel: <code class="doc-prose__code">{{ lastClicked.secondaryLabel }}</code></span>
+          }
+        </span>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="secondarySnippet" language="typescript" title="secondary slot - data" variant="prose" />
+  <rng-code-block [code]="secondaryTemplateSnippet" language="html" title="secondary slot - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Multiple groups with headlines</h3>
+  <p class="doc-prose__p">
+    Split items into multiple <code class="doc-prose__code">IDropdownGroup</code> entries.
+    Groups with a <code class="doc-prose__code">headline</code> render a <code class="doc-prose__code">&lt;h6 class="rng-dropdown__hl"&gt;</code> above their items;
+    groups without a headline render only the <code class="doc-prose__code">rng-dropdown__list</code>. Groups are rendered inside <code class="doc-prose__code">rng-dropdown__group</code> within
+    <code class="doc-prose__code">rng-dropdown__body</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-headline">
+        <rng-button icon="settings">Settings</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-headline"
+        [groups]="headlineGroups()"
+        (itemClick)="onItemClick($event, 'headline')" />
+      @if (lastClickedSource === 'headline' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="headlineSnippet" language="typescript" title="headlines - data" variant="prose" />
+  <rng-code-block [code]="headlineTemplateSnippet" language="html" title="headlines - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Danger styling</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">isDanger: true</code> on an item to apply <code class="doc-prose__code">rng-dropdown__item--danger</code>.
+    Use it for destructive actions such as Delete or Sign out. It can be combined with <code class="doc-prose__code">icon</code>.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-danger">
+        <rng-button variant="danger">Danger items</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-danger"
+        [groups]="dangerGroups()"
+        (itemClick)="onItemClick($event, 'danger')" />
+      @if (lastClickedSource === 'danger' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }}</code>
+          @if (lastClicked.isDanger) {
+            <span> • <code class="doc-prose__code">isDanger</code></span>
+          }
+        </span>
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="headlineSnippet" language="typescript" title="danger - data (with headlines)" variant="prose" />
+
+  <h3 class="doc-prose__h3">Disabled items</h3>
+  <p class="doc-prose__p">
+    Set <code class="doc-prose__code">isDisabled: true</code> on an item to render it with
+    <code class="doc-prose__code">rng-dropdown__item--disabled</code>. Disabled items are still visible but are muted and do not emit
+    <code class="doc-prose__code">itemClick</code> - <code class="doc-prose__code">onItemClick</code> returns early when <code class="doc-prose__code">isDisabled</code> is true.
+    They still render icons and secondary content if provided.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-disabled">
+        <rng-button>Export</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-disabled"
+        [groups]="disabledGroups()"
+        (itemClick)="onItemClick($event, 'disabled')" />
+      @if (lastClickedSource === 'disabled' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="disabledSnippet" language="typescript" title="disabled - data" variant="prose" />
+  <rng-code-block [code]="disabledTemplateSnippet" language="html" title="disabled - template" variant="prose" />
+
+  <h3 class="doc-prose__h3">Fixed alignment</h3>
+  <p class="doc-prose__p">
+    By default the dropdown auto-detects viewport overflow on the native <code class="doc-prose__code">toggle</code> event (when
+    <code class="doc-prose__code">newState === 'open'</code>) and applies the correct position class.
+    Pass <code class="doc-prose__code">alignment</code> to force a fixed position and skip that detection entirely - useful when the trigger is near a viewport edge.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-align-right">
+        <rng-button>Right</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-align-right"
+        alignment="right"
+        [groups]="basicGroups()"
+        (itemClick)="onItemClick($event, 'align-right')" />
+
+      <div rngDropdownTarget="demo-align-top">
+        <rng-button>Top</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-align-top"
+        alignment="top"
+        [groups]="basicGroups()"
+        (itemClick)="onItemClick($event, 'align-top')" />
+
+      <div rngDropdownTarget="demo-align-top-right">
+        <rng-button>Top Right</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-align-top-right"
+        alignment="top-right"
+        [groups]="basicGroups()"
+        (itemClick)="onItemClick($event, 'align-top-right')" />
+    </div>
+  </div>
+  <rng-code-block [code]="alignmentSnippet" language="html" title="alignment - template" variant="prose" />
+  <p class="doc-prose__p">
+    Auto-detection when <code class="doc-prose__code">alignment</code> is <code class="doc-prose__code">null</code> checks the bounding rect against <code class="doc-prose__code">window.innerWidth</code> and
+    <code class="doc-prose__code">window.innerHeight</code> inside a <code class="doc-prose__code">setTimeout</code> and sets one of:
+    <code class="doc-prose__code">rng-dropdown--right</code>, <code class="doc-prose__code">rng-dropdown--top</code> or
+    <code class="doc-prose__code">rng-dropdown--top-right</code>, or no class when there is sufficient space.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr">
+        <th class="doc-prose__th"><code class="doc-prose__code">alignment</code></th>
+        <th class="doc-prose__th">CSS class</th>
+        <th class="doc-prose__th">When to use</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><em>(not set)</em></td>
+        <td class="doc-prose__td">auto-detected</td>
+        <td class="doc-prose__td">Default - let the component decide</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">'right'</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">rng-dropdown--right</code></td>
+        <td class="doc-prose__td">Trigger is near the right edge</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">'top'</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">rng-dropdown--top</code></td>
+        <td class="doc-prose__td">Trigger is near the bottom edge</td>
+      </tr>
+      <tr class="doc-prose__tr">
+        <td class="doc-prose__td"><code class="doc-prose__code">'top-right'</code></td>
+        <td class="doc-prose__td"><code class="doc-prose__code">rng-dropdown--top-right</code></td>
+        <td class="doc-prose__td">Trigger is in a bottom-right corner</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3">Custom content via <code class="doc-prose__code">ng-content</code></h3>
+  <p class="doc-prose__p">
+    For fully custom markup omit <code class="doc-prose__code">[groups]</code> and project content directly.
+    The component renders <code class="doc-prose__code">groups</code> when <code class="doc-prose__code">groups().length &gt; 0</code> and always projects
+    <code class="doc-prose__code">&lt;ng-content /&gt;</code> after it. Use the same class names
+    (<code class="doc-prose__code">rng-dropdown__body</code>, <code class="doc-prose__code">rng-dropdown__group</code>,
+    <code class="doc-prose__code">rng-dropdown__list</code>, <code class="doc-prose__code">rng-dropdown__item</code>) to match the built-in styling.
+  </p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-custom">
+        <rng-button>Custom content</rng-button>
+      </div>
+      <rng-dropdown name="demo-custom">
+        <div class="rng-dropdown__body">
+          <div class="rng-dropdown__group">
+            <h6 class="rng-dropdown__hl">Custom headline</h6>
+            <ul class="rng-dropdown__list">
+              <li class="rng-dropdown__item" role="button" tabindex="0">Custom item</li>
+              <li class="rng-dropdown__item rng-dropdown__item--danger" role="button" tabindex="0">Danger custom item</li>
+            </ul>
+          </div>
+        </div>
+      </rng-dropdown>
+    </div>
+  </div>
+  <rng-code-block [code]="customSnippet" language="html" title="custom content" variant="prose" />
+
+  <h3 class="doc-prose__h3">Full example</h3>
+  <p class="doc-prose__p">Headlines, icons, secondary slots, disabled state and click handling together.</p>
+  <div class="doc-prose__example">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <div rngDropdownTarget="demo-full">
+        <rng-button icon="user" variant="primary">Account</rng-button>
+      </div>
+      <rng-dropdown
+        name="demo-full"
+        [groups]="basicGroups()"
+        (itemClick)="onItemClick($event, 'full')" />
+      @if (lastClickedSource === 'full' && lastClicked) {
+        <span style="font-size: 0.875rem; color: var(--doc-text-muted);"
+          >Last: <code class="doc-prose__code">{{ lastClicked.label }}</code> •
+          <code class="doc-prose__code">{{ lastClicked.value }}</code></span
+        >
+      }
+    </div>
+  </div>
+  <rng-code-block [code]="fullSnippet" language="typescript" title="full example - component" variant="prose" />
+  <rng-code-block [code]="fullTemplateSnippet" language="html" title="full example - template" variant="prose" />
+
+  <h2 class="doc-prose__h2">Position (auto-detection)</h2>
+  <p class="doc-prose__p">
+    When <code class="doc-prose__code">alignment</code> is <code class="doc-prose__code">null</code> (the default) the dropdown listens to the native
+    <code class="doc-prose__code">toggle</code> event. On open it measures its <code class="doc-prose__code">getBoundingClientRect()</code> against
+    <code class="doc-prose__code">window.innerWidth</code> / <code class="doc-prose__code">window.innerHeight</code> and sets the appropriate class.
+    On close it resets the position class to <code class="doc-prose__code">null</code>. When a fixed <code class="doc-prose__code">alignment</code> is set, that logic is skipped.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Condition</th><th class="doc-prose__th">Class applied</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Sufficient space below and to the right</td><td class="doc-prose__td"><em>(none)</em></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Would overflow the right edge</td><td class="doc-prose__td"><code class="doc-prose__code">rng-dropdown--right</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Would overflow the bottom edge</td><td class="doc-prose__td"><code class="doc-prose__code">rng-dropdown--top</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td">Would overflow both bottom and right edges</td><td class="doc-prose__td"><code class="doc-prose__code">rng-dropdown--top-right</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="doc-prose__h2">API</h2>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rngDropdownTarget</code> Directive</h3>
+  <p class="doc-prose__p">
+    Applied to the <strong>wrapper</strong> element of the trigger. The directive targets the first child element (or the element itself when it is a
+    <code class="doc-prose__code">&lt;button&gt;</code> / <code class="doc-prose__code">&lt;a&gt;</code>) and automatically sets all required Popover API attributes.
+  </p>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">rngDropdownTarget</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Must match the <code class="doc-prose__code">name</code> input of <code class="doc-prose__code">rng-dropdown</code>. Sets <code class="doc-prose__code">popovertarget="rng-dropdown-&lt;name&gt;"</code>, class <code class="doc-prose__code">rng-dropdown__trigger</code> and <code class="doc-prose__code">anchor-name: --rng-&lt;name&gt;</code> on the inner trigger element</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-dropdown</code> Inputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Input</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Default</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">name</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">''</code></td><td class="doc-prose__td">Unique name - links with <code class="doc-prose__code">rngDropdownTarget</code>. Rendered as <code class="doc-prose__code">id="rng-dropdown-&lt;name&gt;"</code> and <code class="doc-prose__code">--rng-dropdown-anchor: --rng-&lt;name&gt;</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">groups</code></td><td class="doc-prose__td"><code class="doc-prose__code">IDropdownGroup[]</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">[]</code></td><td class="doc-prose__td">List of groups to render as dropdown content. When empty only <code class="doc-prose__code">&lt;ng-content /&gt;</code> is shown</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">alignment</code></td><td class="doc-prose__td"><code class="doc-prose__code">'right' | 'top' | 'top-right' | null</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td"><code class="doc-prose__code">null</code></td><td class="doc-prose__td">Forces a fixed position - skips auto-detection when set. Maps to <code class="doc-prose__code">rng-dropdown--right</code> / <code class="doc-prose__code">--top</code> / <code class="doc-prose__code">--top-right</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-dropdown</code> Outputs</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Output</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">itemClick</code></td><td class="doc-prose__td"><code class="doc-prose__code">OutputEmitterRef&lt;IDropdownItem&gt;</code></td><td class="doc-prose__td">Emits the clicked item. Disabled items never emit. The dropdown closes automatically via <code class="doc-prose__code">hidePopover()</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">rng-dropdown</code> Content Projection</h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Slot</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><em>(default)</em></td><td class="doc-prose__td">Custom markup projected via <code class="doc-prose__code">&lt;ng-content /&gt;</code> after the groups. Use <code class="doc-prose__code">rng-dropdown__body</code> / <code class="doc-prose__code">rng-dropdown__group</code> etc. for matching styling</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IDropdownGroup</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">headline</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Optional label rendered as <code class="doc-prose__code">&lt;h6 class="rng-dropdown__hl"&gt;</code> above the group items</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">items</code></td><td class="doc-prose__td"><code class="doc-prose__code">IDropdownItem[]</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Items to render in this group - each becomes an <code class="doc-prose__code">li.rng-dropdown__item</code> with <code class="doc-prose__code">role="button"</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IDropdownItem</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Property</th><th class="doc-prose__th">Type</th><th class="doc-prose__th">Required</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">label</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Primary label text rendered in <code class="doc-prose__code">rng-dropdown__item-primary</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">value</code></td><td class="doc-prose__td"><code class="doc-prose__code">string | number</code></td><td class="doc-prose__td">Yes</td><td class="doc-prose__td">Unique identifier - available as <code class="doc-prose__code">event.value</code> in <code class="doc-prose__code">itemClick</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">icon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Icon rendered before the label via <code class="doc-prose__code">rng-icon</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">secondaryLabel</code></td><td class="doc-prose__td"><code class="doc-prose__code">string</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Text rendered in the secondary (right) slot - <code class="doc-prose__code">rng-dropdown__item-secondary</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">secondaryIcon</code></td><td class="doc-prose__td"><code class="doc-prose__code">IconNameType</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Icon rendered in the secondary slot via <code class="doc-prose__code">rng-icon</code> - takes precedence over <code class="doc-prose__code">secondaryLabel</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isDanger</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Applies danger styling <code class="doc-prose__code">rng-dropdown__item--danger</code></td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">isDisabled</code></td><td class="doc-prose__td"><code class="doc-prose__code">boolean</code></td><td class="doc-prose__td">No</td><td class="doc-prose__td">Renders with <code class="doc-prose__code">rng-dropdown__item--disabled</code> and suppresses <code class="doc-prose__code">itemClick</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">DropdownAlignment</code> &amp; <code class="doc-prose__code">DropdownPositionClass</code></h3>
+  <table class="doc-prose__table">
+    <thead>
+      <tr class="doc-prose__tr"><th class="doc-prose__th">Type</th><th class="doc-prose__th">Values</th><th class="doc-prose__th">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">DropdownAlignment</code></td><td class="doc-prose__td"><code class="doc-prose__code">'right' | 'top' | 'top-right'</code></td><td class="doc-prose__td">Input for <code class="doc-prose__code">alignment</code> - forces a fixed position</td></tr>
+      <tr class="doc-prose__tr"><td class="doc-prose__td"><code class="doc-prose__code">DropdownPositionClass</code></td><td class="doc-prose__td"><code class="doc-prose__code">'rng-dropdown--right' | 'rng-dropdown--top' | 'rng-dropdown--top-right' | null</code></td><td class="doc-prose__td">Internal resolved class - computed from <code class="doc-prose__code">alignment</code> or auto-detection via <code class="doc-prose__code">_positionClass</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-prose__h3"><code class="doc-prose__code">IMPORT_DROPDOWN</code></h3>
+  <p class="doc-prose__p">
+    Includes <code class="doc-prose__code">DropdownComponent</code> and <code class="doc-prose__code">DropdownTargetDirective</code>.
+    Use it to import all dropdown pieces at once.
+  </p>
+  <rng-code-block [code]="importSnippet" language="typescript" title="IMPORT_DROPDOWN" variant="prose" />
+
+  <rng-doc-pager />
+</article>
