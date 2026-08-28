@@ -30,9 +30,21 @@
       inset: -20% -10% auto -10%;
       height: rem(520);
       background:
-        radial-gradient(rem(600) rem(300) at 20% 10%, color-mix(in srgb, var(--doc-primary) 8%, transparent), transparent 60%),
-        radial-gradient(rem(800) rem(400) at 80% 0%, color-mix(in srgb, #bd34fe 7%, transparent), transparent 60%),
-        radial-gradient(rem(700) rem(300) at 50% 30%, color-mix(in srgb, #41d1ff 6%, transparent), transparent 60%);
+        radial-gradient(
+          rem(600) rem(300) at 20% 10%,
+          color-mix(in srgb, var(--doc-primary) 8%, transparent),
+          transparent 60%
+        ),
+        radial-gradient(
+          rem(800) rem(400) at 80% 0%,
+          color-mix(in srgb, #bd34fe 7%, transparent),
+          transparent 60%
+        ),
+        radial-gradient(
+          rem(700) rem(300) at 50% 30%,
+          color-mix(in srgb, #41d1ff 6%, transparent),
+          transparent 60%
+        );
       pointer-events: none;
     }
   }
@@ -186,12 +198,16 @@
     border: rem(1) solid var(--doc-border);
     border-radius: var(--doc-radius);
     background-color: var(--doc-surface-2);
-    box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.06), 0 rem(12) rem(32) rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 rem(1) rem(3) rgba(0, 0, 0, 0.06),
+      0 rem(12) rem(32) rgba(0, 0, 0, 0.05);
     overflow: hidden;
     text-align: left;
 
     .theme-dark & {
-      box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.3), 0 rem(12) rem(32) rgba(0, 0, 0, 0.4);
+      box-shadow:
+        0 rem(1) rem(3) rgba(0, 0, 0, 0.3),
+        0 rem(12) rem(32) rgba(0, 0, 0, 0.4);
     }
   }
 
@@ -214,9 +230,15 @@
       border-radius: 50%;
       display: block;
 
-      &:nth-child(1) { background: #ff5f56; }
-      &:nth-child(2) { background: #ffbd2e; }
-      &:nth-child(3) { background: #27c93f; }
+      &:nth-child(1) {
+        background: #ff5f56;
+      }
+      &:nth-child(2) {
+        background: #ffbd2e;
+      }
+      &:nth-child(3) {
+        background: #27c93f;
+      }
     }
   }
 
@@ -330,11 +352,15 @@
     border: rem(1) solid var(--doc-border);
     border-radius: rem(18);
     background-color: var(--doc-surface-2);
-    box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.06), 0 rem(12) rem(32) rgba(0, 0, 0, 0.05);
-    overflow: visible;
+    box-shadow:
+      0 rem(1) rem(3) rgba(0, 0, 0, 0.06),
+      0 rem(12) rem(32) rgba(0, 0, 0, 0.05);
+    overflow: clip;
 
     .theme-dark & {
-      box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.3), 0 rem(12) rem(32) rgba(0, 0, 0, 0.4);
+      box-shadow:
+        0 rem(1) rem(3) rgba(0, 0, 0, 0.3),
+        0 rem(12) rem(32) rgba(0, 0, 0, 0.4);
     }
   }
 
@@ -762,14 +788,21 @@
     white-space: nowrap;
     transition: color var(--doc-duration) var(--doc-easing);
 
-    i { font-size: 0.95rem; transition: transform var(--doc-duration) var(--doc-easing); }
+    i {
+      font-size: 0.95rem;
+      transition: transform var(--doc-duration) var(--doc-easing);
+    }
 
     &:hover {
       color: var(--doc-primary-strong);
-      i { transform: translateX(rem(2)); }
+      i {
+        transform: translateX(rem(2));
+      }
     }
 
-    .theme-dark &:hover { color: #a8b1ff; }
+    .theme-dark &:hover {
+      color: #a8b1ff;
+    }
   }
 
   .doc-catalogue-index__list {
@@ -785,7 +818,9 @@
     background-color: var(--doc-surface-2);
     transition: background-color var(--doc-duration) var(--doc-easing);
 
-    &:last-child { border-bottom: none; }
+    &:last-child {
+      border-bottom: none;
+    }
 
     &::before {
       content: '';
@@ -802,7 +837,9 @@
     &:hover {
       background-color: var(--doc-surface);
 
-      &::before { opacity: 1; }
+      &::before {
+        opacity: 1;
+      }
       .doc-catalogue-row__icon {
         background-color: var(--doc-bg);
         border-color: var(--doc-border-strong);
@@ -890,7 +927,7 @@
     background-color: var(--doc-primary-soft);
     border: rem(1) solid transparent;
     color: var(--doc-primary);
-    font-size: 0.70rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: -0.01em;
     flex-shrink: 0;
@@ -1070,7 +1107,9 @@
       border: none;
       padding: 0;
 
-      i { color: var(--doc-primary); }
+      i {
+        color: var(--doc-primary);
+      }
     }
 
     > p {
@@ -1142,7 +1181,11 @@
       color: var(--doc-text-muted);
       align-items: flex-start;
 
-      i { color: #22c55e; margin-top: rem(2); flex-shrink: 0; }
+      i {
+        color: #22c55e;
+        margin-top: rem(2);
+        flex-shrink: 0;
+      }
     }
   }
 
@@ -1193,16 +1236,32 @@
   }
 
   // token colors for inline code in install section
-  .doc-tok-k { color: #d73a49; }
-  .doc-tok-v { color: #6f42c1; }
-  .doc-tok-s { color: #032f62; }
-  .doc-tok-p { color: #005cc5; }
+  .doc-tok-k {
+    color: #d73a49;
+  }
+  .doc-tok-v {
+    color: #6f42c1;
+  }
+  .doc-tok-s {
+    color: #032f62;
+  }
+  .doc-tok-p {
+    color: #005cc5;
+  }
 
   .theme-dark {
-    .doc-tok-k { color: #ff7b72; }
-    .doc-tok-v { color: #d2a8ff; }
-    .doc-tok-s { color: #a5d6ff; }
-    .doc-tok-p { color: #79c0ff; }
+    .doc-tok-k {
+      color: #ff7b72;
+    }
+    .doc-tok-v {
+      color: #d2a8ff;
+    }
+    .doc-tok-s {
+      color: #a5d6ff;
+    }
+    .doc-tok-p {
+      color: #79c0ff;
+    }
   }
 
   // ------------------------------------------------------------
@@ -1324,7 +1383,9 @@
     overflow: hidden;
     isolation: isolate;
     border: rem(1) solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 rem(10) rem(32) rgba(0, 0, 0, 0.14), 0 rem(1) rem(3) rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 rem(10) rem(32) rgba(0, 0, 0, 0.14),
+      0 rem(1) rem(3) rgba(0, 0, 0, 0.08);
 
     @include m.breakpoint(medium-up) {
       flex-direction: row;
@@ -1336,7 +1397,9 @@
     .theme-dark & {
       background-color: #232326;
       border-color: #2e2e32;
-      box-shadow: 0 rem(10) rem(32) rgba(0, 0, 0, 0.35), 0 rem(1) rem(3) rgba(0, 0, 0, 0.3);
+      box-shadow:
+        0 rem(10) rem(32) rgba(0, 0, 0, 0.35),
+        0 rem(1) rem(3) rgba(0, 0, 0, 0.3);
     }
 
     &::before {
@@ -1344,8 +1407,16 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(rem(560) rem(320) at 85% 100%, color-mix(in srgb, var(--doc-primary) 22%, transparent), transparent 68%),
-        radial-gradient(rem(480) rem(280) at 10% 0%, color-mix(in srgb, #bd34fe 12%, transparent), transparent 62%);
+        radial-gradient(
+          rem(560) rem(320) at 85% 100%,
+          color-mix(in srgb, var(--doc-primary) 22%, transparent),
+          transparent 68%
+        ),
+        radial-gradient(
+          rem(480) rem(280) at 10% 0%,
+          color-mix(in srgb, #bd34fe 12%, transparent),
+          transparent 62%
+        );
       pointer-events: none;
       z-index: 0;
     }
