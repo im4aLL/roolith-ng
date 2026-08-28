@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CodeBlock } from '../../shared/code-block/code-block';
 import { DocPager } from '../../shared/doc-pager/doc-pager';
+import { App } from '../../app';
 
 @Component({
   selector: 'rng-doc-theming',
@@ -10,6 +12,13 @@ import { DocPager } from '../../shared/doc-pager/doc-pager';
   styleUrl: './theming.scss',
 })
 export class Theming {
+  private readonly document = inject(DOCUMENT);
+  private readonly appRef = inject(App, { optional: true }) as unknown as
+    | { theme: WritableSignal<'light' | 'dark'> }
+    | null;
+
+  protected readonly isTokyoApplied = signal(false);
+
   /**
    * Tokens emitted by the library mixin.
    *
@@ -205,4 +214,145 @@ window.matchMedia('(prefers-color-scheme: dark)')
   --rng-color-primary-lighter: hsl(from var(--rng-color-primary) h s 60%);
   --rng-color-accent: var(--rng-color-primary);
 }`;
+
+  /**
+   * Tokyo Night theme example using only `--rng-*` variables.
+   *
+   * Copy this block into your global `styles.scss` after `rng.rng-everything()`.
+   * Only `--rng-*` variables are overridden.
+   */
+  protected readonly tokyoNightExample = `// ------------------------------------------------------------------
+// Tokio Night theme overrides
+// Palette: https://github.com/folke/tokyonight.nvim (night)
+// bg #1a1b26, bg_dark #16161e, bg_highlight #292e42
+// fg #c0caf5, fg_dark #a9b1d6, gutter #3b4261, comment #565f89
+// blue #7aa2f7, cyan #7dcfff, purple #bb9af7, green #9ece6a
+// yellow #e0af68, orange #ff9e64, red #f7768e, teal #73daca
+// ------------------------------------------------------------------
+:root {
+  // -- library: core palette (rng) - Tokio Night with darker primary --
+  --rng-color-primary: #4d5e9e;
+  --rng-color-primary-light: #5e6fb0;
+  --rng-color-primary-lighter: #7b8dc1;
+  --rng-color-secondary: #c797ff;
+  --rng-color-secondary-light: #d3adff;
+  --rng-color-secondary-dark: #b07aec;
+  --rng-color-warning: #e0af68;
+  --rng-color-danger: #f7768e;
+  --rng-color-success: #9ece6a;
+  --rng-color-info: #7dcfff;
+  --rng-color-accent: #4d5e9e;
+  --rng-color-accent-light: #5e6fb0;
+  --rng-color-accent-dark: #3f4f8a;
+
+  // -- neutral scale: 50 (darkest) -> 900 (lightest) for dark theme --
+  --rng-color-neutral: #1a1b26;
+  --rng-color-neutral-50: #16161e;
+  --rng-color-neutral-100: #1a1b26;
+  --rng-color-neutral-150: #1f2335;
+  --rng-color-neutral-200: #24283b;
+  --rng-color-neutral-300: #292e42;
+  --rng-color-neutral-400: #3b4261;
+  --rng-color-neutral-500: #414868;
+  --rng-color-neutral-600: #565f89;
+  --rng-color-neutral-700: #737aa2;
+  --rng-color-neutral-800: #a9b1d6;
+  --rng-color-neutral-900: #c0caf5;
+
+  // -- surface --
+  --rng-surface-bg-color: #1a1b26;
+  --rng-surface-text-color: #c0caf5;
+  --rng-surface-alt-text-color: #c0caf5;
+  --rng-border-color: #292e42;
+
+  // -- misc --
+  --rng-focus-outline: 0.0625rem dotted rgba(77, 94, 158, 0.5);
+  --rng-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.45), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --rng-shadow-small: 0 2px 4px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --rng-shadow-xsmall: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.2) 0 1px 2px 0;
+}
+
+.theme-dark {
+  --rng-color-primary: #4d5e9e;
+  --rng-color-primary-light: #5e6fb0;
+  --rng-color-primary-lighter: #7b8dc1;
+  --rng-color-secondary: #c797ff;
+  --rng-color-secondary-light: #d3adff;
+  --rng-color-secondary-dark: #b07aec;
+  --rng-color-warning: #e0af68;
+  --rng-color-danger: #f7768e;
+  --rng-color-success: #9ece6a;
+  --rng-color-info: #7dcfff;
+  --rng-color-accent: #4d5e9e;
+  --rng-color-accent-light: #5e6fb0;
+  --rng-color-accent-dark: #3f4f8a;
+  --rng-color-neutral: #1a1b26;
+  --rng-color-neutral-50: #16161e;
+  --rng-color-neutral-100: #1a1b26;
+  --rng-color-neutral-150: #1f2335;
+  --rng-color-neutral-200: #24283b;
+  --rng-color-neutral-300: #292e42;
+  --rng-color-neutral-400: #3b4261;
+  --rng-color-neutral-500: #414868;
+  --rng-color-neutral-600: #565f89;
+  --rng-color-neutral-700: #737aa2;
+  --rng-color-neutral-800: #a9b1d6;
+  --rng-color-neutral-900: #c0caf5;
+  --rng-surface-bg-color: #1a1b26;
+  --rng-surface-text-color: #c0caf5;
+  --rng-surface-alt-text-color: #c0caf5;
+  --rng-border-color: #292e42;
+  --rng-focus-outline: 0.0625rem dotted rgba(77, 94, 158, 0.5);
+  --rng-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.45), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --rng-shadow-small: 0 2px 4px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --rng-shadow-xsmall: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.2) 0 1px 2px 0;
+}`;
+
+  /**
+   * Dynamically applies the Tokyo Night theme as a temporary <style> tag.
+   *
+   * The style is injected into `<head>` at runtime and disappears on reload
+   * because it is not persisted. Also switches the doc app to dark mode
+   * so the dark Tokyo Night palette is visible immediately.
+   *
+   * @returns void
+   */
+  protected applyTokyoNight(): void {
+    if (this.isTokyoApplied()) {
+      return;
+    }
+
+    const styleId = 'tokyo-night-theme';
+
+    if (this.document.getElementById(styleId)) {
+      this.isTokyoApplied.set(true);
+      return;
+    }
+
+    const style = this.document.createElement('style');
+    style.id = styleId;
+    style.textContent = this.tokyoNightExample;
+    this.document.head.appendChild(style);
+    this.isTokyoApplied.set(true);
+
+    // switch doc app to dark mode so Tokyo Night is visible
+    // keep it temporary - revert localStorage so reload goes back to default
+    const prevTheme = localStorage.getItem('doc-theme');
+
+    this.document.documentElement.classList.add('theme-dark');
+
+    if (this.appRef) {
+      this.appRef.theme.set('dark');
+
+      // revert persistence in next microtask - visual stays dark this session,
+      // but reload will read the previous theme (default)
+      queueMicrotask(() => {
+        if (prevTheme === 'light' || prevTheme === 'dark') {
+          localStorage.setItem('doc-theme', prevTheme);
+        } else {
+          localStorage.removeItem('doc-theme');
+        }
+      });
+    }
+  }
 }

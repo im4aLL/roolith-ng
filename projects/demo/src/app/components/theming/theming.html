@@ -107,6 +107,38 @@
   <rng-code-block [code]="scssOverride" language="scss" title="styles.scss - SCSS override" variant="prose" />
   <p class="doc-prose__p">Available SCSS overrides include <code class="doc-prose__code">$primary-color</code>, <code class="doc-prose__code">$secondary-color</code>, <code class="doc-prose__code">$warning-color</code>, <code class="doc-prose__code">$danger-color</code>, <code class="doc-prose__code">$success-color</code>, <code class="doc-prose__code">$info-color</code>, <code class="doc-prose__code">$dark-color</code>, <code class="doc-prose__code">$gray-color</code>, <code class="doc-prose__code">$border-radius</code>, <code class="doc-prose__code">$shadow</code> and the full <code class="doc-prose__code">$colors</code> map.</p>
 
+  <h3 class="doc-prose__h3">Example: Tokyo Night</h3>
+  <p class="doc-prose__p">
+    Real world override using only <code class="doc-prose__code">--rng-*</code> variables.
+    Copy the block into your <code class="doc-prose__code">styles.scss</code> after <code class="doc-prose__code">@include rng.rng-everything();</code>.
+  </p>
+  <div class="doc-prose__example" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+    <button type="button" class="doc-button" (click)="applyTokyoNight()" [disabled]="isTokyoApplied()">
+      @if (isTokyoApplied()) {
+        <i class="iconoir-check" aria-hidden="true"></i> Tokyo Night applied
+      } @else {
+        <i class="iconoir-half-moon" aria-hidden="true"></i> Apply Tokyo Night theme
+      }
+    </button>
+    @if (isTokyoApplied()) {
+      <span class="doc-prose__p" style="margin: 0; color: var(--doc-text-muted); font-size: 0.875rem;">Applied - dark mode enabled. Visit other component pages without reload to see changes. Reload to revert.</span>
+    } @else {
+      <span class="doc-prose__p" style="margin: 0; color: var(--doc-text-muted); font-size: 0.875rem;">Applies Tokyo Night variables temporarily and switches to dark mode (no persistence).</span>
+    }
+  </div>
+  @if (isTokyoApplied()) {
+    <div class="doc-callout">
+      <p class="doc-callout__title"><i class="iconoir-eye" aria-hidden="true"></i> Theme applied - dark mode enabled</p>
+      <p class="doc-prose__p">Doc app switched to dark mode and Tokyo Night variables applied. Visit other component pages without reloading to see the changes across the app. Use the sidebar to browse components - no reload needed. Reload the browser to revert to the default theme.</p>
+    </div>
+  }
+  <rng-code-block
+    [code]="tokyoNightExample"
+    language="scss"
+    title="Tokyo Night - CSS variable overrides (only --rng-*)"
+    variant="prose"
+  />
+
   <h2 class="doc-prose__h2">Dark mode</h2>
   <p class="doc-prose__p">Dark mode is a single class: <code class="doc-prose__code">.theme-dark</code> on <code class="doc-prose__code">document.documentElement</code> (or any ancestor of your app). It recomputes the neutral scale and swaps surface, border and info tokens.</p>
   <rng-code-block [code]="toggleExample" language="typescript" title="toggle dark mode" variant="prose" />
