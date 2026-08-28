@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './components/home/home';
 
 export const routes: Routes = [
-  { path: '', component: Home, title: 'Roolith Docs' },
+  { path: '', component: Home, title: 'Roolith NG - Angular UI Component Library' },
   {
     path: 'guide/getting-started',
     loadComponent: () => import('./components/getting-started/getting-started').then((mod) => mod.GettingStarted),
