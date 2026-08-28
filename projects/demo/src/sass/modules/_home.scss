@@ -422,8 +422,12 @@
 
   .doc-preview__row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: rem(12);
+
+    @include m.breakpoint(medium-up) {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   .doc-preview__footer {
@@ -434,11 +438,15 @@
 
   .doc-preview__table-footer {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: row;
     gap: rem(12);
     flex-wrap: wrap;
     width: 100%;
+
+    @include m.breakpoint(medium-up) {
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   .doc-preview__table-meta {
@@ -460,8 +468,11 @@
     display: flex;
     align-items: center;
     gap: rem(8);
-    margin-left: auto;
     flex-wrap: wrap;
+
+    @include m.breakpoint(medium-up) {
+      margin-left: auto;
+    }
 
     rng-button {
       flex: 0 0 auto;
@@ -724,8 +735,6 @@
 
   .doc-catalogue-index__bar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
     gap: rem(12) rem(16);
     padding: rem(14) rem(18);
     background-color: var(--doc-surface);
@@ -735,6 +744,8 @@
     @include m.breakpoint(medium-up) {
       padding: rem(14) rem(22);
       flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 
@@ -780,7 +791,6 @@
     display: inline-flex;
     align-items: center;
     gap: rem(6);
-    margin-left: auto;
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--doc-primary);
@@ -798,6 +808,10 @@
       i {
         transform: translateX(rem(2));
       }
+    }
+
+    @include m.breakpoint(medium-up) {
+      margin-left: auto;
     }
 
     .theme-dark &:hover {
@@ -1175,11 +1189,16 @@
 
     li {
       display: flex;
+      flex-direction: column;
       gap: rem(10);
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--doc-text-muted);
       align-items: flex-start;
+
+      @include m.breakpoint(medium-up) {
+        flex-direction: row;
+      }
 
       i {
         color: #22c55e;
