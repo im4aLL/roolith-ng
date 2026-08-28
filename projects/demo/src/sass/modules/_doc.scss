@@ -106,6 +106,15 @@
     padding-left: 1.25rem;
   }
 
+  // List item typography - matches body text (.doc-prose__p).
+  .doc-prose__li,
+  .doc-prose-li,
+  .doc-list__item {
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: var(--doc-text);
+  }
+
   // List item spacing - class based.
   .doc-prose__li + .doc-prose__li,
   .doc-prose-li + .doc-prose-li,
@@ -132,6 +141,7 @@
     color: var(--doc-primary);
     font-size: 0.875em;
     border-color: transparent;
+    white-space: normal;
   }
 
   // Pre block - class based fallback for raw pre.
