@@ -1,28 +1,14 @@
 # RoolithNg
 
-A modern, Angular-native UI component library for building enterprise-grade web applications. AI Ready with an installable `roolith-ng` agent skill for Pi, OpenCode, Claude, Cursor and more so AI agents generate correct `rng-*` APIs.
-`@im4all/roolith-ng` ships standalone Angular components, directives, pipes, and a design-token driven SCSS system so you can compose consistent, accessible, and themeable interfaces.
+**Documentation: https://roolith-ng.habibhadi.com/**
+
+A modern, Angular-native UI component library for building consistent, accessible enterprise apps.
+Standalone components, signal-based inputs, a full table stack, and overlay primitives - all themed through SCSS design tokens.
 
 - Package: `@im4all/roolith-ng`
-- Version: `1.0.0`
-- Angular: `>=21.0.0` (tested on `21.2.x`, standalone, no `NgModule` required)
-- Runtime deps: `lodash-es`, `luxon`, `tslib`
-- Bundling: `sideEffects: false`, tree-shakable, `ng-packagr` build
-
-## Features
-
-- Standalone Angular components - import only what you need.
-- Token-driven theming via SCSS and CSS variables, with light/dark support out of the box.
-- Forms-ready inputs with full `ReactiveForms` and `FormsModule` support.
-- Data-heavy building blocks - table with sorting/selection, pagination, filters, and export helpers.
-- Overlay primitives - dialog, drawer, dropdown, popover, tooltip, and toast with focus-trapping and stacking.
-- Zero global side effects (`sideEffects: false`) and minimal runtime dependencies.
-- AI Ready - installable `roolith-ng` agent skill for Pi, OpenCode, Claude, Cursor and more so AI agents generate correct `rng-*` APIs (see [AI Ready - Agent Skills](#ai-ready---agent-skills)).
-
-## Requirements
-
-- Node.js `^20.19.0 || ^22.12.0 || >=24` (repo uses `npm@11.11.0`, CI builds on Node `22`).
-- Angular `>=21.0.0` with `@angular/common`, `@angular/core`, `@angular/forms` as peer dependencies.
+- Angular: `>=21.0.0`
+- Standalone, tree-shakable, no `NgModule` required
+- MIT Licensed
 
 ## Installation
 
@@ -30,84 +16,9 @@ A modern, Angular-native UI component library for building enterprise-grade web 
 npm install @im4all/roolith-ng
 ```
 
-Peer dependencies (install matching versions in your app):
+Peer dependencies: `@angular/common`, `@angular/core`, `@angular/forms`.
 
-```bash
-npm install @angular/common @angular/core @angular/forms
-```
-
-Other package managers:
-
-```bash
-yarn add @im4all/roolith-ng
-pnpm add @im4all/roolith-ng
-bun add @im4all/roolith-ng
-```
-
-## Usage
-
-Import components directly into your standalone components:
-
-```ts
-import { Component } from '@angular/core';
-import { ButtonComponent, CardComponent } from '@im4all/roolith-ng';
-
-@Component({
-  selector: 'app-example',
-  imports: [ButtonComponent, CardComponent],
-  template: `
-    <rng-card header="Hello Roolith">
-      <rng-button variant="primary">Get started</rng-button>
-    </rng-card>
-  `,
-})
-export class ExampleComponent {}
-```
-
-Selectors use the `rng-` prefix (e.g. `<rng-button>`, `<rng-card>`, `<rng-table>`).
-Icons use the [Iconoir](https://iconoir.com/) class names (e.g. `<rng-icon name="iconoir-search" />`).
-
-### Forms
-
-Form controls integrate with Angular forms out of the box.
-Import `FormsModule` or `ReactiveFormsModule` as needed:
-
-```ts
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TextInputComponent, SelectInputComponent } from '@im4all/roolith-ng';
-```
-
-```html
-<rng-text-input [(ngModel)]="name" placeholder="Name" />
-<rng-select-input [options]="options" formControlName="country" />
-```
-
-All inputs support `formControl`, `formControlName`, `ngModel`, `disabled`, `error`, and validation states.
-
-## Components
-
-30+ primitives exported from `projects/roolith-ng/src/lib/index.ts:1`.
-
-| Category | Components |
-| --- | --- |
-| Layout | `Card`, `Accordion`, `Tab`, `Drawer`, `Nav`, `NavGroup`, `List` |
-| Actions & indicators | `Button`, `ButtonGroup`, `ButtonSplit`, `ToggleGroup`, `Icon`, `Badge`, `BadgeExtended` |
-| Forms / Inputs | `TextInput`, `NumberInput`, `TextareaInput`, `SearchInput`, `SwitchInput`, `CheckboxInput`, `RadioInput`, `SelectInput`, `MultiSelectInput`, `SelectPlain`, `FileInput`, `DatePicker`, `TimePicker`, `DateTimePicker` |
-| Data display | `Table` (sorting/selection/header-checkbox), `Pagination`, `Breadcrumb`, `Progress`, `Loader` (+ `InlineLoader`), `BlockMessage`, `Message`, `Tooltip`, `Popover` |
-| Overlay & feedback | `Dialog` (`DialogService`), `Drawer`, `Dropdown`, `Popover`, `Tooltip`, `Toast` |
-| Filtering | `Filter`, `FilterButton`, `FilterFieldTemplate` directive, `FilterEngine` utility, `shared.helpers` |
-
-See `projects/demo/src/app/app.routes.ts:1` for a live catalogue of every component with examples.
-Directives include `TableCellDirective`, `TableSort`, `FilterFieldTemplate`, `TabContentOf`, and drawer/dialog structural directives.
-
-## Theming
-
-`@im4all/roolith-ng` ships its SCSS system under `@im4all/roolith-ng/sass`.
-Use the modern `@use` syntax.
-
-### Base setup (recommended)
-
-Include everything - tokens, reset, typography, components, grid, and state helpers - in your global `styles.scss`:
+Add styles once in your app with `modern @use` syntax:
 
 ```scss
 @use '@im4all/roolith-ng/sass/rng-scss' as rng;
@@ -115,149 +26,26 @@ Include everything - tokens, reset, typography, components, grid, and state help
 @include rng.rng-everything();
 ```
 
-The demo app does this in `projects/demo/src/styles.scss:1`.
+## Components
 
-### Modular imports
+26 components, standalone and tree-shakable.
+Layout, actions, 14 form inputs, data tables, overlays, and filtering - all prefixed with `rng-`.
 
-Pick only what you need (`projects/roolith-ng/src/sass/rng-scss.scss:9`):
+See the full list with live previews: https://roolith-ng.habibhadi.com/guide/components
 
-```scss
-@use '@im4all/roolith-ng/sass/rng-scss' as rng;
+## AI agent ready
 
-@include rng.rng-base-style();    // tokens, reset, typography
-@include rng.rng-modules-style(); // components
-@include rng.rng-layout-style();  // grid + layout
-@include rng.rng-state-style();   // helpers
-```
-
-### Runtime overrides (CSS variables)
-
-Override tokens without rebuilding.
-All tokens are emitted as `--rng-*` variables from `projects/roolith-ng/src/sass/_css-var.scss:1`:
-
-```scss
-:root {
-  --rng-color-primary: #4f46e5;
-  --rng-color-secondary: #1e1b4b;
-  --rng-border-radius: 12px;
-  --rng-surface-bg-color: #ffffff;
-}
-
-/* dark variant - toggled via class on html/body */
-.theme-dark {
-  --rng-color-primary: #a8b1ff;
-  --rng-surface-bg-color: #1b1b1b;
-  --rng-border-color: var(--rng-color-neutral-200);
-}
-```
-
-Toggle at runtime:
-
-```ts
-const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-document.documentElement.classList.toggle('theme-dark', isDark);
-```
-
-## AI Ready - Agent Skills
-
-`@im4all/roolith-ng` ships an optional, installable agent skill `roolith-ng` so AI coding agents can generate correct `rng-*` markup, theming, and forms code without guesswork.
-
-- Package includes: `skills/roolith-ng/SKILL.md` + `references/` (components, theming, conventions, forms, patterns)
-- Not installed automatically - opt-in via installer
-- No internal workspace skills (`.agents/skills`, `.opencode/agents`) are included - only `roolith-ng` is published (verified at build)
-- Works with Pi and OpenCode first, then Claude, Cursor, Codex, Windsurf and others via `npx skills add`
-
-### Install skills in a consumer app
-
-After `npm install @im4all/roolith-ng`:
+Roolith NG ships an installable `roolith-ng` skill so AI coding agents use correct `rng-*` APIs instead of hallucinating props.
+Install once - your agent reads 39 bundled references and follows project conventions.
 
 ```bash
 npx skills add https://github.com/im4aLL/roolith-ng/skills --skill roolith-ng
 ```
 
-The installer detects your agents and copies to the right locations - Pi and OpenCode first, then others.
+## Documentation
 
-Installer copies `node_modules/@im4all/roolith-ng/skills/roolith-ng/` to `.pi/skills/roolith-ng/` (Pi), `.opencode/skills/roolith-ng/` (OpenCode), `.agents/skills/roolith-ng/`, `.claude/skills/roolith-ng/` and others.
-
-### Build-time overrides (SCSS)
-
-Override `!default` variables in `projects/roolith-ng/src/sass/_settings.scss:1` before including the mixins:
-
-```scss
-@use '@im4all/roolith-ng/sass/settings' with (
-  $primary-color: #4f46e5,
-  $secondary-color: #1e1b4b
-);
-@use '@im4all/roolith-ng/sass/rng-scss' as rng;
-
-@include rng.rng-everything();
-```
-
-See `projects/demo/src/app/components/theming/theming.ts:1` for the full token list and dark-mode reference.
-
-## Demo app (documentation)
-
-The documentation site lives in `projects/demo` and is the canonical usage reference.
-It is an Angular application that imports from `@im4all/roolith-ng`.
-
-```bash
-# serve docs locally at http://localhost:4200
-npm run start:demo
-# or
-ng serve demo
-
-# production build (output to dist/demo/browser)
-npm run build
-```
-
-Routes are defined in `projects/demo/src/app/app.routes.ts:1` and cover `guide/getting-started`, `guide/theming`, `guide/components`, and every component page (`components/button`, `components/table`, etc.).
-
-## Development
-
-This repository is an Angular workspace with two projects:
-
-- `projects/roolith-ng` - the publishable library (`@im4all/roolith-ng`, `ng-packagr` build, `prefix: rng`).
-- `projects/demo` - the documentation/demo application.
-
-```
-projects/roolith-ng/src/lib/   # components, directives, pipes, utils
-projects/roolith-ng/src/sass/  # design tokens and component SCSS
-projects/demo/src/app/         # docs pages and live examples
-```
-
-### Scripts
-
-| Command | Description |
-| --- | --- |
-| `npm install` | Install workspace dependencies |
-| `npm run build:lib` | Build the library to `dist/roolith-ng` |
-| `npm run build` | Build the demo app to `dist/demo/browser` |
-| `npm run start:demo` | Serve the demo app locally |
-| `npm run test:lib` | Run library unit tests with coverage (`vitest`, `jsdom`) |
-| `npm run lint` | Lint with `eslint` + `angular-eslint` |
-
-Build output is placed in `dist/roolith-ng` (library) and `dist/demo/browser` (demo SPA).
-The demo deploy workflow is in `.github/workflows/deploy.yml:1` (FTP deploy to Hostinger, SPA fallback via `.htaccess`).
-
-### Conventions
-
-- Use Angular CLI generators: `ng g component <path> --project=roolith-ng` (or `demo`).
-- Styling is token-driven SCSS - never use component SCSS for ad-hoc styling, do not target raw tags (use classes), use `rem()` from `sass/functions/_rem.scss` instead of raw `px`, and use Iconoir class names for icons.
-- Prefer signals over regular variables in components.
-
-## Publishing
-
-After building, publish from the build output (as configured in `projects/roolith-ng/ng-package.json:1` and `projects/roolith-ng/package.json:1`):
-
-```bash
-npm run build:lib
-cd dist/roolith-ng
-npm publish --access public
-```
-
-The package is published as `@im4all/roolith-ng` with `publishConfig.access: public`.
+For full API docs, usage examples, theming, and live previews, visit https://roolith-ng.habibhadi.com/.
 
 ## License
 
-See [LICENSE](LICENSE).
-MIT - Copyright (c) 2026 Md Habibullah Al Hadi.
+MIT.
